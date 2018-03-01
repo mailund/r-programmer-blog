@@ -1,0 +1,24 @@
+baseurl = "https://mailund.github.io/r-programmer-blog"
+title = "The Working R Programmer"
+copyright = "Copyright &copy; 2018 - Thomas Mailund"
+canonifyurls = true
+theme = "hugo-kiera"
+publishDir = "docs"
+
+paginate = 3
+summaryLength = 10
+pygmentsCodeFences = true
+
+[author]
+    name = ""
+    github = ""
+    gitlab = ""
+    linkedin = ""
+    facebook = ""
+    twitter = ""
+    instagram = ""
+
+[params]
+    tagline = "Tips and tricks for the working R programmer"
+
+
