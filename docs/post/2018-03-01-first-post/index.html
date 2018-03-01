@@ -62,21 +62,64 @@
 
 
 
-<section id="list">
+<article>
+
+    <h1>First Post</h1>
 
     
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-01T22:46:35&#43;01:00">Mar 1, 2018</time>
+        </li>
+        
+        
 
-    <h2>Tags</h2>
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/blogdown/">#Blogdown</a>
+                
+            </em>
+        </li>
+        
 
+        <li>2 min read</li>
+    </ul>
+</aside>
     
 
+    <p>This is my first attempt at a Hugo+Blogdown blog. I got tired of struggling with formatting R code on my <a href="http://www.mailund.dk">Wordpress blog</a>, so figured it would make sense to use RMarkdown to write about R code. That is what I use in my books, in any case, so I am familiar with it — and how hard can it be to set up a static page blog?</p>
+
+<p>Pretty hard, as it turns out, and I still haven’t completely managed yet. I struggled for hours trying to get this Hugo blog to accept anything but the default theme once I put the pages on GitHub and more through luck than skills I eventually managed.</p>
+
+<p>Oh the joy!</p>
+
+<p>But then I discover that the base urls are not handled correctly. I can get those to work if I use the <code>hugo</code> command line, but not if I process the site through <code>blogdown</code>. So I ended up with a Makefile for running RMarkdown files through <code>knitr</code> to produce Markdown files.</p>
+
+<p>That works well enough, but I still haven’t figured out how to get images to have the right base-url. I can work around that if I insert images manually, but this is going to annoy me when I plot from R.</p>
+
+<p>Well, I’ll worry about that later. I’ve had enough trouble getting this far, so it is only fair I leave a little trouble to Future Thomas.</p>
+
+<p>For now, I&rsquo;ve wasted so much time setting this site up that I don&rsquo;t have any time to write about what I came here for: tail-recursion optimisation in R. So I will leave that for tomorrow.</p>
+
+<p>Good night.</p>
+
+
+</article>
+
+
+<section class="post-nav">
     <ul>
         
-            <li><a href="blogdown">blogdown</a> <span class="count">(1 entries)</span></li>
         
     </ul>
-
 </section>
+    
+
+
 
 
 

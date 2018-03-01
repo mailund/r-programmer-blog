@@ -6,19 +6,16 @@ theme = "hugo-kiera"
 publishDir = "docs"
 
 paginate = 3
-summaryLength = 10
+summaryLength = 30
 pygmentsCodeFences = true
 
 [author]
-    name = ""
-    github = ""
-    gitlab = ""
-    linkedin = ""
-    facebook = ""
-    twitter = ""
-    instagram = ""
+    name = "Thomas Mailund"
+    github = "mailund"
+    twitter = "ThomasMailund"
+    linkedin = "thomas-mailund-94153b1"
+    facebook = "mailund"
 
 [params]
-    tagline = "Tips and tricks for the working R programmer"
-
+    tagline = "Tips and tricks for the serious R programmer"
 
