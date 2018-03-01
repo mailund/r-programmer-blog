@@ -1,4 +1,4 @@
-baseurl = "https://mailund.github.io/r-programmer-blog"
+baseurl = "https://mailund.github.io/r-programmer-blog/"
 title = "The Working R Programmer"
 copyright = "Copyright &copy; 2018 - Thomas Mailund"
 canonifyurls = true

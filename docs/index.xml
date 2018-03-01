@@ -49,15 +49,6 @@ It makes use of a variety of open source projects including:</description>
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      
-      <guid>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
-      <description>knitr::opts_chunk$set(collapse = TRUE) R Markdown This is an R Markdown document.</description>
-    </item>
-    
-    <item>
       <title>Creating a New Theme</title>
       <link>/r-programmer-blog/posts/creating-a-new-theme/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
