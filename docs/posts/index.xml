@@ -39,6 +39,15 @@
     </item>
     
     <item>
+      <title>Hello R Markdown</title>
+      <link>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
+      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
+      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents.</description>
+    </item>
+    
+    <item>
       <title>Creating a New Theme</title>
       <link>https://mailund.github.io/r-programmer-blog/posts/creating-a-new-theme/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
