@@ -2,94 +2,94 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>The Working R Programmer</title>
-    <link>https://mailund.github.io/r-programmer-blog/</link>
+    <link>/r-programmer-blog/</link>
     <description>Recent content on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
     <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://mailund.github.io/r-programmer-blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/r-programmer-blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About Hugo</title>
-      <link>https://mailund.github.io/r-programmer-blog/about/</link>
+      <link>/r-programmer-blog/about/</link>
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/about/</guid>
+      <guid>/r-programmer-blog/about/</guid>
       <description>Hugo is a static site engine written in Go.
 It makes use of a variety of open source projects including:</description>
     </item>
     
     <item>
       <title>Style Guide</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/style-guide/</link>
+      <link>/r-programmer-blog/posts/style-guide/</link>
       <pubDate>Tue, 14 Nov 2017 10:57:55 -0500</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/style-guide/</guid>
+      <guid>/r-programmer-blog/posts/style-guide/</guid>
       <description>Headings Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Headings with Text Heading 1 Lorem ipsum dolor sit amet, adipiscing elit.</description>
     </item>
     
     <item>
       <title>Image Style Guide</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/image-content/</link>
+      <link>/r-programmer-blog/posts/image-content/</link>
       <pubDate>Tue, 14 Nov 2017 08:08:17 -0500</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/image-content/</guid>
+      <guid>/r-programmer-blog/posts/image-content/</guid>
       <description>Veniam est eu adipisicing reprehenderit do sit sint elit sint. Tempor laborum ut dolore aliqua.</description>
     </item>
     
     <item>
       <title>Hello R Markdown</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
+      <link>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
+      <guid>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents.</description>
     </item>
     
     <item>
       <title>Hello R Markdown</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
+      <link>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
+      <guid>/r-programmer-blog/posts/2015-07-23-r-rmarkdown/</guid>
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents.</description>
     </item>
     
     <item>
       <title>Creating a New Theme</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/creating-a-new-theme/</link>
+      <link>/r-programmer-blog/posts/creating-a-new-theme/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/creating-a-new-theme/</guid>
+      <guid>/r-programmer-blog/posts/creating-a-new-theme/</guid>
       <description>Introduction This tutorial will show you how to create a simple theme in Hugo.</description>
     </item>
     
     <item>
       <title>(Hu)go Template Primer</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/goisforlovers/</link>
+      <link>/r-programmer-blog/posts/goisforlovers/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/goisforlovers/</guid>
+      <guid>/r-programmer-blog/posts/goisforlovers/</guid>
       <description>Hugo uses the excellent go html/template library for its template engine.</description>
     </item>
     
     <item>
       <title>Getting Started with Hugo</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/hugoisforlovers/</link>
+      <link>/r-programmer-blog/posts/hugoisforlovers/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/hugoisforlovers/</guid>
+      <guid>/r-programmer-blog/posts/hugoisforlovers/</guid>
       <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.</description>
     </item>
     
     <item>
       <title>Migrate to Hugo from Jekyll</title>
-      <link>https://mailund.github.io/r-programmer-blog/posts/migrate-from-jekyll/</link>
+      <link>/r-programmer-blog/posts/migrate-from-jekyll/</link>
       <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/posts/migrate-from-jekyll/</guid>
+      <guid>/r-programmer-blog/posts/migrate-from-jekyll/</guid>
       <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output.</description>
     </item>
     
