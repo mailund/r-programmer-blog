@@ -15,7 +15,7 @@ To square this circle, I tried one solution [involving sub-branches](https://amb
 
 The solution I managed stop stumble into — more through luck than skill — is simpler than either of the two above. If you add a directory called `docs` to your repository, GitHub is happy use that for your site. You just need to push the directory to GitHub and then go into Settings and select this under GitHub Pages. You cannot choose this option before you have pushed the `docs` directory, so remember to do this first.
 
-![](https://mailund.github.io/r-programmer-blog/post/2018-03-02-purpose/2018-03-02-github-pages-setup)
+![](https://mailund.github.io/r-programmer-blog/post/2018-03-02-purpose/2018-03-02-github-pages-setup.png)
 
 Once that is done, you tell Hugo to put the published pages in that directory by putting
 
