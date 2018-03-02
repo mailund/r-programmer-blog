@@ -1,8 +1,8 @@
 +++
 title = "First Post"
 date = 2018-03-01T22:46:35+01:00
-tags = ["Blogdown"]
-categories = []
+tags = ["Blogdown", "Hugo"]
+categories = ["Blog"]
 +++
 
 This is my first attempt at a Hugo+Blogdown blog. I got tired of struggling with formatting R code on my [Wordpress blog](http://www.mailund.dk), so figured it would make sense to use RMarkdown to write about R code. That is what I use in my books, in any case, so I am familiar with it — and how hard can it be to set up a static page blog?

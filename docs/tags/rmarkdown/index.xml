@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on The Working R Programmer</title>
-    <link>https://mailund.github.io/r-programmer-blog/post/</link>
-    <description>Recent content in Posts on The Working R Programmer</description>
+    <title>Rmarkdown on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/rmarkdown/</link>
+    <description>Recent content in Rmarkdown on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
     <lastBuildDate>Fri, 02 Mar 2018 07:58:24 +0100</lastBuildDate>
     
-	<atom:link href="https://mailund.github.io/r-programmer-blog/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/rmarkdown/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <guid>https://mailund.github.io/r-programmer-blog/post/2018-03-02-purpose/</guid>
       <description>Since I already have a blog, you might be asking, &amp;ldquo;why another one?&amp;rdquo;.
 It&amp;rsquo;s a fair question, and I am not creating a new blog just to make you follow two instead of one.</description>
-    </item>
-    
-    <item>
-      <title>First Post</title>
-      <link>https://mailund.github.io/r-programmer-blog/post/2018-03-01-first-post/</link>
-      <pubDate>Thu, 01 Mar 2018 22:46:35 +0100</pubDate>
-      
-      <guid>https://mailund.github.io/r-programmer-blog/post/2018-03-01-first-post/</guid>
-      <description>This is my first attempt at a Hugo+Blogdown blog. I got tired of struggling with formatting R code on my Wordpress blog, so figured it would make sense to use RMarkdown to write about R code.</description>
     </item>
     
   </channel>
