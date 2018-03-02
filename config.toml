@@ -17,5 +17,5 @@ pygmentsCodeFences = true
     facebook = "mailund"
 
 [params]
-    tagline = "Tips and tricks for the serious R programmer"
+    tagline = "Tips and tricks for serious software development in R"
 
