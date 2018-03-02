@@ -6,20 +6,18 @@
     <description>Recent content on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>About Hugo</title>
+      <title>About</title>
       <link>https://mailund.github.io/r-programmer-blog/about/</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 02 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/about/</guid>
-      <description>Hugo is a static site engine written in Go.
-It makes use of a variety of open source projects including:
- Cobra Viper J Walter Weatherman Cast  Learn more and contribute on GitHub.</description>
+      <description>Hi, I&amp;rsquo;m Thomas Mailund, and on this blog, I write about R programming. I have a more general-purpose blog on www.mailund.dk, but since I got fed up with jumping through hoops to get R code and output displayed the way I want it, I have moved all R topics here, where I can use knitr and Markdown + Pandoc to create posts.</description>
     </item>
     
     <item>
