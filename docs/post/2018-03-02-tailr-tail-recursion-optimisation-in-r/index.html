@@ -481,7 +481,7 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(<span style="c
 ##         }
 ##     })
 ## }
-## &lt;bytecode: 0x7feb92ff0a28&gt;
+## &lt;bytecode: 0x7fc6668ef070&gt;
 </code></pre>
 
 <p>but, then, it is not one we want to manually inspect in any case.</p>
@@ -508,6 +508,8 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(llength(test_l
 ##  431.3518   100
 ##  185.3926   100
 </code></pre>
+
+<p><img src="llength-running-time.png" alt="" /></p>
 
 <p>It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don&rsquo;t really want to write that by hand.</p>
 

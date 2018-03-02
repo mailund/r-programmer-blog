@@ -406,6 +406,8 @@ microbenchmark::microbenchmark(llength(test_llist),
                                  tr_llength(test_llist))
 ```
 
+![](llength-running-time.png)
+
 It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don't really want to write that by hand.
 
 As you have no doubt noticed about `llength`, it is not in fact tail-recursive, from the look of it, since the final recursion is enclosed by a call to `cases`. The function is only tail-recursive because it can be translated into one by rewriting the `cases` function call to a sequence of `if`-statements. The `tailr` package doesn't handle `cases` from `pmatch` by knowing about this package. Instead, it has a mechanism that lets you provide re-writing rules.
