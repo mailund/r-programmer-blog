@@ -4,12 +4,17 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/post/</loc>
-    <lastmod>2018-03-02T09:48:01+01:00</lastmod>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/about/</loc>
     <lastmod>2018-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/post/2018-03-02-tailr-tail-recursion-optimisation-in-r/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
   </url>
   
   <url>
@@ -52,6 +57,12 @@
   </url>
   
   <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://mailund.github.io/r-programmer-blog/tags/rmarkdown/</loc>
     <lastmod>2018-03-02T07:58:24+01:00</lastmod>
     <priority>0</priority>
@@ -60,6 +71,18 @@
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/tags/</loc>
     <lastmod>2018-03-02T09:48:01+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/tail-recursion/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/tailr/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
     <priority>0</priority>
   </url>
   
