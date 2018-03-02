@@ -5,7 +5,7 @@ canonifyurls = true
 theme = "hugo-kiera"
 publishDir = "docs"
 
-paginate = 3
+paginate = 5
 summaryLength = 30
 pygmentsCodeFences = true
 
