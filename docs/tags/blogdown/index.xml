@@ -6,10 +6,19 @@
     <description>Recent content in Blogdown on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Thu, 01 Mar 2018 22:46:35 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 02 Mar 2018 09:48:01 +0100</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/blogdown/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Blog Setup</title>
+      <link>https://mailund.github.io/r-programmer-blog/post/2018-03-02-blog-setup/</link>
+      <pubDate>Fri, 02 Mar 2018 09:48:01 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/post/2018-03-02-blog-setup/</guid>
+      <description>Ok, I hadn&amp;rsquo;t planned to write any more about how the blog is set up, since that isn&amp;rsquo;t that interesting to me and probably isn&amp;rsquo;t to you — either you know a lot more about this than me, in which case I have nothing to teach you, or you just don&amp;rsquo;t care, which I can relate to.</description>
+    </item>
     
     <item>
       <title>First Post</title>
