@@ -41,3 +41,5 @@ On top of that frustration list are:
 2. The tags and category links point to 404 although the directories and files they *should* point to are there.
 
 If you know anything about Hugo and `knitr`/`blogdown`, I could really use your help. A [pull request on GitHub](https://github.com/mailund/r-programmer-blog) would be amazing—and I have one or two curtesy copies of [Functional Data Structures](http://amzn.to/2oC9zbH) I might reward substantial help with.
+
+**Post-publication edit:** Ok, the problems with tags and categories seems to only appear on my local machine. On GitHub it seems to be working.
