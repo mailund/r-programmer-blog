@@ -340,7 +340,7 @@ Even though this version also has a function for pattern matching, I think we ca
 
 The insertion function is not tail-recursive, so it is not a function we can readily optimise, but let me worry about that for a later time. I just described it here to motivate pattern matching approaches.
 
-## Making `llength` tail-recursive
+## Making `llength` looping
 
 Let us return to the linked lists and the function for computing the length of a linked list:
 
@@ -495,6 +495,8 @@ microbenchmark::microbenchmark(factorial(n),
 ##    100
 ```
 
+![](Factorial-running-times.png)
+
 There is *some* overhead in using the automatically translated version over the hand-written, naturally, and for a simple function such as `factorial`, it is not hard to write the loop-variant instead of the recursive function.
 
 As we saw, rewriting `llength` as a looping function was a bit harder. With `tailr` we can do this automatically, however:
@@ -532,7 +534,7 @@ tr_llength
 ##         }
 ##     })
 ## }
-## <bytecode: 0x7fdf077d90d8>
+## <bytecode: 0x7feb92ff0a28>
 ```
 
 but, then, it is not one we want to manually inspect in any case.
