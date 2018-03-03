@@ -6,10 +6,19 @@
     <description>Recent content in Blogdown on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Fri, 02 Mar 2018 09:48:01 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 03 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/blogdown/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Blogdown plots</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/03/blogdown-plots/</link>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/03/blogdown-plots/</guid>
+      <description>Ok, I tried a clean install of blogdown and using RStudio to create a new post. I don&amp;rsquo;t plan to use RStudio for blogging in the future if I can avoid it &amp;ndash; it is a great R editor but I find it a bit sluggish compared to iA Writer for writing.</description>
+    </item>
     
     <item>
       <title>Blog Setup</title>

@@ -368,8 +368,8 @@ loop_factorial <- function(n) {
 
 n <- 1000
 microbenchmark::microbenchmark(factorial(n), 
-                                 loop_factorial(n), 
-                                 tr_factorial(n))
+                               loop_factorial(n), 
+                               tr_factorial(n))
 ```
 
 ![](Factorial-running-times.png)
@@ -402,8 +402,8 @@ make_llist <- function(n) {
 }
 test_llist <- make_llist(100)
 microbenchmark::microbenchmark(llength(test_llist),
-                                 loop_llength(test_llist),
-                                 tr_llength(test_llist))
+                               loop_llength(test_llist),
+                               tr_llength(test_llist))
 ```
 
 ![](llength-running-time.png)

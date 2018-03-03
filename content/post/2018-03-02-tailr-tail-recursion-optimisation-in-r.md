@@ -479,16 +479,16 @@ loop_factorial <- function(n) {
 
 n <- 1000
 microbenchmark::microbenchmark(factorial(n), 
-                                 loop_factorial(n), 
-                                 tr_factorial(n))
+                               loop_factorial(n), 
+                               tr_factorial(n))
 ```
 
 ```
 ## Unit: microseconds
 ##               expr     min       lq      mean   median       uq      max
-##       factorial(n) 832.102 916.1770 1144.4888 1004.703 1221.802 6089.741
-##  loop_factorial(n)  57.902  58.4760   87.9642   60.415   61.612 2652.412
-##    tr_factorial(n) 177.859 188.1715  232.1562  205.623  264.845  459.217
+##       factorial(n) 655.067 677.8340 793.92037 693.8395 784.4420 4309.064
+##  loop_factorial(n)  46.705  46.9915  68.37452  47.5690  48.6355 2052.121
+##    tr_factorial(n) 146.400 149.5475 165.72714 152.9665 172.9260  226.491
 ##  neval
 ##    100
 ##    100
@@ -534,7 +534,7 @@ tr_llength
 ##         }
 ##     })
 ## }
-## <bytecode: 0x7f9e94c569f0>
+## <bytecode: 0x7f898db60b88>
 ```
 
 but, then, it is not one we want to manually inspect in any case.
@@ -552,20 +552,20 @@ make_llist <- function(n) {
 }
 test_llist <- make_llist(100)
 microbenchmark::microbenchmark(llength(test_llist),
-                                 loop_llength(test_llist),
-                                 tr_llength(test_llist))
+                               loop_llength(test_llist),
+                               tr_llength(test_llist))
 ```
 
 ```
 ## Unit: milliseconds
 ##                      expr      min       lq     mean   median       uq
-##       llength(test_llist) 62.73938 69.81038 76.38766 74.14394 79.47418
-##  loop_llength(test_llist) 67.93074 75.27335 85.03931 79.48944 84.02637
-##    tr_llength(test_llist) 41.22978 46.12606 53.44397 50.37396 53.86556
-##       max neval
-##  121.7598   100
-##  431.3518   100
-##  185.3926   100
+##       llength(test_llist) 50.38496 52.92176 57.77588 54.95441 61.20081
+##  loop_llength(test_llist) 52.39650 55.82082 61.74288 58.51863 63.00917
+##    tr_llength(test_llist) 32.83101 35.79986 38.92129 36.89996 40.39412
+##        max neval
+##   84.12289   100
+##  126.92861   100
+##   78.08468   100
 ```
 
 ![](llength-running-time.png)
