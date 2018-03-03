@@ -44,7 +44,7 @@ log10_ticks <- function(elms) {
 I then used this function to set the break-points in `scale_y_log10` like this:
 
 ```r
-ggplot(bm, aes(x = expr, y = time, fill = "#fc6721", alpha = 0.2)) + # "#fc6721"
+ggplot(bm, aes(x = expr, y = time, fill = "#fc6721", alpha = 0.2)) +
     geom_boxplot() +
     scale_y_log10("Microseconds (log-scale)", breaks = log10_ticks(bm$time)) +
     scale_x_discrete("Function", labels = c("factorial()", "loop_factorial()", "tr_factorial()")) +
