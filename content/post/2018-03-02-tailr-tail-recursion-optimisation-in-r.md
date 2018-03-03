@@ -495,7 +495,7 @@ microbenchmark::microbenchmark(factorial(n),
 ##    100
 ```
 
-![](Factorial-running-times.png)
+![](images/Factorial-running-times.png)
 
 There is *some* overhead in using the automatically translated version over the hand-written, naturally, and for a simple function such as `factorial`, it is not hard to write the loop-variant instead of the recursive function.
 
@@ -534,7 +534,7 @@ tr_llength
 ##         }
 ##     })
 ## }
-## <bytecode: 0x7ffe812516d8>
+## <bytecode: 0x7ffac0dfc190>
 ```
 
 but, then, it is not one we want to manually inspect in any case.
