@@ -83,12 +83,9 @@ bm <- microbenchmark::microbenchmark(llength(test_llist),
 ggplot(bm, aes(x = expr, y = time, fill = expr, alpha = 0.8)) + # "#fc6721"
     scale_fill_brewer(palette = "Set2") +
     geom_boxplot() +
-    scale_y_log10("Milliseconds (log-scale)",
-                  breaks = seq(33000000, 110000000, by = 10000000),
-                  labels = seq(33000000, 110000000, by = 10000000)
-                  ) +
+    scale_y_log10("Milliseconds (log-scale)", breaks = log10_ticks(bm$time)) +
     scale_x_discrete("Function", labels = c("llength()", "loop_llength()", "tr_llength()")) +
     xlab("Function") +
-    theme_lab() + theme(panel.grid.major.x = element_blank(), legend.position = "none")
+    theme_blog() + theme(panel.grid.major.x = element_blank(), legend.position = "none")
 
 ggsave("llength-running-time.png")
