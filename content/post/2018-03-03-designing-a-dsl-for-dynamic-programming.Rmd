@@ -1,7 +1,7 @@
 ---
 title: Designing a DSL for dynamic programming
 author: Thomas Mailund
-date: '2018-03-03'
+date: 2018-03-03T10:00:00+01:00
 slug: designing-a-dsl-for-dynamic-programming
 categories:
   - DSL

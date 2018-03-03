@@ -4,7 +4,7 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/post/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -13,8 +13,13 @@
   </url>
   
   <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/03/tick-marks-for-log10-axis/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -57,19 +62,31 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/categories/dsl/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/tags/dynamic-programming/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/tags/dynprog/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/ggplot2/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/graphics/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -81,7 +98,7 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</loc>
-    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   

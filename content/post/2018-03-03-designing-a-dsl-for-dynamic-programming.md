@@ -1,7 +1,7 @@
 ---
 title: Designing a DSL for dynamic programming
 author: Thomas Mailund
-date: '2018-03-03'
+date: 2018-03-03T10:00:00+01:00
 slug: designing-a-dsl-for-dynamic-programming
 categories:
   - DSL
@@ -82,46 +82,29 @@ The parsed information for the `factorial` expression, in the version without `%
 
 ```r
 library(dynprog)
+```
+
+```
+## Error in library(dynprog): there is no package called 'dynprog'
+```
+
+```r
 fact <- {
   fact[n] <- n * fact[n - 1] ? n >= 1
   fact[n] <- 1               ? n < 1
 } %where% {n <- 1:4}
+```
+
+```
+## Error in {: could not find function "%where%"
+```
+
+```r
 fact
 ```
 
 ```
-## $recursions
-## $recursions$recursion_env
-## <environment: R_GlobalEnv>
-## 
-## $recursions$patterns
-## $recursions$patterns[[1]]
-## fact[n]
-## 
-## $recursions$patterns[[2]]
-## fact[n]
-## 
-## 
-## $recursions$conditions
-## $recursions$conditions[[1]]
-## n >= 1
-## 
-## $recursions$conditions[[2]]
-## n < 1
-## 
-## 
-## $recursions$recursions
-## $recursions$recursions[[1]]
-## n * fact[n - 1]
-## 
-## $recursions$recursions[[2]]
-## [1] 1
-## 
-## 
-## 
-## $ranges
-## $ranges$n
-## [1] 1 2 3 4
+## Error in eval(expr, envir, enclos): objekt 'fact' blev ikke fundet
 ```
 
 For edit distance, the parsed information is this:
@@ -137,55 +120,21 @@ edit <- {
                    edit[i,j - 1] + 1,
                    edit[i - 1,j - 1] + x[i] == y[j]) ? i > 1 && j > 1
 } %where% {i <- seq_along(x) ; j <- seq_along(y)}
+```
+
+```
+## Error in {: could not find function "%where%"
+```
+
+```r
 edit
 ```
 
 ```
-## $recursions
-## $recursions$recursion_env
-## <environment: R_GlobalEnv>
-## 
-## $recursions$patterns
-## $recursions$patterns[[1]]
-## edit[1, j]
-## 
-## $recursions$patterns[[2]]
-## edit[i, 1]
-## 
-## $recursions$patterns[[3]]
-## edit[i, j]
-## 
-## 
-## $recursions$conditions
-## $recursions$conditions[[1]]
-## [1] TRUE
-## 
-## $recursions$conditions[[2]]
-## [1] TRUE
-## 
-## $recursions$conditions[[3]]
-## i > 1 && j > 1
-## 
-## 
-## $recursions$recursions
-## $recursions$recursions[[1]]
-## j
-## 
-## $recursions$recursions[[2]]
-## i
-## 
-## $recursions$recursions[[3]]
-## min(edit[i - 1, j] + 1, edit[i, j - 1] + 1, edit[i - 1, j - 1] + 
-##     x[i] == y[j])
-## 
-## 
-## 
-## $ranges
-## $ranges$i
-## [1] 1
-## 
-## $ranges$j
-## [1] 1
+## function (name, ...) 
+## UseMethod("edit")
+## <bytecode: 0x7f8d5a4e15f8>
+## <environment: namespace:utils>
 ```
 
 The next step is now to build the functionality to pick the right expression to evaluate when iterating over the ranges. Here, I need to do some pattern-matching similar to [`pmatch`](http://github.com/mailund/pmatch) on the `patterns` list and then combine that with evaluating the `conditions` for the different values of ranges indices. I can go through the recursions from top to bottom, and evaluate the first expression where both the pattern and condition match, and then put the result into the dynamic programming table.

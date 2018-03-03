@@ -1,0 +1,170 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+         
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Tick-marks for log10 axis</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-03T18:00:00&#43;01:00">Mar 3, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/graphics/">Graphics</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/ggplot2/">#“ggplot2”</a>
+                
+            </em>
+        </li>
+        
+
+        <li>2 min read</li>
+    </ul>
+</aside>
+    
+
+    <p>For the <a href="https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/"><code>tailr</code> post</a> I needed to plot some benchmark results. I still haven&rsquo;t figure out how I can get plots from RMarkdown automatically moved to the right directory here, but that’s okay. I can do that manually for now.</p>
+
+<p>Anyway, I wanted plots like this one:</p>
+
+<p><img src="https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png" alt="" /></p>
+
+<p>The default tick-marks on the y-axis, however, weren’t quite like I wanted them. I wanted them as shown in the plot above, with ten tick-marks per order of magnitude.</p>
+
+<p>I am sure that this must be implemented lots of times, but I don’t know which function I should be looking for, so I ended up implementing it this way:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">log10_ticks <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(elms) {
+    bottom <span style="color:#f92672">&lt;-</span> roundDown(<span style="color:#66d9ef">min</span>(elms))
+    top <span style="color:#f92672">&lt;-</span> roundUp(<span style="color:#66d9ef">max</span>(elms))
+    orders_of_mag <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">log10</span>(top) <span style="color:#f92672">-</span> <span style="color:#66d9ef">log10</span>(bottom)
+    <span style="color:#66d9ef">if</span> (orders_of_mag <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) orders_of_mag <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>
+
+    <span style="color:#75715e"># it is slightly easier to compute it this way, where</span>
+    <span style="color:#75715e"># I have some zeroes when changing order of magnitude</span>
+    <span style="color:#75715e"># that I can just delete again later</span>
+    ticks <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;numeric&#34;</span>, length <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span><span style="color:#f92672">*</span>orders_of_mag)
+    m <span style="color:#f92672">&lt;-</span> bottom
+    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>orders_of_mag) {
+        <span style="color:#66d9ef">for</span> (j <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">9</span>) {
+            ticks[<span style="color:#ae81ff">10</span><span style="color:#f92672">*</span>(i<span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span> j] <span style="color:#f92672">&lt;-</span> m <span style="color:#f92672">*</span> j
+        }
+        m <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">*</span> m
+    }
+    ticks[<span style="color:#ae81ff">10</span><span style="color:#f92672">*</span>i] <span style="color:#f92672">&lt;-</span> m
+    ticks[ticks <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>]
+}</code></pre></div>
+<p>I then used this function to set the break-points in <code>scale_y_log10</code> like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ggplot(bm, aes(x <span style="color:#f92672">=</span> expr, y <span style="color:#f92672">=</span> time, fill <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;#fc6721&#34;</span>, alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.2</span>)) <span style="color:#f92672">+</span> <span style="color:#75715e"># &#34;#fc6721&#34;</span>
+    geom_boxplot() <span style="color:#f92672">+</span>
+    scale_y_log10(<span style="color:#e6db74">&#34;Microseconds (log-scale)&#34;</span>, breaks <span style="color:#f92672">=</span> log10_ticks(bm<span style="color:#f92672">$</span>time)) <span style="color:#f92672">+</span>
+    scale_x_discrete(<span style="color:#e6db74">&#34;Function&#34;</span>, labels <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#34;factorial()&#34;</span>, <span style="color:#e6db74">&#34;loop_factorial()&#34;</span>, <span style="color:#e6db74">&#34;tr_factorial()&#34;</span>)) <span style="color:#f92672">+</span>
+    xlab(<span style="color:#e6db74">&#34;Function&#34;</span>) <span style="color:#f92672">+</span>
+    theme_blog() <span style="color:#f92672">+</span> theme(panel.grid.major.x <span style="color:#f92672">=</span> element_blank(), legend.position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)</code></pre></div>
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/"><i class="fa fa-chevron-circle-left"></i> Designing a DSL for dynamic programming</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+
+</html>
