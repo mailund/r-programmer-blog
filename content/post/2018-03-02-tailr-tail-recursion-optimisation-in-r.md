@@ -495,7 +495,7 @@ microbenchmark::microbenchmark(factorial(n),
 ##    100
 ```
 
-![](images/Factorial-running-times.png)
+![](https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-Factorial-running-times.png)
 
 There is *some* overhead in using the automatically translated version over the hand-written, naturally, and for a simple function such as `factorial`, it is not hard to write the loop-variant instead of the recursive function.
 
@@ -534,7 +534,7 @@ tr_llength
 ##         }
 ##     })
 ## }
-## <bytecode: 0x7ffac0dfc190>
+## <bytecode: 0x7fd23508fb48>
 ```
 
 but, then, it is not one we want to manually inspect in any case.
@@ -568,7 +568,7 @@ microbenchmark::microbenchmark(llength(test_llist),
 ##   78.08468   100
 ```
 
-![](images/llength-running-time.png)
+![]((https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png)
 
 It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don't really want to write that by hand.
 
