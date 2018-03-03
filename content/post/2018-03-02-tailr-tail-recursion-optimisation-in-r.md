@@ -534,7 +534,7 @@ tr_llength
 ##         }
 ##     })
 ## }
-## <bytecode: 0x7f898db60b88>
+## <bytecode: 0x7ffe812516d8>
 ```
 
 but, then, it is not one we want to manually inspect in any case.
@@ -568,7 +568,7 @@ microbenchmark::microbenchmark(llength(test_llist),
 ##   78.08468   100
 ```
 
-![](llength-running-time.png)
+![](images/llength-running-time.png)
 
 It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don't really want to write that by hand.
 
