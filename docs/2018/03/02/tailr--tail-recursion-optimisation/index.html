@@ -481,7 +481,7 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(<span style="c
 ##         }
 ##     })
 ## }
-## &lt;bytecode: 0x7fd23508fb48&gt;
+## &lt;bytecode: 0x7fbc95c91b48&gt;
 </code></pre>
 
 <p>but, then, it is not one we want to manually inspect in any case.</p>
@@ -509,7 +509,7 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(llength(test_l
 ##   78.08468   100
 </code></pre>
 
-<p>![]((<a href="https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png">https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png</a>)</p>
+<p><img src="https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png" alt="" /></p>
 
 <p>It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don&rsquo;t really want to write that by hand.</p>
 

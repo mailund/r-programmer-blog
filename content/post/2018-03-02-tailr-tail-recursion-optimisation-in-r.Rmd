@@ -406,7 +406,7 @@ microbenchmark::microbenchmark(llength(test_llist),
                                tr_llength(test_llist))
 ```
 
-![]((https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png)
+![](https://mailund.github.io/r-programmer-blog/images/2018-03-02-tailr-tail-recursion-optimisation-in-r-llength-running-time.png)
 
 It is, of course, possible to write a faster hand-written function to deal with this case, but it will be about as complicated as the automatically generated function, and you don't really want to write that by hand.
 
