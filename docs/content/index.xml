@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Contents on The Working R Programmer</title>
+    <link>/r-programmer-blog/content/</link>
+    <description>Recent content in Contents on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    
+	<atom:link href="/r-programmer-blog/content/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

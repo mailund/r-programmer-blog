@@ -21,9 +21,18 @@
     </item>
     
     <item>
+      <title>Dsl</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/dsl/</link>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/dsl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Metaprogramming</title>
       <link>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</link>
-      <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</guid>
       <description></description>

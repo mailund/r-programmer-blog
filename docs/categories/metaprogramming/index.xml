@@ -6,17 +6,26 @@
     <description>Recent content in Metaprogramming on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Fri, 02 Mar 2018 10:38:06 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 03 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Designing a DSL for dynamic programming</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</link>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</guid>
+      <description>I&amp;rsquo;m working on an example for one of the chapters of Domain Specific Languages in R that will appear in the printed version but weren&amp;rsquo;t included in the earlier e-book. The plan is to have one to three extra example chapters, depending on how much I can do before my deadline on April 1st.</description>
+    </item>
+    
+    <item>
       <title>tailr — Tail Recursion Optimisation</title>
-      <link>https://mailund.github.io/r-programmer-blog/post/2018-03-02-tailr-tail-recursion-optimisation-in-r/</link>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</link>
       <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/post/2018-03-02-tailr-tail-recursion-optimisation-in-r/</guid>
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</guid>
       <description>Believe it or not, all the bother with setting up this blog was such that I could write this post easier than I could on Wordpress. So now, let us get to some actual R programming!</description>
     </item>
     
