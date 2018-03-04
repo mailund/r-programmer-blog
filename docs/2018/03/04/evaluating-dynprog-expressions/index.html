@@ -64,7 +64,7 @@
 
 <article>
 
-    <h1>Comments</h1>
+    <h1>Evaluating dynprog expressions</h1>
 
     
         <aside>
@@ -79,7 +79,10 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/blog/">Blog</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/dsl/">DSL</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
                 
             </em>
         </li>
@@ -90,30 +93,373 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/hugo/">#Hugo</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/dynamic-programming/">#dynamic-programming</a>
                 
                     , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/disqus/">#Disqus</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/dynprog/">#dynprog</a>
                 
             </em>
         </li>
         
 
-        <li>1 min read</li>
+        <li>11 min read</li>
     </ul>
 </aside>
     
 
-    <p>Ok, if this is working, it should now be possible to comment on posts here.</p>
+    
 
-<p>I was a bit slow in trying this out, because I had a hellish time setting up the blog in the first place, and I expected adding comments support with <a href="https://disqus.com">Disqus</a> would be just as hard, but if this is working, it was a simple matter of adding</p>
-
-<pre><code>disqusShortname = &quot;r-programmer-blog&quot;
+<p>I think I now have a complete implementation of the dynamic programming DSL <a href="https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/">I wrote about the other day</a>. You can install it from <a href="https://github.com/mailund/dynprog">the GitHub repository</a> if you want to experiment with it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">devtools<span style="color:#f92672">::</span>install_github(<span style="color:#e6db74">&#34;mailund/dynprog&#34;</span>)
+<span style="color:#f92672">library</span>(dynprog)</code></pre></div>
+<p>The syntax for computing a table of factorial values now looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact <span style="color:#f92672">&lt;-</span> {
+  fact[n] <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> fact[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+  fact[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>               <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>
+} <span style="color:#f92672">%where%</span> {n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">8</span>}
+fact</code></pre></div>
+<pre><code>## [1]     1     2     6    24   120   720  5040 40320
 </code></pre>
 
-<p>to the configuration file and telling Disqus about the existence of the blog.</p>
+<p>For computing the <a href="https://en.wikipedia.org/wiki/Edit_distance">edit distance</a> you can write a recursion like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">strsplit</span>(<span style="color:#e6db74">&#34;abd&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)[[<span style="color:#ae81ff">1</span>]]
+y <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">strsplit</span>(<span style="color:#e6db74">&#34;abbd&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)[[<span style="color:#ae81ff">1</span>]]
+edit <span style="color:#f92672">&lt;-</span> {
+  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> (x[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> y[j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>])
+  )   <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+} <span style="color:#f92672">%where%</span> {
+    i <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(x) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    j <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(y) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+}
+edit</code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    0    1    2    3    4
+## [2,]    1    0    1    2    3
+## [3,]    2    1    0    1    2
+## [4,]    3    2    1    1    1
+</code></pre>
 
-<p>Cool.</p>
+<p>The syntax is a little different from what I presented <a href="https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/">in the previous post</a>. I hadn’t thought completely through how I should represent strings, and I’m not sure this is the easiest way to get strings represented  as vectors of characters, but, hey, it works, so this is what I have now.</p>
+
+<p>I will describe the design in details in <a href="http://amzn.to/2FO5MiQ"> Domain Specific Languages in R</a>, but before I write the chapter for this DSL, I would love to get some feedback. So here, I will describe the current design.</p>
+
+<h2 id="parsing-expressions">Parsing expressions</h2>
+
+<p>All the magic in parsing the language is done by the <code>%where%</code> operator. It is an infix operator, so it takes two arguments. The first is the recursion equations and the second the ranges the dynamic programming algorithm should iterate over. I parse these separately before I evaluate anything.</p>
+
+<pre><code>`%where%` &lt;- function(recursion, ranges) {
+    parsed &lt;- list(
+        recursions = parse_recursion(rlang::enquo(recursion)),
+        ranges = parse_ranges(rlang::enquo(ranges))
+    )
+    eval_dynprog(parsed)
+}
+</code></pre>
+
+<p>I translate both <code>recursion</code> and <code>ranges</code>—the two arguments to the operator—into quosures so I have their environment to evaluate the expressions in. For <code>parse_ranges</code>, I evaluate the expressions in the ranges specification and create a list that has one item per range-iterator; each such item is a vector of the indices for the range-iterator.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">parse_ranges(rlang<span style="color:#f92672">::</span>quo({n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">8</span>}))</code></pre></div>
+<pre><code>## $n
+## [1] 1 2 3 4 5 6 7 8
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">parse_ranges(rlang<span style="color:#f92672">::</span>quo({
+    i <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(x) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    j <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(y) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+}))</code></pre></div>
+<pre><code>## $i
+## [1] 1 2 3 4
+## 
+## $j
+## [1] 1 2 3 4 5
+</code></pre>
+
+<p>The recursion-equations I parse into three lists, one for the pattern on the left-hand-side of the assignments, one for the conditions following <code>?</code>, and one for the actual recursions. I also store the environment of the expression. I don’t need to do this for the ranges because I evaluate the expressions there as part of the parsing, but for the recursions I need to remember where to evaluate expressions.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">parse_recursion(rlang<span style="color:#f92672">::</span>quo({
+  fact[n] <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> fact[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+  fact[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>               <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>
+}))</code></pre></div>
+<pre><code>## $recursion_env
+## &lt;environment: R_GlobalEnv&gt;
+## 
+## $patterns
+## $patterns[[1]]
+## fact[n]
+## 
+## $patterns[[2]]
+## fact[n]
+## 
+## 
+## $conditions
+## $conditions[[1]]
+## n &gt; 1
+## 
+## $conditions[[2]]
+## n &lt;= 1
+## 
+## 
+## $recursions
+## $recursions[[1]]
+## n * fact[n - 1]
+## 
+## $recursions[[2]]
+## [1] 1
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">parse_recursion(rlang<span style="color:#f92672">::</span>quo({
+  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> (x[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> y[j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>])
+  ) <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+}))</code></pre></div>
+<pre><code>## $recursion_env
+## &lt;environment: R_GlobalEnv&gt;
+## 
+## $patterns
+## $patterns[[1]]
+## edit[1, j]
+## 
+## $patterns[[2]]
+## edit[i, 1]
+## 
+## $patterns[[3]]
+## edit[i, j]
+## 
+## 
+## $conditions
+## $conditions[[1]]
+## [1] TRUE
+## 
+## $conditions[[2]]
+## [1] TRUE
+## 
+## $conditions[[3]]
+## i &gt; 1 &amp;&amp; j &gt; 1
+## 
+## 
+## $recursions
+## $recursions[[1]]
+## j - 1
+## 
+## $recursions[[2]]
+## i - 1
+## 
+## $recursions[[3]]
+## min(edit[i - 1, j] + 1, edit[i, j - 1] + 1, edit[i - 1, j - 1] + 
+##     (x[i - 1] != y[j - 1]))
+</code></pre>
+
+<h2 id="evaluating-expressions">Evaluating expressions</h2>
+
+<p>As I explained earlier, I want the semantics to be this: the expression should iterate over the ranges, in the order they are provided, and for each combination of range-iterators, match the index variables against the patterns and conditions in the order these are provided. For the first pattern/condition combination that evaluates to <code>TRUE</code>, I will evaluate the recursion expression and assign the value into the dynamic programming table.</p>
+
+<p>To achieve this, I first have to construct code for testing patterns and expressions. The top-level evaluation function looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_dynprog <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(dynprog) {
+    conditions <span style="color:#f92672">&lt;-</span> make_pattern_tests(
+        dynprog<span style="color:#f92672">$</span>recursion<span style="color:#f92672">$</span>patterns,
+        <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">as.symbol</span>, <span style="color:#66d9ef">names</span>(dynprog<span style="color:#f92672">$</span>ranges))
+    )
+    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(conditions)) {
+        conditions[[i]] <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>call2(
+            <span style="color:#e6db74">&#34;&amp;&amp;&#34;</span>, dynprog<span style="color:#f92672">$</span>recursion<span style="color:#f92672">$</span>conditions[[i]], conditions[[i]]
+        )
+    }
+    eval_recursion(
+        get_table_name(dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>patterns),
+        update_expr(conditions, dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursions),
+        dynprog<span style="color:#f92672">$</span>ranges,
+        dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursion_env
+    )
+}</code></pre></div>
+<p>I construct the checks for matching patterns and conditions in the <code>make_pattern_tests</code> function and the <code>for</code>-loop that follows it. The <code>make_pattern_tests</code> builds expressions for checking if indices matches the pattern in the recursion specification. The conditions are already expressions in the DSL, so I don’t need to do anything with those, but I combine patterns and conditions by wrapping them in <code>&amp;&amp;</code> calls, ensuring that a condition is only true if both the <code>?</code>-conditions and patterns are true.</p>
+
+<p>The actual expression evaluation is done in this function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tbl_name, update_expr, ranges, eval_env) {
+    loop <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>expr({
+        combs <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;numeric&#34;</span>, length <span style="color:#f92672">=</span> <span style="color:#66d9ef">nrow</span>(combs))
+        <span style="color:#66d9ef">dim</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name)) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)
+        <span style="color:#66d9ef">for</span> (row <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name))) {
+            rlang<span style="color:#f92672">::</span>UQ(tbl_name)[<span style="color:#66d9ef">row</span>] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(combs[<span style="color:#66d9ef">row</span>, , drop <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>], {
+                rlang<span style="color:#f92672">::</span>UQ(update_expr)
+            })
+        }
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name)
+    })
+    <span style="color:#66d9ef">eval</span>(loop, envir <span style="color:#f92672">=</span> rlang<span style="color:#f92672">::</span>env_clone(<span style="color:#66d9ef">environment</span>(), eval_env))
+}</code></pre></div>
+<p>This will look a bit complicated if you are not familiar with <code>rlang</code> and quasi-quotation (and if you are not, may I recommend <a href="http://amzn.to/2FO5MiQ">this excellent book</a> where you can learn about it?)</p>
+
+<p>It will be a bit easier to understand if we see the expression, that we construct inside it, expanded.</p>
+
+<p>First, I will just construct the parsed result we would get by parsing the edit-distance expression:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">recursions <span style="color:#f92672">&lt;-</span> parse_recursion(rlang<span style="color:#f92672">::</span>quo({
+  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+      edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> (x[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> y[j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>])
+  ) <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+}))
+ranges <span style="color:#f92672">&lt;-</span> parse_ranges(rlang<span style="color:#f92672">::</span>quo({
+    i <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(x) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    j <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(y) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+}))
+dynprog <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">list</span>(
+    recursions <span style="color:#f92672">=</span> recursions,
+    ranges <span style="color:#f92672">=</span> ranges
+)</code></pre></div>
+<p>The manipulations of <code>conditions</code> in the evaluation function first creates pattern-matching expressions:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">conditions <span style="color:#f92672">&lt;-</span> make_pattern_tests(
+    dynprog<span style="color:#f92672">$</span>recursion<span style="color:#f92672">$</span>patterns,
+    <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">as.symbol</span>, <span style="color:#66d9ef">names</span>(dynprog<span style="color:#f92672">$</span>ranges))
+)
+conditions</code></pre></div>
+<pre><code>## [[1]]
+## all(1 == i, j == j)
+## 
+## [[2]]
+## all(i == i, 1 == j)
+## 
+## [[3]]
+## all(i == i, j == j)
+</code></pre>
+
+<p>I have kept this very simple. The variables that are part of the pattern-expression in the recursions are simply matched against the variables specified in the ranges. I get silly stuff like <code>i == i</code>, but I’m okay with that. This will just evaluate to <code>TRUE</code>. The interesting part is when I have to match an index against some value—either a constant, as in the cases here, or an expression to be evaluated. I either case, I want to test if the range variables matches the values, and the <code>all()</code> function combined with the simple comparisons will do that, as long as I evaluate the expressions in the right scope (which I will ensure later).</p>
+
+<p>For the <code>?</code> conditions, I either have <code>TRUE</code> or some expression in the <code>conditions</code> list I get from the parse. I simply combine those with the pattern-conditions:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(conditions)) {
+    conditions[[i]] <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>call2(
+        <span style="color:#e6db74">&#34;&amp;&amp;&#34;</span>, dynprog<span style="color:#f92672">$</span>recursion<span style="color:#f92672">$</span>conditions[[i]], conditions[[i]]
+    )
+}
+conditions</code></pre></div>
+<pre><code>## [[1]]
+## TRUE &amp;&amp; all(1 == i, j == j)
+## 
+## [[2]]
+## TRUE &amp;&amp; all(i == i, 1 == j)
+## 
+## [[3]]
+## i &gt; 1 &amp;&amp; j &gt; 1 &amp;&amp; all(i == i, j == j)
+</code></pre>
+
+<p>The final step in <code>eval_dynprog</code> is this expression:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    eval_recursion(
+        get_table_name(dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>patterns),
+        update_expr(conditions, dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursions),
+        dynprog<span style="color:#f92672">$</span>ranges,
+        dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursion_env
+    )</code></pre></div>
+<p>The <code>get_table_name</code> does exactly what you would expect. It extracts the name of the dynamic programming table from the patterns. In the earlier syntax I had, you would explicitly provide the table name as part of the <code>%with%</code> expression, but now I just get it from the patterns.</p>
+
+<p>The <code>update_expr</code> combines the patterns- and <code>?</code>-conditions we just constructed with the values we want to evaluate when conditions are met. The function translates these pieces of information into a sequence of <code>if-else</code>-statements.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">update_expr(conditions, dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursions)</code></pre></div>
+<pre><code>## if (TRUE &amp;&amp; all(1 == i, j == j)) j - 1 else if (TRUE &amp;&amp; all(i == 
+##     i, 1 == j)) i - 1 else if (i &gt; 1 &amp;&amp; j &gt; 1 &amp;&amp; all(i == i, 
+##     j == j)) min(edit[i - 1, j] + 1, edit[i, j - 1] + 1, edit[i - 
+##     1, j - 1] + (x[i - 1] != y[j - 1]))
+</code></pre>
+
+<p>In <code>eval_recursion</code>, we insert this expression into the body of a loop:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    loop <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>expr({
+        combs <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;numeric&#34;</span>, length <span style="color:#f92672">=</span> <span style="color:#66d9ef">nrow</span>(combs))
+        <span style="color:#66d9ef">dim</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name)) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)
+        <span style="color:#66d9ef">for</span> (row <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name))) {
+            rlang<span style="color:#f92672">::</span>UQ(tbl_name)[<span style="color:#66d9ef">row</span>] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(combs[<span style="color:#66d9ef">row</span>, , drop <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>], {
+                rlang<span style="color:#f92672">::</span>UQ(update_expr)
+            })
+        }
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name)
+    })</code></pre></div>
+<p>The <code>rlang::UQ()</code>—in case you are not familiar with it—unquotes an expression and lets us insert it into the <code>rlang::expr</code> result. We use it to set the name of the table we create and to insert <code>udpate_expr</code> into the body of the loop.</p>
+
+<p>I realise, as I write this, that it is a bit unfortunate that I have used the same name, <code>update_expr</code>, for the expression and the function that creates it. I will go back and fix this later.</p>
+
+<p>Anyway, we can see what the <code>loop</code> expression will look like if we insert the <code>tbl_name</code> and <code>update_expr</code> expressions into it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tbl_name <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>expr(edit)
+update_expr <span style="color:#f92672">&lt;-</span> update_expr(conditions, dynprog<span style="color:#f92672">$</span>recursions<span style="color:#f92672">$</span>recursions)
+loop <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>expr({
+        combs <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;numeric&#34;</span>, length <span style="color:#f92672">=</span> <span style="color:#66d9ef">nrow</span>(combs))
+        <span style="color:#66d9ef">dim</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name)) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)
+        <span style="color:#66d9ef">for</span> (row <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name))) {
+            rlang<span style="color:#f92672">::</span>UQ(tbl_name)[<span style="color:#66d9ef">row</span>] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(combs[<span style="color:#66d9ef">row</span>, , drop <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>], {
+                rlang<span style="color:#f92672">::</span>UQ(update_expr)
+            })
+        }
+        rlang<span style="color:#f92672">::</span>UQ(tbl_name)
+})
+loop</code></pre></div>
+<pre><code>## {
+##     combs &lt;- do.call(expand.grid, ranges)
+##     edit &lt;- vector(&quot;numeric&quot;, length = nrow(combs))
+##     dim(edit) &lt;- Map(length, ranges)
+##     for (row in seq_along(edit)) {
+##         edit[row] &lt;- with(combs[row, , drop = FALSE], {
+##             if (TRUE &amp;&amp; all(1 == i, j == j)) 
+##                 j - 1
+##             else if (TRUE &amp;&amp; all(i == i, 1 == j)) 
+##                 i - 1
+##             else if (i &gt; 1 &amp;&amp; j &gt; 1 &amp;&amp; all(i == i, j == j)) 
+##                 min(edit[i - 1, j] + 1, edit[i, j - 1] + 1, edit[i - 
+##                   1, j - 1] + (x[i - 1] != y[j - 1]))
+##         })
+##     }
+##     edit
+## }
+</code></pre>
+
+<p>The <code>do.call</code> expression builds a table over all ranges combinations.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)</code></pre></div>
+<pre><code>##    i j
+## 1  1 1
+## 2  2 1
+## 3  3 1
+## 4  4 1
+## 5  1 2
+## 6  2 2
+## 7  3 2
+## 8  4 2
+## 9  1 3
+## 10 2 3
+## 11 3 3
+## 12 4 3
+## 13 1 4
+## 14 2 4
+## 15 3 4
+## 16 4 4
+## 17 1 5
+## 18 2 5
+## 19 3 5
+## 20 4 5
+</code></pre>
+
+<p>The dynamic programming table will have as many values as there are combinations of ranges indices, so we can construct it as a vector of that length. The dimensions of the table are given by the length of the ranges expressions, and that is what we get by this expression:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)</code></pre></div>
+<pre><code>## $i
+## [1] 4
+## 
+## $j
+## [1] 5
+</code></pre>
+
+<p>We do not iterate over the ranges using nested <code>for</code>-loops. That would require us to build expressions for the these loops. It is much easier to just iterate over the grid of combinations, which is what we do. When we then use the <code>with(combs[row,,drop=FALSE], ...)</code> expression, we automatically get values assigned to the range-index variables, and it is in this context we evaluate the <code>update_expr</code> expression.</p>
+
+<p>Once we have constructed this loop-expression, we need to evaluate it, and here the only tricky thing is making sure that we evaluate it in the right scope.</p>
+
+<p>I have used this expression for that:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">eval</span>(loop, envir <span style="color:#f92672">=</span> rlang<span style="color:#f92672">::</span>env_clone(<span style="color:#66d9ef">environment</span>(), eval_env))</code></pre></div>
+<p>The <code>eval_env</code> is the environment we get from the recursion quosure, so that will contain the scope where the expressions are defined. I wrap that in another environment that includes the local environment of the <code>eval_recursion</code> function. I do this only to get the <code>ranges</code> variable set to the ranges I have parsed in the DSL. There might be a smarter way of doing this—if there is, I would love to hear it—but this works fine and is reasonably straightforward.</p>
+
+<p>What do you guys think? Have I made it overly complicated or have I missed some cases that the current code doesn’t handle? I would love to hear from you; tweet me at <a href="https://twitter.com/ThomasMailund">@ThomasMailund</a>.</p>
 
 
 </article>
@@ -123,9 +469,13 @@
     <ul>
         
         <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/04/evaluating-dynprog-expressions/"><i class="fa fa-chevron-circle-left"></i> Evaluating dynprog expressions</a>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/03/tick-marks-for-log10-axis/"><i class="fa fa-chevron-circle-left"></i> Tick-marks for log10 axis</a>
         </li>
         
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/04/comments/">Comments <i class="fa fa-chevron-circle-right"></i> </a>
+        </li>
         
     </ul>
 </section>
