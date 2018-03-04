@@ -5,7 +5,7 @@ canonifyurls = true
 theme = "hugo-kiera"
 publishDir = "docs"
 googleAnalytics = ""
-disqusShortname = ""
+disqusShortname = "r-programmer-blog"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 paginate = 5
