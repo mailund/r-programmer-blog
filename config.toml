@@ -8,7 +8,7 @@ googleAnalytics = ""
 disqusShortname = "r-programmer-blog"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
-paginate = 5
+paginate = 20
 summaryLength = 30
 pygmentsCodeFences = true
 
