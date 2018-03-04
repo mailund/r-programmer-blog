@@ -66,26 +66,26 @@ bm <- microbenchmark::microbenchmark(factorial(n),
 
 ggplot(bm, aes(x = expr, y = time, fill = "#fc6721", alpha = 0.2)) + # "#fc6721"
     geom_boxplot() +
-    scale_y_log10("Microseconds (log-scale)", breaks = log10_ticks(bm$time)) +
+    scale_y_log10("Microseconds (log-scale)") + #, breaks = log10_ticks(bm$time)) +
     scale_x_discrete("Function", labels = c("factorial()", "loop_factorial()", "tr_factorial()")) +
     xlab("Function") +
+    annotation_logticks(sides = "l", linetype = "solid") +
     theme_blog() + theme(panel.grid.major.x = element_blank(), legend.position = "none")
 
-
-ggsave("Factorial-running-times.png")
-
-
-test_llist <- make_llist(100)
-bm <- microbenchmark::microbenchmark(llength(test_llist),
-                               loop_llength(test_llist),
-                               tr_llength(test_llist))
-
-ggplot(bm, aes(x = expr, y = time, fill = expr, alpha = 0.8)) + # "#fc6721"
-    scale_fill_brewer(palette = "Set2") +
-    geom_boxplot() +
-    scale_y_log10("Milliseconds (log-scale)", breaks = log10_ticks(bm$time)) +
-    scale_x_discrete("Function", labels = c("llength()", "loop_llength()", "tr_llength()")) +
-    xlab("Function") +
-    theme_blog() + theme(panel.grid.major.x = element_blank(), legend.position = "none")
-
-ggsave("llength-running-time.png")
+# ggsave("Factorial-running-times.png")
+#
+#
+# test_llist <- make_llist(100)
+# bm <- microbenchmark::microbenchmark(llength(test_llist),
+#                                loop_llength(test_llist),
+#                                tr_llength(test_llist))
+#
+# ggplot(bm, aes(x = expr, y = time, fill = expr, alpha = 0.8)) + # "#fc6721"
+#     scale_fill_brewer(palette = "Set2") +
+#     geom_boxplot() +
+#     scale_y_log10("Milliseconds (log-scale)", breaks = log10_ticks(bm$time)) +
+#     scale_x_discrete("Function", labels = c("llength()", "loop_llength()", "tr_llength()")) +
+#     xlab("Function") +
+#     theme_blog() + theme(panel.grid.major.x = element_blank(), legend.position = "none")
+#
+# ggsave("llength-running-time.png")
