@@ -4,7 +4,7 @@ author: Thomas Mailund
 date: 2018-03-03T18:00:00+01:00
 categories:
   - Graphics
-tags: [“ggplot2”]
+tags: [ggplot2, plotting]
 ---
 
 For the [`tailr` post](https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/) I needed to plot some benchmark results. I still haven't figure out how I can get plots from RMarkdown automatically moved to the right directory here, but that’s okay. I can do that manually for now.
