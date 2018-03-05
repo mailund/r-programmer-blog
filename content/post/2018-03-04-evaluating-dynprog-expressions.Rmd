@@ -53,7 +53,7 @@ edit
 
 The syntax is a little different from what I presented [in the previous post](https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/). I hadn’t thought completely through how I should represent strings, and I’m not sure this is the easiest way to get strings represented  as vectors of characters, but, hey, it works, so this is what I have now.
 
-I will describe the design in details in [ Domain Specific Languages in R](http://amzn.to/2FO5MiQ), but before I write the chapter for this DSL, I would love to get some feedback. So here, I will describe the current design.
+I will describe the design in details in [Domain Specific Languages in R](http://amzn.to/2FO5MiQ), but before I write the chapter for this DSL, I would love to get some feedback. So here, I will describe the current design.
 
 ## Parsing expressions
 
