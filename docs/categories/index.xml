@@ -23,7 +23,7 @@
     <item>
       <title>Dsl</title>
       <link>https://mailund.github.io/r-programmer-blog/categories/dsl/</link>
-      <pubDate>Mon, 05 Mar 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/categories/dsl/</guid>
       <description></description>
@@ -41,9 +41,18 @@
     <item>
       <title>Metaprogramming</title>
       <link>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</link>
-      <pubDate>Mon, 05 Mar 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pattern Matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/pattern-matching/</link>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/pattern-matching/</guid>
       <description></description>
     </item>
     
