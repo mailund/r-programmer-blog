@@ -17,8 +17,7 @@
       <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</guid>
-      <description>I just added a new feature to my pmatch package. You will need the development version to get it.
-# install.packages(&amp;#34;devtools&amp;#34;) devtools::install_github(&amp;#34;mailund/pmatch&amp;#34;) This package implements Haskell- or ML-like pattern matching, and I showed some examples of it in my post on tail-recursion optimisation.</description>
+      <description>I just added a new feature to my pmatch package. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</description>
     </item>
     
     <item>

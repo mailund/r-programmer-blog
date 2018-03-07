@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Pmatch on The Working R Programmer</title>
-    <link>https://mailund.github.io/r-programmer-blog/tags/pmatch/</link>
-    <description>Recent content in Pmatch on The Working R Programmer</description>
+    <title>Data Structures on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/categories/data-structures/</link>
+    <description>Recent content in Data Structures on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
     <lastBuildDate>Wed, 07 Mar 2018 07:07:11 +0100</lastBuildDate>
     
-	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/pmatch/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/data-structures/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <guid>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</guid>
       <description>What&amp;rsquo;s in a name? That which we call a rose By any other word would smell as sweet — William Shakespeare, Romeo and Juliet
  I have plans for re-implementing several of the data structures I wrote about in Functional Data Structures in R.</description>
-    </item>
-    
-    <item>
-      <title>Variable bindings with pattern matching</title>
-      <link>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</link>
-      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</guid>
-      <description>I just added a new feature to my pmatch package. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</description>
     </item>
     
   </channel>

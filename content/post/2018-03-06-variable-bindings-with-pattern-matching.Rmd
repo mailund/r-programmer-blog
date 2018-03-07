@@ -11,7 +11,7 @@ tags:
   - pmatch
 ---
 
-I just added a new feature to my [`pmatch` package](https://github.com/mailund/pmatch). You will need the development version to get it.
+I just added a new feature to my [`pmatch` package](https://github.com/mailund/pmatch). You will need the development version to get it, until I make a new release, and I have a few more features planned before that.
 
 ```r
 # install.packages("devtools")

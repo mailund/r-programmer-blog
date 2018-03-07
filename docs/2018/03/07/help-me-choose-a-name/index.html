@@ -1,0 +1,202 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+         
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Help Me Choose a Package Name</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-07T07:07:11&#43;01:00">Mar 7, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>1 min read</li>
+    </ul>
+</aside>
+    
+
+    <blockquote>
+<p>What&rsquo;s in a name? That which we call a rose
+By any other word would smell as sweet
+— William Shakespeare, Romeo and Juliet</p>
+</blockquote>
+
+<p>I have plans for re-implementing several of the data structures I wrote about in <a href="http://amzn.to/2tjaWAG">Functional Data Structures in R</a>. I want a package with useful data structures, and I did write one, named <code>ralgo</code>, when I wrote the data structure book, but many of the data structures can be implemented much cleaner if I use the pattern matching features of <a href="https://github.com/mailund/pmatch"><code>pmatch</code></a> and, where possible, optimise the code using <a href="https://github.com/mailund/tailr"><code>tailr</code></a>.</p>
+
+<p>I need a good name for such a package, though. I made a GitHub repository named <code>pmtypes</code>—for “pattern matching types”—but that is a boring name.</p>
+
+<p>Please help me come up with a good name.</p>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/"><i class="fa fa-chevron-circle-left"></i> Variable bindings with pattern matching</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+
+</html>

@@ -21,13 +21,22 @@
     </item>
     
     <item>
+      <title>Help Me Choose a Package Name</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</link>
+      <pubDate>Wed, 07 Mar 2018 07:07:11 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</guid>
+      <description>What&amp;rsquo;s in a name? That which we call a rose By any other word would smell as sweet — William Shakespeare, Romeo and Juliet
+ I have plans for re-implementing several of the data structures I wrote about in Functional Data Structures in R.</description>
+    </item>
+    
+    <item>
       <title>Variable bindings with pattern matching</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</link>
       <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</guid>
-      <description>I just added a new feature to my pmatch package. You will need the development version to get it.
-# install.packages(&amp;#34;devtools&amp;#34;) devtools::install_github(&amp;#34;mailund/pmatch&amp;#34;) This package implements Haskell- or ML-like pattern matching, and I showed some examples of it in my post on tail-recursion optimisation.</description>
+      <description>I just added a new feature to my pmatch package. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</description>
     </item>
     
     <item>
