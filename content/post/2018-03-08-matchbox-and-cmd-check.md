@@ -7,7 +7,7 @@ tags:
     - matchbox
 categories:
     - Data-structures
-    - Patter-matching
+    - Pattern-matching
     - Package-development
 ---
 
