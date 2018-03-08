@@ -64,13 +64,13 @@
 
 <article>
 
-    <h1>Help Me Choose a Package Name</h1>
+    <h1>Matchbox and CMD CHECK</h1>
 
     
         <aside>
     <ul>
         <li>
-            <time class="post-date" datetime="2018-03-07T07:07:11&#43;01:00">Mar 7, 2018</time>
+            <time class="post-date" datetime="2018-03-08T06:59:09&#43;01:00">Mar 8, 2018</time>
         </li>
         
         
@@ -79,10 +79,13 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
                 
                     , 
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/patter-matching/">Patter-matching</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/package-development/">Package-development</a>
                 
             </em>
         </li>
@@ -93,28 +96,65 @@
             <em>
                 
                     
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/roxygen/">#roxygen</a>
+                
+                    , 
                     <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
                 
             </em>
         </li>
         
 
-        <li>1 min read</li>
+        <li>2 min read</li>
     </ul>
 </aside>
     
 
-    <blockquote>
-<p>What&rsquo;s in a name? That which we call a rose
-By any other word would smell as sweet
-— William Shakespeare, Romeo and Juliet</p>
-</blockquote>
+    <p>Ok, first, the <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/">package I wrote about yesterday</a> will be called <code>matchbox</code>, following Dmytro Perepolkin&rsquo;s suggestion (thanks!). You can get it at <a href="https://github.com/mailund/matchbox">GitHub</a>.</p>
 
-<p>I have plans for re-implementing several of the data structures I wrote about in <a href="http://amzn.to/2tjaWAG">Functional Data Structures in R</a>. I want a package with useful data structures, and I did write one, named <code>ralgo</code>, when I wrote the data structure book, but many of the data structures can be implemented much cleaner if I use the pattern matching features of <a href="https://github.com/mailund/pmatch"><code>pmatch</code></a> and, where possible, optimise the code using <a href="https://github.com/mailund/tailr"><code>tailr</code></a>.</p>
+<p>There isn&rsquo;t much to it yet since I haven&rsquo;t really started implementing the data structures I want to put in it. I plan to implement most of the structures from <a href="http://amzn.to/2G3Tkvk">Function Data Structures in R</a> but using pattern matching and tail-recursion optimisation, and I will write about it here.</p>
 
-<p>I need a good name for such a package, though. I made a GitHub repository named <code>pmtypes</code>—for “pattern matching types”—but that is a boring name.</p>
+<p>I have implemented some linked-lists functions, but a <code>CMD CHECK</code> of the package fails.</p>
 
-<p>Please help me come up with a good name.</p>
+<p>If I run the functions through <code>tailr</code>, I get this interesting Note:</p>
+
+<pre><code>Error in attr(e, &quot;srcref&quot;)[[i]] : subscript out of bounds
+Calls: &lt;Anonymous&gt; ... &lt;Anonymous&gt; -&gt; collectUsage -&gt; collectUsageFun -&gt; walkCode -&gt; h
+Execution halted
+llength: Error while checking: subscript out of bounds
+llrev: Error while checking: subscript out of bounds
+</code></pre>
+
+<p>I have no idea what is happening here.</p>
+
+<p>If I disable the tail-recursion optimisation, I get this Note:</p>
+
+<pre><code>llength: no visible global function definition for ‘llength&lt;-’
+llength: no visible binding for global variable ‘car’
+llrev: no visible global function definition for ‘llrev&lt;-’
+llrev: no visible binding for global variable ‘car’
+Undefined global functions or variables:
+  car llength&lt;- llrev&lt;-
+</code></pre>
+
+<p>This, I am pretty sure, is because of the pattern matching DSL in <code>pmatch</code>. The <code>llength</code> function, for example, is define like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> acc,
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    )
+}</code></pre></div>
+<p>and the <code>cases</code> syntax uses the assignment operator. Therefore, the check thinks we are using the replacement operator <code>length&lt;-</code>. The</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)</code></pre></div>
+<p>expression is translated into</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;-</span> CONS(car, cdr)</code></pre></div>
+<p>by the parser, and a function call on the left-hand side of an assignment is interpreted as a replacement operator. So here, at least, I think I understand the problem. I just don&rsquo;t know how to tell the package check that I know what I am doing and it shouldn&rsquo;t worry about it.</p>
+
+<p>Help!?</p>
 
 
 </article>
@@ -124,13 +164,9 @@ By any other word would smell as sweet
     <ul>
         
         <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/"><i class="fa fa-chevron-circle-left"></i> Variable bindings with pattern matching</a>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/"><i class="fa fa-chevron-circle-left"></i> Help Me Choose a Package Name</a>
         </li>
         
-        
-        <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/">Matchbox and CMD CHECK <i class="fa fa-chevron-circle-right"></i> </a>
-        </li>
         
     </ul>
 </section>

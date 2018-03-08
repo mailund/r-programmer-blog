@@ -66,6 +66,15 @@
     </item>
     
     <item>
+      <title>Matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/tags/matchbox/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/tags/matchbox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Plotting</title>
       <link>https://mailund.github.io/r-programmer-blog/tags/plotting/</link>
       <pubDate>Sat, 03 Mar 2018 18:00:00 +0100</pubDate>
@@ -77,7 +86,7 @@
     <item>
       <title>Pmatch</title>
       <link>https://mailund.github.io/r-programmer-blog/tags/pmatch/</link>
-      <pubDate>Wed, 07 Mar 2018 07:07:11 +0100</pubDate>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/tags/pmatch/</guid>
       <description></description>
@@ -89,6 +98,15 @@
       <pubDate>Fri, 02 Mar 2018 07:58:24 +0100</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/tags/rmarkdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Roxygen</title>
+      <link>https://mailund.github.io/r-programmer-blog/tags/roxygen/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/tags/roxygen/</guid>
       <description></description>
     </item>
     

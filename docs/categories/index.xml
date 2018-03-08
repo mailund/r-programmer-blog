@@ -23,7 +23,7 @@
     <item>
       <title>Data Structures</title>
       <link>https://mailund.github.io/r-programmer-blog/categories/data-structures/</link>
-      <pubDate>Wed, 07 Mar 2018 07:07:11 +0100</pubDate>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/categories/data-structures/</guid>
       <description></description>
@@ -53,6 +53,24 @@
       <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Package Development</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/package-development/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/package-development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Patter Matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/patter-matching/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/patter-matching/</guid>
       <description></description>
     </item>
     
