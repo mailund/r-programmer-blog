@@ -21,6 +21,16 @@
     </item>
     
     <item>
+      <title>Problems With Higher Order Functions in tailr</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</link>
+      <pubDate>Fri, 09 Mar 2018 18:38:52 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</guid>
+      <description>Ok, there is a problem with higher-order functions in my tailr package that I ran into while writing linked list functions for my matchbox package.1
+If you write a tail-recursive function that uses a parameter-function, the tailr package will complain that it doesn&amp;rsquo;t see that function in scope.</description>
+    </item>
+    
+    <item>
       <title>Matchbox and CMD CHECK</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</link>
       <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>

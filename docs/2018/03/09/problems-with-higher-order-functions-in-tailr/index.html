@@ -64,13 +64,13 @@
 
 <article>
 
-    <h1>Matchbox and CMD CHECK</h1>
+    <h1>Problems With Higher Order Functions in tailr</h1>
 
     
         <aside>
     <ul>
         <li>
-            <time class="post-date" datetime="2018-03-08T06:59:09&#43;01:00">Mar 8, 2018</time>
+            <time class="post-date" datetime="2018-03-09T18:38:52&#43;01:00">Mar 9, 2018</time>
         </li>
         
         
@@ -79,13 +79,7 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/package-development/">Package-development</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
                 
             </em>
         </li>
@@ -96,13 +90,7 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/roxygen/">#roxygen</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
                 
             </em>
         </li>
@@ -113,48 +101,42 @@
 </aside>
     
 
-    <p>Ok, first, the <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/">package I wrote about yesterday</a> will be called <code>matchbox</code>, following Dmytro Perepolkin&rsquo;s suggestion (thanks!). You can get it at <a href="https://github.com/mailund/matchbox">GitHub</a>.</p>
+    <p>Ok, there is a problem with higher-order functions in my <a href="https://github.com/mailund/tailr"><code>tailr</code> package</a> that I ran into while writing linked list functions for my <a href="https://github.com/mailund/matchbox"><code>matchbox</code> package</a>.<sup class="footnote-ref" id="fnref:Thanks-again-to"><a href="#fn:Thanks-again-to">1</a></sup></p>
 
-<p>There isn&rsquo;t much to it yet since I haven&rsquo;t really started implementing the data structures I want to put in it. I plan to implement most of the structures from <a href="http://amzn.to/2G3Tkvk">Function Data Structures in R</a> but using pattern matching and tail-recursion optimisation, and I will write about it here.</p>
+<p>If you write a tail-recursive function that uses a parameter-function, the <code>tailr</code> package will complain that it doesn&rsquo;t see that function in scope. This is correct, but only because I do not check the formal arguments of the recursive function.</p>
 
-<p>I have implemented some linked-lists functions, but a <code>CMD CHECK</code> of the package fails.</p>
+<p>Consider this example, that involves a perfectly valid tail-recursive function for mapping over a linked list:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(<span style="color:#66d9ef">pmatch</span>)
 
-<p>If I run the functions through <code>tailr</code>, I get this interesting Note:</p>
+ llist <span style="color:#f92672">:=</span> NIL <span style="color:#f92672">|</span> CONS(car, cdr<span style="color:#f92672">:</span>llist)
 
-<pre><code>Error in attr(e, &quot;srcref&quot;)[[i]] : subscript out of bounds
-Calls: &lt;Anonymous&gt; ... &lt;Anonymous&gt; -&gt; collectUsage -&gt; collectUsageFun -&gt; walkCode -&gt; h
-Execution halted
-llength: Error while checking: subscript out of bounds
-llrev: Error while checking: subscript out of bounds
-</code></pre>
-
-<p>I have no idea what is happening here.</p>
-
-<p>If I disable the tail-recursion optimisation, I get this Note:</p>
-
-<pre><code>llength: no visible global function definition for ‘llength&lt;-’
-llength: no visible binding for global variable ‘car’
-llrev: no visible global function definition for ‘llrev&lt;-’
-llrev: no visible binding for global variable ‘car’
-Undefined global functions or variables:
-  car llength&lt;- llrev&lt;-
-</code></pre>
-
-<p>This, I am pretty sure, is because of the pattern matching DSL in <code>pmatch</code>. The <code>llength</code> function, for example, is define like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+llrev <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, acc <span style="color:#f92672">=</span> NIL) {
     <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
         llist,
         NIL <span style="color:#f92672">-&gt;</span> acc,
-        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llrev(cdr, CONS(car, acc))
+    )
+}
+llrev <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llrev)
+
+llmap <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, f, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> llrev(acc),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llmap(cdr, f, CONS(f(car), acc))
     )
 }</code></pre></div>
-<p>and the <code>cases</code> syntax uses the assignment operator. Therefore, the check thinks we are using the replacement operator <code>length&lt;-</code>. The</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)</code></pre></div>
-<p>expression is translated into</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;-</span> CONS(car, cdr)</code></pre></div>
-<p>by the parser, and a function call on the left-hand side of an assignment is interpreted as a replacement operator. So here, at least, I think I understand the problem. I just don&rsquo;t know how to tell the package check that I know what I am doing and it shouldn&rsquo;t worry about it.</p>
+<p>Trying to transform <code>llmap</code> will give you an error because <code>tailr</code> can&rsquo;t find <code>f</code>.</p>
 
-<p>Help!?</p>
+<p>I&rsquo;ve put that on the <a href="https://github.com/mailund/tailr/issues/19">todo list</a> and it should be easy enough to fix. I just have to pass the function along to all the function calls so I can get at the <code>formals()</code>. I tried to fix it quickly, but changing the functions break everything, so I will have to do it when I have more time for it.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:Thanks-again-to">Thanks again to Dmytro Perepolkin for suggesting the name. <a class="footnote-return" href="#fnref:Thanks-again-to"><sup>[return]</sup></a></li>
+</ol>
+</div>
 
 
 </article>
@@ -164,13 +146,9 @@ Undefined global functions or variables:
     <ul>
         
         <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/"><i class="fa fa-chevron-circle-left"></i> Help Me Choose a Package Name</a>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/"><i class="fa fa-chevron-circle-left"></i> Matchbox and CMD CHECK</a>
         </li>
         
-        
-        <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/">Problems With Higher Order Functions in tailr <i class="fa fa-chevron-circle-right"></i> </a>
-        </li>
         
     </ul>
 </section>
