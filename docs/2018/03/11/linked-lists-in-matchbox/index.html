@@ -1,0 +1,299 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+         
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Linked lists in matchbox</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-11T00:00:00Z">Mar 11, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
+                
+            </em>
+        </li>
+        
+
+        <li>3 min read</li>
+    </ul>
+</aside>
+    
+
+    <p>I have started playing with data structures in <a href="https://github.com/mailund/matchbox"><code>matchbox</code></a> and the first structure I implement had to be linked lists. That is the most versatile data structure I use and it is missing from R. The <code>list</code> type in R is really a vector so you cannot modify it without copying all of it. Linked lists are easier to modify, and you can always prepend to them in constant time.</p>
+
+<p>To define them using pattern matching constructers, we write:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(<span style="color:#66d9ef">pmatch</span>)
+llist <span style="color:#f92672">:=</span> NIL <span style="color:#f92672">|</span> CONS(car, cdr <span style="color:#f92672">:</span> llist)</code></pre></div>
+<p>I think I have implemented all of the functions I use on linked lists. I have made them all tail-recursive, so I can translate the recursive functions into looping versions using the <a href="https://github.com/mailund/tailr"><code>tailr</code></a> package.</p>
+
+<p>All the implementations, as I hope you will agree, are straightforward:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> acc,
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    )
+}
+llength <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llength)
+
+llrev <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> acc,
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llrev(cdr, CONS(car, acc))
+    )
+}
+llrev <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llrev)
+
+llcontains <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, elm) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">FALSE</span>,
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span>
+            <span style="color:#66d9ef">if</span> (car <span style="color:#f92672">==</span> elm) <span style="color:#66d9ef">TRUE</span> <span style="color:#66d9ef">else</span> llcontains(cdr, elm)
+    )
+}
+llcontains <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llcontains)
+
+lltake <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, k, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>(llrev(acc))
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">stop</span>(<span style="color:#e6db74">&#34;There were less than k elements in the list&#34;</span>),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> lltake(cdr, k <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, CONS(car, acc))
+    )
+}
+lltake <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(lltake)
+
+lldrop <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, k, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>(llist)
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">stop</span>(<span style="color:#e6db74">&#34;There were less than k elements in the list&#34;</span>),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> lldrop(cdr, k <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+    )
+}
+lldrop <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(lldrop)</code></pre></div>
+<p>For the map and filter functions I had to fix <code>tailr</code> to make it handle functions that are local variables, so you need to install the development version of the package to make these work.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llmap <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, f, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> llrev(acc),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llmap(cdr, f, CONS(f(car), acc))
+    )
+}
+llmap <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llmap)
+
+llfilter <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, p, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> llrev(acc),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span>
+            <span style="color:#66d9ef">if</span> (p(car)) llfilter(cdr, p, CONS(car, acc))
+            <span style="color:#66d9ef">else</span> llfilter(cdr, p, acc)
+    )
+}
+llfilter <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llfilter)</code></pre></div>
+<p>Finally, there are some functions from translating to and from linked lists. I found it simpler to implement these via loops than recursively, so nothing fancy is going on here.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llist_from_list <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x) {
+    llist <span style="color:#f92672">&lt;-</span> NIL
+    n <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">length</span>(x)
+    <span style="color:#66d9ef">while</span> (n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+        llist <span style="color:#f92672">&lt;-</span> CONS(x[[n]], llist)
+        n <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    }
+    llist
+}
+
+<span style="color:#75715e">#&#39; @export</span>
+as.list.llist <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, all.names <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>, sorted <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>, <span style="color:#66d9ef">...</span>) {
+    n <span style="color:#f92672">&lt;-</span> llength(x)
+    v <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;list&#34;</span>, length <span style="color:#f92672">=</span> n)
+    i <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;=</span> n) {
+        v[i] <span style="color:#f92672">&lt;-</span> x<span style="color:#f92672">$</span>car
+        i <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+        x <span style="color:#f92672">&lt;-</span> x<span style="color:#f92672">$</span>cdr
+    }
+    v
+}
+
+<span style="color:#75715e">#&#39; @export</span>
+as.vector.llist <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, mode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;any&#34;</span>) {
+    <span style="color:#66d9ef">unlist</span>(<span style="color:#66d9ef">as.list</span>(x))
+}</code></pre></div>
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/"><i class="fa fa-chevron-circle-left"></i> Problems With Higher Order Functions in tailr</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+
+</html>

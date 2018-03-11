@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Linked lists in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</guid>
+      <description>I have started playing with data structures in matchbox and the first structure I implement had to be linked lists. That is the most versatile data structure I use and it is missing from R.</description>
+    </item>
+    
+    <item>
       <title>Problems With Higher Order Functions in tailr</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</link>
       <pubDate>Fri, 09 Mar 2018 18:38:52 +0100</pubDate>
