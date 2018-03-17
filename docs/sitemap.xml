@@ -4,12 +4,17 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/post/</loc>
-    <lastmod>2018-03-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-17T12:35:16+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/about/</loc>
     <lastmod>2018-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</loc>
+    <lastmod>2018-03-17T12:35:16+01:00</lastmod>
   </url>
   
   <url>
@@ -161,7 +166,7 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</loc>
-    <lastmod>2018-03-09T18:38:52+01:00</lastmod>
+    <lastmod>2018-03-17T12:35:16+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -215,7 +220,7 @@
   
   <url>
     <loc>https://mailund.github.io/r-programmer-blog/tags/tailr/</loc>
-    <lastmod>2018-03-11T00:00:00+00:00</lastmod>
+    <lastmod>2018-03-17T12:35:16+01:00</lastmod>
     <priority>0</priority>
   </url>
   

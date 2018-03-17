@@ -64,13 +64,13 @@
 
 <article>
 
-    <h1>Blog Setup</h1>
+    <h1>tailr v0.1.1</h1>
 
     
         <aside>
     <ul>
         <li>
-            <time class="post-date" datetime="2018-03-02T09:48:01&#43;01:00">Mar 2, 2018</time>
+            <time class="post-date" datetime="2018-03-17T12:35:16&#43;01:00">Mar 17, 2018</time>
         </li>
         
         
@@ -79,7 +79,7 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/blog/">Blog</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
                 
             </em>
         </li>
@@ -90,46 +90,20 @@
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/blogdown/">#Blogdown</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/hugo/">#Hugo</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
                 
             </em>
         </li>
         
 
-        <li>3 min read</li>
+        <li>1 min read</li>
     </ul>
 </aside>
     
 
-    <p>Ok, I hadn&rsquo;t planned to write any more about how the blog is set up, since that isn&rsquo;t that interesting to me and probably isn&rsquo;t to you — either you know a lot more about this than me, in which case I have nothing to teach you, or you just don&rsquo;t care, which I can relate to.</p>
+    <p>As I wrote about <a href="https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/">here</a> and <a href="https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/">here</a>, I had a problem in <a href="https://github.com/mailund/tailr"><code>tailr</code></a> with higher-order functions. In the transformation for tail-recursion optimisation, I need to know which actual functions each name refer to, in order to apply user-defined transformations, but with higher-order functions, those are not known until runtime.</p>
 
-<p>Anyway, it might help me to write this down while I still remember, in case I need to do it all again at some other time.</p>
-
-<p>One of the problems I had was that GitHub wants the files it shows in its pages in one specific form while Hugo wants them in another. And <a href="https://github.com/rstudio/blogdown"><code>blogdown</code></a>, which feels like the natural solution to blogging about R, wants to play with Hugo, while I am more familiar with GitHub, so wanted to use GitHub Pages rather than learning another platform.</p>
-
-<p>To square this circle, I tried one solution <a href="https://amber.rbind.io/blog/2016/12/19/creatingsite/">involving sub-branches</a> and another <a href="https://tclavelle.github.io/blog/blogdown_github/">using two separate repositories</a>. Both solutions <em>almost</em> worked, but with neither did I manage to change the theme away from the default blogdown one—and I want a simpler theme like the one I am using now.</p>
-
-<p>The solution I managed stop stumble into — more through luck than skill — is simpler than either of the two above. If you add a directory called <code>docs</code> to your repository, GitHub is happy use that for your site. You just need to push the directory to GitHub and then go into Settings and select this under GitHub Pages. You cannot choose this option before you have pushed the <code>docs</code> directory, so remember to do this first.</p>
-
-<p><img src="https://mailund.github.io/r-programmer-blog/post/2018-03-02-blog-setup/2018-03-02-github-pages-setup.png" alt="" /></p>
-
-<p>Once that is done, you tell Hugo to put the published pages in that directory by putting</p>
-
-<pre><code>publishDir = &quot;docs&quot;
-</code></pre>
-
-<p>in your configuration file.</p>
-
-<p>When I build a site using Hugo, it modifies everything under <code>docs</code> and not just the new pieces, so it introduces more traffic to GitHub than I had hoped for, but it works for now, so I dare not fiddle with it much more.</p>
-
-<p>I do have to build the site using Hugo to get the base-URL set correctly. If I build the site using</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">blogdown<span style="color:#f92672">::</span>build_site()</code></pre></div>
-<p>The URLs are not set correctly.</p>
-
-<p>It doesn&rsquo;t look like I can get Hugo to set the URLs correctly for images either. This is annoying since I either have to hardwire them—and then I can&rsquo;t see them when I use local hosting to check a post before committing it—or simply go without images. I don&rsquo;t even know how images are supposed to work with Hugo, to be honest, so I&rsquo;m simply suffering from my ignorance now. But that is another problem for another day.</p>
+<p>I&rsquo;ve made a new release of <code>tailr</code>, v0.1.1, that fixes this. It accepts functions that are local variables, but cannot, of course, apply user-defined transformations for those.</p>
 
 
 </article>
@@ -139,13 +113,9 @@
     <ul>
         
         <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/02/purpose-of-this-blog/"><i class="fa fa-chevron-circle-left"></i> Purpose of this blog</a>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/"><i class="fa fa-chevron-circle-left"></i> Red-black trees in matchbox</a>
         </li>
         
-        
-        <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/">tailr — Tail Recursion Optimisation <i class="fa fa-chevron-circle-right"></i> </a>
-        </li>
         
     </ul>
 </section>

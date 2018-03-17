@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>tailr v0.1.1</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</link>
+      <pubDate>Sat, 17 Mar 2018 12:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</guid>
+      <description>As I wrote about here and here, I had a problem in tailr with higher-order functions. In the transformation for tail-recursion optimisation, I need to know which actual functions each name refer to, in order to apply user-defined transformations, but with higher-order functions, those are not known until runtime.</description>
+    </item>
+    
+    <item>
       <title>Red-black trees in matchbox</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</link>
       <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
