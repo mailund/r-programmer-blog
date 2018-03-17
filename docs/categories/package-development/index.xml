@@ -6,10 +6,19 @@
     <description>Recent content in Package Development on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Thu, 08 Mar 2018 06:59:09 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 17 Mar 2018 14:35:16 +0100</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/package-development/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building a package that uses pattern matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</link>
+      <pubDate>Sat, 17 Mar 2018 14:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</guid>
+      <description>After a week spend programming string algorithms in C—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of tailr today, so that is good, but what I really wanted to work on was matchbox.</description>
+    </item>
     
     <item>
       <title>Matchbox and CMD CHECK</title>

@@ -105,18 +105,254 @@
         </li>
         
 
-        <li>1 min read</li>
+        <li>7 min read</li>
     </ul>
 </aside>
     
 
-    <p>After a week spend <a href="https://github.com/mailund/gsa-read-mapper">programming string algorithms in C</a>—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of <code>tailr</code> today, so that is good, but what I really wanted to work on was <code>matchbox</code>.</p>
+    
+
+<p>After a week spend <a href="https://github.com/mailund/gsa-read-mapper">programming string algorithms in C</a>—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of <code>tailr</code> today, so that is good, but what I really wanted to work on was <code>matchbox</code>.</p>
 
 <p>Where I left it last weekend, I had implemented various data structures—lists, stacks, queues, and search-trees—although search trees only with insertion yet. I <em>wanted</em> to work on the search trees today, first to implement plotting code to visualise them (for debugging purposes) and then to implement deletion. First, however, I wanted to make sure the package was in a good state.</p>
 
 <p>It isn&rsquo;t. It is actually the only package I have right now that doesn&rsquo;t make it through Travis-CI.</p>
 
-<p><img src="images/2018-03-17-travis-status-failing-matchbox.png" alt="" /></p>
+<p><img src="https://mailund.github.io/r-programmer-blog/images/2018-03-17-travis-status-failing-matchbox.png" alt="" /></p>
+
+<p>There&rsquo;s a couple of reasons that it fails, and it isn&rsquo;t just failing on Travis. It is failing because the byte-complier croaks on some of the DSL constructions and the CMD CHECK on others.</p>
+
+<h2 id="problems-with-byte-compilation">Problems with byte-compilation</h2>
+
+<p>The <a href="https://github.com/mailund/matchbox/issues/8">first problem</a> is with constructions where it, at first glance, looks like you are assigning to literals.</p>
+
+<p>If we define a linked-list type like this</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(<span style="color:#66d9ef">pmatch</span>)
+llist <span style="color:#f92672">:=</span> NIL <span style="color:#f92672">|</span> CONS(car, cdr<span style="color:#f92672">:</span>llist)</code></pre></div>
+<p>then we an write a function that checks if a list is empty like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">is_llist_empty <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">TRUE</span>,
+        otherwise <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">FALSE</span>
+    )
+}</code></pre></div>
+<p>The <code>-&gt;</code> assignments are part of the <code>pmatch</code> DSL and not really assignments. Which is good, because it is incorrect to assign to <code>TRUE</code> and <code>FALSE</code>, just as it would be an error to assign to <code>1</code> or <code>&quot;foo&quot;</code>.</p>
+
+<p>The function works fine, though:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">empty <span style="color:#f92672">&lt;-</span> NIL
+non_empty <span style="color:#f92672">&lt;-</span> CONS(<span style="color:#ae81ff">1</span>, NIL)
+
+is_llist_empty(empty)</code></pre></div>
+<pre><code>## [1] TRUE
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">is_llist_empty(non_empty)</code></pre></div>
+<pre><code>## [1] FALSE
+</code></pre>
+
+<p>Incidentally, if you thought it would be simpler to just compare <code>llist == NIL</code>, you would be right. That would be simpler. But it doesn&rsquo;t work with <code>pmatch</code> because <code>NIL</code> is actually just <code>NA</code> with a <code>class</code> attribute, and any comparison with <code>NA</code> gives you <code>NA</code> and not a boolean. So we do need pattern matching of some kind.</p>
+
+<p>So what&rsquo;s the problem? Clearly the function works!</p>
+
+<p>Well, yes, but only because I do not try to byte-compile it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">compiler<span style="color:#f92672">::</span>cmpfun(is_llist_empty)</code></pre></div>
+<pre><code>## Error: bad assignment: 'TRUE &lt;- NIL'
+</code></pre>
+
+<p>If you put a function in a package, it will be byte-compiled by  default. You can turn this off in your <code>DESCRIPTION</code> file, but generally you want the optimisation you get from byte-compilation, so you do not <em>want</em> to turn it off.</p>
+
+<p>You can cheat the byte-compiler using variables</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">is_llist_empty <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist) {
+    t <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">TRUE</span>
+    f <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">FALSE</span> <span style="color:#75715e"># to satisfy lintr</span>
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">t</span>,
+        otherwise <span style="color:#f92672">-&gt;</span> f
+    )
+}
+compiler<span style="color:#f92672">::</span>cmpfun(is_llist_empty)</code></pre></div>
+<pre><code>## function(llist) {
+##     t &lt;- TRUE
+##     f &lt;- FALSE # to satisfy lintr
+##     pmatch::cases(
+##         llist,
+##         NIL -&gt; t,
+##         otherwise -&gt; f
+##     )
+## }
+## &lt;bytecode: 0x7f91699fa540&gt;
+</code></pre>
+
+<p>But consider this function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llcontains <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, elm) {
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">FALSE</span>,
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span>
+            <span style="color:#66d9ef">if</span> (car <span style="color:#f92672">==</span> elm) <span style="color:#66d9ef">TRUE</span> <span style="color:#66d9ef">else</span> llcontains(cdr, elm)
+    )
+}
+llcontains <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llcontains)</code></pre></div>
+<p>I am not byte-compiling it directly but I am inside <code>tailr::loop_transform</code>, but more importantly, in this function I can &ldquo;assign&rdquo; <code>NIL -&gt; FALSE</code> and I do not get any errors when I build the package.</p>
+
+<p>Similarly, I do not get any problems with this function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lldrop <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, k, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>(llist)
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">stop</span>(<span style="color:#e6db74">&#34;There were less than k elements in the list&#34;</span>),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> lldrop(cdr, k <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+    )
+}
+lldrop <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(lldrop)</code></pre></div>
+<p>even though it is just as much a problem to assign to a call to <code>stop</code> as it is to assign to <code>TRUE</code>.</p>
+
+<p>The reason that I do not have problems with these two, as you have no doubt guessed, is that I run them through <code>tailr::loop_transform</code>. This function modifies the input function and replaces the <code>pmatch::cases</code> DSL with a series of <code>if</code>-<code>else</code>-statements. The byte-compiler doesn&rsquo;t see the DSL so it doesn&rsquo;t complain about the odd &ldquo;assignments&rdquo;.</p>
+
+<p>After the <code>tailr</code> transformation, the functions actually look like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llcontains</code></pre></div>
+<pre><code>## function (llist, elm) 
+## {
+##     .tailr_llist &lt;- llist
+##     .tailr_elm &lt;- elm
+##     callCC(function(escape) {
+##         repeat {
+##             llist &lt;- .tailr_llist
+##             elm &lt;- .tailr_elm
+##             if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                 NIL))) 
+##                 with(..match_env, escape(FALSE))
+##             else if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                 CONS(car, cdr)))) 
+##                 with(..match_env, if (car == elm) 
+##                   escape(TRUE)
+##                 else {
+##                   .tailr_llist &lt;&lt;- cdr
+##                   .tailr_elm &lt;&lt;- elm
+##                 })
+##         }
+##     })
+## }
+## &lt;bytecode: 0x7f9169afe5c0&gt;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lldrop</code></pre></div>
+<pre><code>## function (llist, k, acc = NIL) 
+## {
+##     .tailr_llist &lt;- llist
+##     .tailr_k &lt;- k
+##     .tailr_acc &lt;- acc
+##     callCC(function(escape) {
+##         repeat {
+##             llist &lt;- .tailr_llist
+##             k &lt;- .tailr_k
+##             acc &lt;- .tailr_acc
+##             {
+##                 if (k == 0) 
+##                   escape(llist)
+##                 if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                   NIL))) 
+##                   with(..match_env, escape(stop(&quot;There were less than k elements in the list&quot;)))
+##                 else if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                   CONS(car, cdr)))) 
+##                   with(..match_env, {
+##                     .tailr_llist &lt;&lt;- cdr
+##                     .tailr_k &lt;&lt;- k - 1
+##                   })
+##             }
+##         }
+##     })
+## }
+## &lt;bytecode: 0x7f9169917db8&gt;
+</code></pre>
+
+<p>Now, I don&rsquo;t want to run everything through the tail-recursion optimisation, of course. Not all functions <em>can</em> be transformed, and those that can but do not need to, will get slower.</p>
+
+<p>Perhaps, though, I will need to write a similar transformation function in the <code>pmatch</code> package that rewrites calls to <code>cases</code>. I think that would be the solution to this issue.</p>
+
+<h2 id="problems-with-cmd-check">Problems with CMD CHECK</h2>
+
+<p>So, I think I can solve the byte-compiler issue, but I have <a href="https://github.com/mailund/matchbox/issues/9">more of a problem with package checking</a>.</p>
+
+<p>There are some issues that are easy to solve. A package check will complain if there are unbound variables, which there are when we pattern match in <code>pmatch::cases</code>. I can solve that by defining the variables and giving them dummy values—those variables will never be used, but it will shut up the checker.</p>
+
+<p>What I don&rsquo;t know how to handle is this error:</p>
+
+<pre><code>Error in attr(e, &quot;srcref&quot;)[[i]] : subscript out of bounds
+Calls: &lt;Anonymous&gt; ... &lt;Anonymous&gt; -&gt; collectUsage -&gt; collectUsageFun -&gt; walkCode -&gt; h
+</code></pre>
+
+<p>I get it for the functions I transform using <code>tailr</code>. I figured it was because <code>tailr::loop_transform</code> doesn&rsquo;t set the <code>&quot;srcref&quot;</code> attribute, so I tried changing that. I did something like this, just inside the <code>loop_transform</code> function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lldrop <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist, k, acc <span style="color:#f92672">=</span> NIL) {
+    <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>(llist)
+    <span style="color:#66d9ef">pmatch</span><span style="color:#f92672">::</span>cases(
+        llist,
+        NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">stop</span>(<span style="color:#e6db74">&#34;There were less than k elements in the list&#34;</span>),
+        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> lldrop(cdr, k <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+    )
+}
+lldrop_tr <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(lldrop)
+<span style="color:#66d9ef">attributes</span>(lldrop_tr)</code></pre></div>
+<pre><code>## NULL
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lldrop_tr</code></pre></div>
+<pre><code>## function (llist, k, acc = NIL) 
+## {
+##     .tailr_llist &lt;- llist
+##     .tailr_k &lt;- k
+##     .tailr_acc &lt;- acc
+##     callCC(function(escape) {
+##         repeat {
+##             llist &lt;- .tailr_llist
+##             k &lt;- .tailr_k
+##             acc &lt;- .tailr_acc
+##             {
+##                 if (k == 0) 
+##                   escape(llist)
+##                 if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                   NIL))) 
+##                   with(..match_env, escape(stop(&quot;There were less than k elements in the list&quot;)))
+##                 else if (!rlang::is_null(..match_env &lt;- pmatch::test_pattern(llist, 
+##                   CONS(car, cdr)))) 
+##                   with(..match_env, {
+##                     .tailr_llist &lt;&lt;- cdr
+##                     .tailr_k &lt;&lt;- k - 1
+##                   })
+##             }
+##         }
+##     })
+## }
+## &lt;bytecode: 0x7f91685cd1b8&gt;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">attr</span>(lldrop_tr, <span style="color:#e6db74">&#34;srcref&#34;</span>) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">attr</span>(lldrop, <span style="color:#e6db74">&#34;srcref&#34;</span>)
+<span style="color:#66d9ef">attributes</span>(lldrop_tr)</code></pre></div>
+<pre><code>## $srcref
+## function(llist, k, acc = NIL) {
+##     if (k == 0) return(llist)
+##     pmatch::cases(
+##         llist,
+##         NIL -&gt; stop(&quot;There were less than k elements in the list&quot;),
+##         CONS(car, cdr) -&gt; lldrop(cdr, k - 1)
+##     )
+## }
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lldrop_tr</code></pre></div>
+<pre><code>## function(llist, k, acc = NIL) {
+##     if (k == 0) return(llist)
+##     pmatch::cases(
+##         llist,
+##         NIL -&gt; stop(&quot;There were less than k elements in the list&quot;),
+##         CONS(car, cdr) -&gt; lldrop(cdr, k - 1)
+##     )
+## }
+## &lt;bytecode: 0x7f91685cd1b8&gt;
+</code></pre>
+
+<p>It is a bit of a cheat since I now claim that the <em>modified</em> function actually consists of the same code as the original, but I think that would be the way to go. If people want to see the source code of a function, they want the human readable version, not the transformed version.</p>
+
+<p>It doesn&rsquo;t help, though. I still get the error.</p>
+
+<p>I don&rsquo;t know what is causing this or how to debug it. I have never delved deep into package checking. I would love some pointers!</p>
 
 
 </article>
