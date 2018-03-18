@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Transforming functions with cases calls</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/</link>
+      <pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/</guid>
+      <description>The issue with byte-compilation I wrote about yesterday can indeed be fixed by transforming functions that call cases. And that was very easy to implement since I already had all the bits and pieces I needed for it from the tailr transformations.</description>
+    </item>
+    
+    <item>
       <title>Building a package that uses pattern matching</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</link>
       <pubDate>Sat, 17 Mar 2018 14:35:16 +0100</pubDate>
