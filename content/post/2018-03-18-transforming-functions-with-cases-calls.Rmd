@@ -1,0 +1,13 @@
+---
+title: Transforming functions with cases calls
+author: Thomas Mailund
+draft: true
+date: '2018-03-18'
+slug: transforming-functions-with-cases-calls
+categories:
+  - Metaprogramming
+tags:
+  - pmatch
+---
+
+![](https://mailund.github.io/r-programmer-blog/images/2018-03-18-transforming-functions-with-cases-calls-_is_empty_benchmarks.png)
