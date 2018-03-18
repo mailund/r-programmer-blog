@@ -1,0 +1,11 @@
+Package: bloggraphics
+Title: Graphics code for The Working R-programmer blog
+Version: 0.0.0.9000
+Authors@R: person("Thomas", "Mailund", email = "thomas@mailund.dk", role = c("aut", "cre"))
+Description: Misc code for graphics
+Depends: R (>= 3.4.4)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: ggplot2
+RoxygenNote: 6.0.1
