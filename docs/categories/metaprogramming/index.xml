@@ -6,10 +6,19 @@
     <description>Recent content in Metaprogramming on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Thu, 22 Mar 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 27 Mar 2018 19:34:39 +0200</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Lots of Function Transformations</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</link>
+      <pubDate>Tue, 27 Mar 2018 19:34:39 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</guid>
+      <description>The last couple of days I&amp;rsquo;ve been doing a lot of experimenting with a package for function rewriting: foolbox. I am doing some function transformations in both pmatch and tailr and they look very much alike, so I figured I should collect the shared functionality in a separate package.</description>
+    </item>
     
     <item>
       <title>pmatch 0.1.3</title>
