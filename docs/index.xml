@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>“Optional” types using pmatch</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</guid>
+      <description>Some programming languages, e.g. Swift, have special &amp;ldquo;optional&amp;rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</description>
+    </item>
+    
+    <item>
       <title>Lots of Function Transformations</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</link>
       <pubDate>Tue, 27 Mar 2018 19:34:39 +0200</pubDate>
@@ -203,6 +212,15 @@ It&amp;rsquo;s a fair question, and I am not creating a new blog just to make yo
       
       <guid>https://mailund.github.io/r-programmer-blog/2018/03/01/first-post/</guid>
       <description>This is my first attempt at a Hugo+Blogdown blog. I got tired of struggling with formatting R code on my Wordpress blog, so figured it would make sense to use RMarkdown to write about R code.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://mailund.github.io/r-programmer-blog/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/1/01/01/</guid>
+      <description>“Optional” types using pmatch /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */ !function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?</description>
     </item>
     
   </channel>

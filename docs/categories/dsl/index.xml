@@ -6,10 +6,19 @@
     <description>Recent content in Dsl on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Sat, 17 Mar 2018 14:35:16 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 30 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/dsl/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>“Optional” types using pmatch</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</guid>
+      <description>Some programming languages, e.g. Swift, have special &amp;ldquo;optional&amp;rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</description>
+    </item>
     
     <item>
       <title>Building a package that uses pattern matching</title>
