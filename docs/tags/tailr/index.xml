@@ -6,10 +6,19 @@
     <description>Recent content in Tailr on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Sat, 17 Mar 2018 12:35:16 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 27 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/tailr/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>New Package Releases: foolbox and tailr</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</link>
+      <pubDate>Fri, 27 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</guid>
+      <description>I have just released version 0.1.0 of foolbox and version 0.1.2 of tailr. I haven&amp;rsquo;t actually done much on the packages the last three weeks, and they have been very close to these releases for a while, but now I had the spare time and energy to actually send them off.</description>
+    </item>
     
     <item>
       <title>tailr v0.1.1</title>
