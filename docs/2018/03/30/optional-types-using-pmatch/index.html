@@ -9,10 +9,35 @@
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
   <meta name="generator" content="Hugo 0.37.1" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
-  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -24,18 +49,23 @@
 
       <ul id="social-media">
         
-        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
           
-        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
          
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
       </ul>
       
       <p><em>Tips and tricks for serious software development in R</em></p>
       
+
     </header>
 
     
@@ -109,97 +139,97 @@
 <p>Some programming languages, e.g. Swift, have special &ldquo;optional&rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</p>
 
 <p>We can use <a href="https://mailund.github.io/pmatch/"><code>pmatch</code></a> to implement something similar in R. I will use three types instead of two, to represent no value, <code>NONE</code>, some value, <code>VALUE(val)</code>, or some error <code>ERROR(err)</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(<span style="color:#66d9ef">pmatch</span>)
-OPT <span style="color:#f92672">:=</span> NONE <span style="color:#f92672">|</span> VALUE(val) <span style="color:#f92672">|</span> ERROR(err)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(<span style="color:#6ab825">pmatch</span>)
+OPT := NONE | VALUE(val) | ERROR(err)</code></pre></div>
 <p>We can now define a function that catches exceptions and translate them into <code>ERROR()</code> objects:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">try <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(expr) {
-    rlang<span style="color:#f92672">::</span>enquo(expr)
-    <span style="color:#66d9ef">tryCatch</span>(VALUE(rlang<span style="color:#f92672">::</span>eval_tidy(expr)), 
-             error <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(e) ERROR(e))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">try &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(expr) {
+    rlang::enquo(expr)
+    <span style="color:#6ab825">tryCatch</span>(VALUE(rlang::eval_tidy(expr)), 
+             error = <span style="color:#6ab825;font-weight:bold">function</span>(e) ERROR(e))
 }</code></pre></div>
 <p>With this function the control flow when we want to compute something that might go wrong can be made a bit simpler. We no longer need a callback error handler; instead we can inspect the value returned by <code>try</code> in a <code>cases</code> call:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cases(<span style="color:#66d9ef">try</span>(<span style="color:#ae81ff">42</span>),
-      VALUE(val) <span style="color:#f92672">-&gt;</span> val,
-      ERROR(err) <span style="color:#f92672">-&gt;</span> err,
-      NONE <span style="color:#f92672">-&gt;</span> <span style="color:#e6db74">&#34;NOTHING&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cases(<span style="color:#6ab825">try</span>(<span style="color:#3677a9">42</span>),
+      VALUE(val) -&gt; val,
+      ERROR(err) -&gt; err,
+      NONE -&gt; <span style="color:#ed9d13">&#34;NOTHING&#34;</span>)</code></pre></div>
 <pre><code>## [1] 42
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cases(<span style="color:#66d9ef">try</span>(x <span style="color:#f92672">+</span> <span style="color:#ae81ff">42</span>), <span style="color:#75715e"># x isn&#39;t defined...</span>
-      VALUE(val) <span style="color:#f92672">-&gt;</span> val,
-      ERROR(err) <span style="color:#f92672">-&gt;</span> err,
-      NONE <span style="color:#f92672">-&gt;</span> <span style="color:#e6db74">&#34;NOTHING&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cases(<span style="color:#6ab825">try</span>(x + <span style="color:#3677a9">42</span>), <span style="color:#999;font-style:italic"># x isn&#39;t defined...</span>
+      VALUE(val) -&gt; val,
+      ERROR(err) -&gt; err,
+      NONE -&gt; <span style="color:#ed9d13">&#34;NOTHING&#34;</span>)</code></pre></div>
 <pre><code>## &lt;simpleError in rlang::eval_tidy(expr): objekt 'x' blev ikke fundet&gt;
 </code></pre>
 
 <p>To extract the value of an expression after we have computed on optional values we can define this function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">value <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x) {
-    quoted_x <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>enexpr(x)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">value &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+    quoted_x &lt;- rlang::enexpr(x)
     cases(x,
-          VALUE(val) <span style="color:#f92672">-&gt;</span> val,
-          <span style="color:#ae81ff">.</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">stop</span>(<span style="color:#66d9ef">simpleError</span>(
-                <span style="color:#66d9ef">paste</span>(<span style="color:#66d9ef">deparse</span>(quoted_x), <span style="color:#e6db74">&#34; is not a value.&#34;</span>), 
-              call <span style="color:#f92672">=</span> quoted_x
+          VALUE(val) -&gt; val,
+          <span style="color:#3677a9">.</span> -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#6ab825">simpleError</span>(
+                <span style="color:#6ab825">paste</span>(<span style="color:#6ab825">deparse</span>(quoted_x), <span style="color:#ed9d13">&#34; is not a value.&#34;</span>), 
+              call = quoted_x
         )))
 }
     
 
-value(<span style="color:#66d9ef">try</span>(<span style="color:#ae81ff">42</span>))</code></pre></div>
+value(<span style="color:#6ab825">try</span>(<span style="color:#3677a9">42</span>))</code></pre></div>
 <pre><code>## [1] 42
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">value(<span style="color:#66d9ef">try</span>(<span style="color:#ae81ff">42</span> <span style="color:#f92672">+</span> x))</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">value(<span style="color:#6ab825">try</span>(<span style="color:#3677a9">42</span> + x))</code></pre></div>
 <pre><code>## Error in try(42 + x): try(42 + x)  is not a value.
 </code></pre>
 
 <h2 id="computing-with-optional-values">Computing with optional values</h2>
 
 <p>Computing on optional values is more interesting if we can make it relatively transparent that this is what we are doing. For arithmetic expressions we can do this by defining operations on these types. A sensible way is to return errors if we see those, then <code>NONE</code> if we see one of those, and otherwise use <code>VALUE</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">Ops.OPT <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(e1, e2) {
-    cases(<span style="color:#ae81ff">..</span>(e1, e2),
-          <span style="color:#ae81ff">..</span>(ERROR(err), <span style="color:#ae81ff">.</span>)        <span style="color:#f92672">-&gt;</span> ERROR(err),
-          <span style="color:#ae81ff">..</span>(<span style="color:#ae81ff">.</span>, ERROR(err))        <span style="color:#f92672">-&gt;</span> ERROR(err),
-          <span style="color:#ae81ff">..</span>(NONE, <span style="color:#ae81ff">.</span>)              <span style="color:#f92672">-&gt;</span> NONE,
-          <span style="color:#ae81ff">..</span>(<span style="color:#ae81ff">.</span>, NONE)              <span style="color:#f92672">-&gt;</span> NONE,
-          <span style="color:#ae81ff">..</span>(VALUE(v1), VALUE(v2)) <span style="color:#f92672">-&gt;</span> VALUE(<span style="color:#66d9ef">do.call</span>(<span style="color:#ae81ff">.</span>Generic, <span style="color:#66d9ef">list</span>(v1, v2))),
-          <span style="color:#ae81ff">..</span>(VALUE(v1), v2)        <span style="color:#f92672">-&gt;</span> VALUE(<span style="color:#66d9ef">do.call</span>(<span style="color:#ae81ff">.</span>Generic, <span style="color:#66d9ef">list</span>(v1, v2))),
-          <span style="color:#ae81ff">..</span>(v1, VALUE(v2))        <span style="color:#f92672">-&gt;</span> VALUE(<span style="color:#66d9ef">do.call</span>(<span style="color:#ae81ff">.</span>Generic, <span style="color:#66d9ef">list</span>(v1, v2)))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">Ops.OPT &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(e1, e2) {
+    cases(<span style="color:#3677a9">..</span>(e1, e2),
+          <span style="color:#3677a9">..</span>(ERROR(err), <span style="color:#3677a9">.</span>)        -&gt; ERROR(err),
+          <span style="color:#3677a9">..</span>(<span style="color:#3677a9">.</span>, ERROR(err))        -&gt; ERROR(err),
+          <span style="color:#3677a9">..</span>(NONE, <span style="color:#3677a9">.</span>)              -&gt; NONE,
+          <span style="color:#3677a9">..</span>(<span style="color:#3677a9">.</span>, NONE)              -&gt; NONE,
+          <span style="color:#3677a9">..</span>(VALUE(v1), VALUE(v2)) -&gt; VALUE(<span style="color:#6ab825">do.call</span>(<span style="color:#3677a9">.</span>Generic, <span style="color:#6ab825;font-weight:bold">list</span>(v1, v2))),
+          <span style="color:#3677a9">..</span>(VALUE(v1), v2)        -&gt; VALUE(<span style="color:#6ab825">do.call</span>(<span style="color:#3677a9">.</span>Generic, <span style="color:#6ab825;font-weight:bold">list</span>(v1, v2))),
+          <span style="color:#3677a9">..</span>(v1, VALUE(v2))        -&gt; VALUE(<span style="color:#6ab825">do.call</span>(<span style="color:#3677a9">.</span>Generic, <span style="color:#6ab825;font-weight:bold">list</span>(v1, v2)))
     )
 }</code></pre></div>
 <p>The last two cases here handles when we combine an optional value with a value from the underlying type. Because of the last two cases we do not need to explicitly translate a value into a <code>VALUE()</code>. With this group function defined we can use optional values in expressions.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#ae81ff">12</span>) <span style="color:#f92672">+</span> VALUE(<span style="color:#ae81ff">6</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#3677a9">12</span>) + VALUE(<span style="color:#3677a9">6</span>)</code></pre></div>
 <pre><code>## VALUE(val = 18)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">NONE <span style="color:#f92672">+</span> VALUE(<span style="color:#ae81ff">6</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">NONE + VALUE(<span style="color:#3677a9">6</span>)</code></pre></div>
 <pre><code>## NONE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ERROR(<span style="color:#e6db74">&#34;foo&#34;</span>) <span style="color:#f92672">+</span> NONE</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ERROR(<span style="color:#ed9d13">&#34;foo&#34;</span>) + NONE</code></pre></div>
 <pre><code>## ERROR(err = foo)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#ae81ff">12</span>) <span style="color:#f92672">+</span> ERROR(<span style="color:#e6db74">&#34;bar&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#3677a9">12</span>) + ERROR(<span style="color:#ed9d13">&#34;bar&#34;</span>)</code></pre></div>
 <pre><code>## ERROR(err = bar)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#ae81ff">12</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">12</span></code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">VALUE(<span style="color:#3677a9">12</span>) + <span style="color:#3677a9">12</span></code></pre></div>
 <pre><code>## VALUE(val = 24)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">12</span> <span style="color:#f92672">+</span> NONE</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#3677a9">12</span> + NONE</code></pre></div>
 <pre><code>## NONE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">12</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">try</span>(<span style="color:#ae81ff">42</span> <span style="color:#f92672">+</span> x)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#3677a9">12</span> + <span style="color:#6ab825">try</span>(<span style="color:#3677a9">42</span> + x)</code></pre></div>
 <pre><code>## ERROR(err = Error in rlang::eval_tidy(expr): objekt 'x' blev ikke fundet
 ## )
 </code></pre>
 
 <p>For mathematical functions, such as <code>log</code> or <code>exp</code>, we can also define versions for optional types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">Math.OPT <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, <span style="color:#66d9ef">...</span>) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">Math.OPT &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, <span style="color:#6ab825;font-weight:bold">...</span>) {
     cases(x,
-          ERROR(err) <span style="color:#f92672">-&gt;</span> ERROR(err),
-          NONE       <span style="color:#f92672">-&gt;</span> NONE,
-          VALUE(v)   <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#ae81ff">.</span>Generic, <span style="color:#66d9ef">list</span>(x)),
-          v          <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#ae81ff">.</span>Generic, <span style="color:#66d9ef">list</span>(x))
+          ERROR(err) -&gt; ERROR(err),
+          NONE       -&gt; NONE,
+          VALUE(v)   -&gt; <span style="color:#6ab825">do.call</span>(<span style="color:#3677a9">.</span>Generic, <span style="color:#6ab825;font-weight:bold">list</span>(x)),
+          v          -&gt; <span style="color:#6ab825">do.call</span>(<span style="color:#3677a9">.</span>Generic, <span style="color:#6ab825;font-weight:bold">list</span>(x))
     )
-}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">log</span>(ERROR(<span style="color:#e6db74">&#34;foo&#34;</span>))</code></pre></div>
+}</code></pre></div><div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">log</span>(ERROR(<span style="color:#ed9d13">&#34;foo&#34;</span>))</code></pre></div>
 <pre><code>## ERROR(err = foo)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">exp</span>(NONE)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">exp</span>(NONE)</code></pre></div>
 <pre><code>## NONE
 </code></pre>
 
@@ -293,5 +323,7 @@ value(<span style="color:#66d9ef">try</span>(<span style="color:#ae81ff">42</spa
 </div>
 <script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
 </body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
 
 </html>

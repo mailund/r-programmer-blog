@@ -9,10 +9,35 @@
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
   <meta name="generator" content="Hugo 0.37.1" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
-  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -24,18 +49,23 @@
 
       <ul id="social-media">
         
-        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
           
-        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
          
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
       </ul>
       
       <p><em>Tips and tricks for serious software development in R</em></p>
       
+
     </header>
 
     
@@ -115,16 +145,16 @@
 <p>There are known solutions to these problems, as long as functions are written to be tail-recursive, meaning that the return value of a function is either a base value or another recursive call, but where we do not call recursively to then do something with the result.</p>
 
 <p>An example of a tail-recursive function is this version of <code>factorial</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(n, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) {
-    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) acc
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">factorial</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, acc <span style="color:#f92672">*</span> n)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(n, acc = <span style="color:#3677a9">1</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (n &lt;= <span style="color:#3677a9">1</span>) acc
+    <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825">factorial</span>(n - <span style="color:#3677a9">1</span>, acc * n)
 }</code></pre></div>
 <p>In the base case, we return a value, in the recursive call, we return the value of the recursion. So, we recurse at the tail of the function, thus the name, &ldquo;tail-recursive&rdquo;.</p>
 
 <p>An example of a function that is <em>not</em> tail-recursive, we have this version of <code>factorial</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(n) {
-    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">else</span> n <span style="color:#f92672">*</span> <span style="color:#66d9ef">factorial</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(n) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (n &lt;= <span style="color:#3677a9">1</span>) <span style="color:#3677a9">1</span>
+    <span style="color:#6ab825;font-weight:bold">else</span> n * <span style="color:#6ab825">factorial</span>(n - <span style="color:#3677a9">1</span>)
 }</code></pre></div>
 <p>We still recurse at the tail of the function, but it is not the very last thing we do, because <em>after</em> we get the value from the recursive call, we do something with it before we return: we multiply it with <code>n</code>.</p>
 
@@ -145,27 +175,27 @@
 <p>In a chapter in my upcoming book on <a href="http://amzn.to/2FLAk4K">Domain-specific languages in R</a> I have a chapter on how to do ML- or Haskell-like pattern matching in R. The ideas from that chapter can also be found in my <a href="https://github.com/mailund/pmatch"><code>pmatch</code></a> package. Since this package works well with data structure manipulation, something that was complicated in my <a href="http://amzn.to/2F6pjK7">book on those</a>, I expect I will try to implement all those data structures using the new framework, so you can expect to hear more about that.</p>
 
 <p>For now, though, consider a simple case: linked lists. The <code>list</code> type in R is really a vector with a pre-allocated size. Because of this, prepending to a <code>list</code> object is a linear time operation. We can implement linked lists with constant time prepending (but still linear time appending, <a href="http://amzn.to/2F6pjK7">unless we are clever</a>) like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(<span style="color:#66d9ef">pmatch</span>)
-linked_list <span style="color:#f92672">:=</span> NIL <span style="color:#f92672">|</span> CONS(car, cdr <span style="color:#f92672">:</span> linked_list)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(<span style="color:#6ab825">pmatch</span>)
+linked_list := NIL | CONS(car, cdr : linked_list)</code></pre></div>
 <p>This code defines two &ldquo;constructors&rdquo; for linked lists. We can construct an empty linked list using <code>NIL</code> and we can construct a non-empty list by adding a head—by tradition called <code>car</code>—to an existing list—by tradition called <code>cdr</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lst <span style="color:#f92672">&lt;-</span> CONS(<span style="color:#ae81ff">1</span>, CONS(<span style="color:#ae81ff">2</span>, CONS(<span style="color:#ae81ff">3</span>, NIL)))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lst &lt;- CONS(<span style="color:#3677a9">1</span>, CONS(<span style="color:#3677a9">2</span>, CONS(<span style="color:#3677a9">3</span>, NIL)))
 lst</code></pre></div>
 <pre><code>## CONS(car = 1, cdr = CONS(car = 2, cdr = CONS(car = 3, cdr = NIL)))
 </code></pre>
 
 <p>Once we have defined constructors from a type, we can match patterns against values, and e.g. recognise when a linked list is empty—equal to <code>NIL</code>—or not—matches a <code>CONS</code> pattern.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(lst, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, acc = <span style="color:#3677a9">0</span>) {
   cases(lst,
-        NIL <span style="color:#f92672">-&gt;</span> acc,
-        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+        NIL -&gt; acc,
+        CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>))
 }
 llength(lst)</code></pre></div>
 <pre><code>## [1] 3
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llrev <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(lst, acc <span style="color:#f92672">=</span> NIL) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llrev &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, acc = NIL) {
   cases(lst,
-        NIL <span style="color:#f92672">-&gt;</span> acc,
-        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llrev(cdr, CONS(car, acc)))
+        NIL -&gt; acc,
+        CONS(car, cdr) -&gt; llrev(cdr, CONS(car, acc)))
 }
 llrev(lst)</code></pre></div>
 <pre><code>## CONS(car = 3, cdr = CONS(car = 2, cdr = CONS(car = 1, cdr = NIL)))
@@ -178,61 +208,61 @@ llrev(lst)</code></pre></div>
 <p>Search trees are binary trees that holds values in all inner nodes and satisfy the invariant that all values in a left subtree are smaller than the value in an inner node, and all values in the right subtree are larger.</p>
 
 <p>We can define a search tree like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">search_tree <span style="color:#f92672">:=</span> E <span style="color:#f92672">|</span> T(left <span style="color:#f92672">:</span> search_tree, value, right <span style="color:#f92672">:</span> search_tree)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">search_tree := E | T(left : search_tree, value, right : search_tree)</code></pre></div>
 <p>Here, we use an empty tree, <code>E</code>, for leaves. We only store values in inner nodes, created with the constructor <code>T</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree <span style="color:#f92672">&lt;-</span> T(T(E,<span style="color:#ae81ff">1</span>,E), <span style="color:#ae81ff">3</span>, T(E,<span style="color:#ae81ff">4</span>,E))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree &lt;- T(T(E,<span style="color:#3677a9">1</span>,E), <span style="color:#3677a9">3</span>, T(E,<span style="color:#3677a9">4</span>,E))
 tree</code></pre></div>
 <pre><code>## T(left = T(left = E, value = 1, right = E), value = 3, right = T(left = E, value = 4, right = E))
 </code></pre>
 
 <p>Because of the invariant, we know where values should be found if they are in a tree. We can look at the value in the root of a subtree. If it is larger than the value we are searching for, we need to search to the left. If it is smaller, we need to search to the right. Otherwise, it must be equal to the value. If we reach an empty tree in this search, then we know the value is no the tree.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree, x) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, x) {
   cases(tree,
-        E <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">FALSE</span>,
-        T(left, val, right) <span style="color:#f92672">-&gt;</span> {
-          <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> val) member(left, x)
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> val) member(right, x)
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">TRUE</span>
+        E -&gt; <span style="color:#6ab825;font-weight:bold">FALSE</span>,
+        T(left, val, right) -&gt; {
+          <span style="color:#6ab825;font-weight:bold">if</span> (x &lt; val) member(left, x)
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">if</span> (x &gt; val) member(right, x)
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">TRUE</span>
         })
 }
-member(tree, <span style="color:#ae81ff">0</span>)</code></pre></div>
+member(tree, <span style="color:#3677a9">0</span>)</code></pre></div>
 <pre><code>## [1] FALSE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#ae81ff">1</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#3677a9">1</span>)</code></pre></div>
 <pre><code>## [1] TRUE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#ae81ff">2</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#3677a9">2</span>)</code></pre></div>
 <pre><code>## [1] FALSE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#ae81ff">3</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#3677a9">3</span>)</code></pre></div>
 <pre><code>## [1] TRUE
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#ae81ff">4</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member(tree, <span style="color:#3677a9">4</span>)</code></pre></div>
 <pre><code>## [1] TRUE
 </code></pre>
 
 <p>Since data in R, in general, are immutable, we cannot update search trees. We can, however, create copies with updated structure, and because R implements &ldquo;copy-on-write&rdquo;, this is an efficient way of updating the structure of data we work on. If we insert elements into a search tree, what we will really be doing is to create a new tree that holds all the values the old tree held plus the new values. If the value is already in the old tree we do not add it again, but we will be returning a new tree. We create the new tree in a recursion.</p>
 
 <p>Whenever we call recursively, we create a new inner node that will contain one subtree that is an exact copy of one of the subtrees from the old tree—shared with the old tree so no actual copying takes place—and one subtree that is created in the recursive insertion. The recursion goes left or right using the same logic as in the <code>member</code> function. If we find that the element is already in the tree, we terminate the recursion with the tree that contains the value. If we reach an empty tree, the element was not in the old tree, but we have found the place where it should be in the new tree, so we create an inner tree with two empty subtrees and the value.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">insert <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree, x) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">insert &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, x) {
   cases(tree,
-        E <span style="color:#f92672">-&gt;</span> T(E, x, E),
-        T(left, val, right) <span style="color:#f92672">-&gt;</span>
-          <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> val)
+        E -&gt; T(E, x, E),
+        T(left, val, right) -&gt;
+          <span style="color:#6ab825;font-weight:bold">if</span> (x &lt; val)
             T(insert(left, x), val, right)
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> val)
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">if</span> (x &gt; val)
             T(left, val, insert(right, x))
-          <span style="color:#66d9ef">else</span>
+          <span style="color:#6ab825">else</span>
             T(left, x, right)
         )
 }
 
-tree <span style="color:#f92672">&lt;-</span> E
-<span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">sample</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>))
-  tree <span style="color:#f92672">&lt;-</span> insert(tree, i)
+tree &lt;- E
+<span style="color:#6ab825;font-weight:bold">for</span> (i <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#6ab825">sample</span>(<span style="color:#3677a9">2</span>:<span style="color:#3677a9">4</span>))
+  tree &lt;- insert(tree, i)
 
-<span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">6</span>) {
-  <span style="color:#66d9ef">cat</span>(i, <span style="color:#e6db74">&#34; : &#34;</span>, member(tree, i), <span style="color:#e6db74">&#34;\n&#34;</span>)
+<span style="color:#6ab825;font-weight:bold">for</span> (i <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#3677a9">1</span>:<span style="color:#3677a9">6</span>) {
+  <span style="color:#6ab825">cat</span>(i, <span style="color:#ed9d13">&#34; : &#34;</span>, member(tree, i), <span style="color:#ed9d13">&#34;\n&#34;</span>)
 }</code></pre></div>
 <pre><code>## 1  :  FALSE 
 ## 2  :  TRUE 
@@ -245,22 +275,22 @@ tree <span style="color:#f92672">&lt;-</span> E
 <p>The worst-case time usage for both of these functions is proportional to the depth of the tree, and that can be linear in the number of elements stored in the tree. If we keep the tree balanced, though, the time is reduced to logarithmic in the size of the tree. A classical data structure for keeping search trees balanced is so-called <em>red-black</em> search trees. Implementing these using pointer or reference manipulation in languages such as C/C++ or Java can be quite challenging, but in a functional language, balancing such trees is a simple matter of transforming trees based on local structure.</p>
 
 <p>Red-black search trees are binary search trees where each tree has a colour associated, either red or black. We can define colours using constant constructors and define a red-black search tree by extending the plain search tree:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">colour <span style="color:#f92672">:=</span> R <span style="color:#f92672">|</span> B
-rb_tree <span style="color:#f92672">:=</span> E <span style="color:#f92672">|</span> T(col <span style="color:#f92672">:</span> colour, left <span style="color:#f92672">:</span> rb_tree, value, right <span style="color:#f92672">:</span> rb_tree)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">colour := R | B
+rb_tree := E | T(col : colour, left : rb_tree, value, right : rb_tree)</code></pre></div>
 <p>Except for including the colour in the pattern matching, the <code>member</code> function for this data structure is the same as for the plain search tree.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree, x) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">member &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, x) {
   cases(tree,
-        E <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">FALSE</span>,
-        T(<span style="color:#66d9ef">col</span>, left, val, right) <span style="color:#f92672">-&gt;</span> {
-          <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> val) member(left, x)
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> val) member(right, x)
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">TRUE</span>
+        E -&gt; <span style="color:#6ab825;font-weight:bold">FALSE</span>,
+        T(<span style="color:#6ab825">col</span>, left, val, right) -&gt; {
+          <span style="color:#6ab825;font-weight:bold">if</span> (x &lt; val) member(left, x)
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">if</span> (x &gt; val) member(right, x)
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">TRUE</span>
         })
 }
 
-tree <span style="color:#f92672">&lt;-</span> T(R, E, <span style="color:#ae81ff">2</span>, T(B, E, <span style="color:#ae81ff">5</span>, E))
-<span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">6</span>) {
-  <span style="color:#66d9ef">cat</span>(i, <span style="color:#e6db74">&#34; : &#34;</span>, member(tree, i), <span style="color:#e6db74">&#34;\n&#34;</span>)
+tree &lt;- T(R, E, <span style="color:#3677a9">2</span>, T(B, E, <span style="color:#3677a9">5</span>, E))
+<span style="color:#6ab825;font-weight:bold">for</span> (i <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#3677a9">1</span>:<span style="color:#3677a9">6</span>) {
+  <span style="color:#6ab825">cat</span>(i, <span style="color:#ed9d13">&#34; : &#34;</span>, member(tree, i), <span style="color:#ed9d13">&#34;\n&#34;</span>)
 }</code></pre></div>
 <pre><code>## 1  :  FALSE 
 ## 2  :  TRUE 
@@ -280,21 +310,21 @@ tree <span style="color:#f92672">&lt;-</span> T(R, E, <span style="color:#ae81ff
 <p>If every path from root to a leaf has the same number of black nodes, then the tree is perfectly balanced if we ignored the red nodes. Since no red node has a red parent, the longest path, when red nodes are considered, can be no longer than twice the length of the shortest path.</p>
 
 <p>These invariants can be guaranteed by always inserting new values in red leaves, potentially invalidating the first invariant, and then rebalancing all sub-trees that invalidate this invariant, and at the end setting the root to be black. The rebalancing is done when returning from the recursive insertion calls that otherwise work as insertion in the plain search tree.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">insert_rec <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree, x) {
-  <span style="color:#66d9ef">match</span>(tree,
-        E <span style="color:#f92672">-&gt;</span> T(R, E, x, E),
-        T(<span style="color:#66d9ef">col</span>, left, val, right) <span style="color:#f92672">-&gt;</span> {
-          <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> val)
-            balance(T(<span style="color:#66d9ef">col</span>, insert_rec(left, x), val, right))
-          <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> val)
-            balance(T(<span style="color:#66d9ef">col</span>, left, val, insert_rec(right, x)))
-          <span style="color:#66d9ef">else</span>
-            T(<span style="color:#66d9ef">col</span>, left, x, right) <span style="color:#75715e"># already here</span>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">insert_rec &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, x) {
+  <span style="color:#6ab825">match</span>(tree,
+        E -&gt; T(R, E, x, E),
+        T(<span style="color:#6ab825">col</span>, left, val, right) -&gt; {
+          <span style="color:#6ab825;font-weight:bold">if</span> (x &lt; val)
+            balance(T(<span style="color:#6ab825">col</span>, insert_rec(left, x), val, right))
+          <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825;font-weight:bold">if</span> (x &gt; val)
+            balance(T(<span style="color:#6ab825">col</span>, left, val, insert_rec(right, x)))
+          <span style="color:#6ab825">else</span>
+            T(<span style="color:#6ab825">col</span>, left, x, right) <span style="color:#999;font-style:italic"># already here</span>
         })
 }
-insert <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree, x) {
-  tree <span style="color:#f92672">&lt;-</span> insert_rec(tree, x)
-  tree<span style="color:#f92672">$</span>col <span style="color:#f92672">&lt;-</span> B
+insert &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, x) {
+  tree &lt;- insert_rec(tree, x)
+  tree$col &lt;- B
   tree
 }</code></pre></div>
 <p>The transformation rules for the <code>balance</code> function are shown in the figure below:</p>
@@ -302,42 +332,42 @@ insert <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">func
 <p><img src="http://users-cs.au.dk/mailund/RBT-transformations.png" alt="" /></p>
 
 <p>Every time we see one of the trees around the edges, we must transform it into the tree in the middle. We can implement these transformations as simple as this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">balance <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tree) {
-  <span style="color:#66d9ef">match</span>(tree,
-        T(B,T(R,a,x,T(R,b,y,<span style="color:#66d9ef">c</span>)),z,d) <span style="color:#f92672">-&gt;</span> T(R,T(B,a,x,b),y,T(B,<span style="color:#66d9ef">c</span>,z,d)),
-        T(B,T(R,T(R,a,x,b),y,<span style="color:#66d9ef">c</span>),z,d) <span style="color:#f92672">-&gt;</span> T(R,T(B,a,x,b),y,T(B,<span style="color:#66d9ef">c</span>,z,d)),
-        T(B,a,x,T(R,b,y,T(R,<span style="color:#66d9ef">c</span>,z,d))) <span style="color:#f92672">-&gt;</span> T(R,T(B,a,x,b),y,T(B,<span style="color:#66d9ef">c</span>,z,d)),
-        T(B,a,x,T(R,T(R,b,y,<span style="color:#66d9ef">c</span>),z,d)) <span style="color:#f92672">-&gt;</span> T(R,T(B,a,x,b),y,T(B,<span style="color:#66d9ef">c</span>,z,d)),
-        otherwise <span style="color:#f92672">-&gt;</span> tree)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">balance &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree) {
+  <span style="color:#6ab825">match</span>(tree,
+        T(B,T(R,a,x,T(R,b,y,<span style="color:#6ab825;font-weight:bold">c</span>)),z,d) -&gt; T(R,T(B,a,x,b),y,T(B,<span style="color:#6ab825;font-weight:bold">c</span>,z,d)),
+        T(B,T(R,T(R,a,x,b),y,<span style="color:#6ab825;font-weight:bold">c</span>),z,d) -&gt; T(R,T(B,a,x,b),y,T(B,<span style="color:#6ab825;font-weight:bold">c</span>,z,d)),
+        T(B,a,x,T(R,b,y,T(R,<span style="color:#6ab825;font-weight:bold">c</span>,z,d))) -&gt; T(R,T(B,a,x,b),y,T(B,<span style="color:#6ab825;font-weight:bold">c</span>,z,d)),
+        T(B,a,x,T(R,T(R,b,y,<span style="color:#6ab825;font-weight:bold">c</span>),z,d)) -&gt; T(R,T(B,a,x,b),y,T(B,<span style="color:#6ab825;font-weight:bold">c</span>,z,d)),
+        otherwise -&gt; tree)
 }</code></pre></div>
 <p>For contrast, below is the version I presented in <a href="http://amzn.to/2F6pjK7">Functional Data-structures in R</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">rbt_balance <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(colour, value, left, right) {
-  <span style="color:#66d9ef">if</span> (pattern_match(a <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>left, b <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>left,
-                    <span style="color:#66d9ef">c</span> <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>right, d <span style="color:#f92672">=</span> right,
-                    x <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>value, y <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>value, z <span style="color:#f92672">=</span> value,
-                    colour <span style="color:#f92672">==</span> BLACK, left<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED, left<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">rbt_balance &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(colour, value, left, right) {
+  <span style="color:#6ab825;font-weight:bold">if</span> (pattern_match(a = left$left, b = left$right$left,
+                    <span style="color:#6ab825;font-weight:bold">c</span> = left$right$right, d = right,
+                    x = left$value, y = left$right$value, z = value,
+                    colour == BLACK, left$colour == RED, left$right$colour == RED)
 
-      <span style="color:#f92672">||</span> pattern_match(a <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>left, b <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>right,
-                       <span style="color:#66d9ef">c</span> <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>right, d <span style="color:#f92672">=</span> right,
-                       x <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>value, y <span style="color:#f92672">=</span> left<span style="color:#f92672">$</span>value, z <span style="color:#f92672">=</span> value,
-                       colour <span style="color:#f92672">==</span> BLACK, left<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED, left<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED)
+      || pattern_match(a = left$left$left, b = left$left$right,
+                       <span style="color:#6ab825;font-weight:bold">c</span> = left$right, d = right,
+                       x = left$left$value, y = left$value, z = value,
+                       colour == BLACK, left$colour == RED, left$left$colour == RED)
 
-      <span style="color:#f92672">||</span> pattern_match(a <span style="color:#f92672">=</span> left, b <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>left,
-                       <span style="color:#66d9ef">c</span> <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>left, d <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>right,
-                       x <span style="color:#f92672">=</span> value, y <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>value, z <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>value,
-                       colour <span style="color:#f92672">==</span> BLACK, right<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED, right<span style="color:#f92672">$</span>right<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED)
+      || pattern_match(a = left, b = right$left,
+                       <span style="color:#6ab825;font-weight:bold">c</span> = right$right$left, d = right$right$right,
+                       x = value, y = right$value, z = right$right$value,
+                       colour == BLACK, right$colour == RED, right$right$colour == RED)
 
-      <span style="color:#f92672">||</span> pattern_match(a <span style="color:#f92672">=</span> left, b <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>left,
-                       <span style="color:#66d9ef">c</span> <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>right, d <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>right,
-                       x <span style="color:#f92672">=</span> value, y <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>value, z <span style="color:#f92672">=</span> right<span style="color:#f92672">$</span>value,
-                       colour <span style="color:#f92672">==</span> BLACK, right<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED, right<span style="color:#f92672">$</span>left<span style="color:#f92672">$</span>colour <span style="color:#f92672">==</span> RED)
+      || pattern_match(a = left, b = right$left$left,
+                       <span style="color:#6ab825;font-weight:bold">c</span> = right$left$right, d = right$right,
+                       x = value, y = right$left$value, z = right$value,
+                       colour == BLACK, right$colour == RED, right$left$colour == RED)
   ) {
 
-    left <span style="color:#f92672">&lt;-</span> red_black_tree_node(colour <span style="color:#f92672">=</span> BLACK, value <span style="color:#f92672">=</span> x, left <span style="color:#f92672">=</span> a, right <span style="color:#f92672">=</span> b)
-    right <span style="color:#f92672">&lt;-</span> red_black_tree_node(colour <span style="color:#f92672">=</span> BLACK, value <span style="color:#f92672">=</span> z, left <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>, right <span style="color:#f92672">=</span> d)
-    red_black_tree_node(colour <span style="color:#f92672">=</span> RED, value <span style="color:#f92672">=</span> y, left, right)
+    left &lt;- red_black_tree_node(colour = BLACK, value = x, left = a, right = b)
+    right &lt;- red_black_tree_node(colour = BLACK, value = z, left = <span style="color:#6ab825;font-weight:bold">c</span>, right = d)
+    red_black_tree_node(colour = RED, value = y, left, right)
 
-  } <span style="color:#66d9ef">else</span> {
+  } <span style="color:#6ab825;font-weight:bold">else</span> {
     red_black_tree_node(colour, value, left, right)
   }
 }</code></pre></div>
@@ -348,35 +378,35 @@ insert <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">func
 <h2 id="making-llength-looping">Making <code>llength</code> looping</h2>
 
 <p>Let us return to the linked lists and the function for computing the length of a linked list:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(lst, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, acc = <span style="color:#3677a9">0</span>) {
   cases(lst,
-        NIL <span style="color:#f92672">-&gt;</span> acc,
-        CONS(car, cdr) <span style="color:#f92672">-&gt;</span> llength(cdr, acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+        NIL -&gt; acc,
+        CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>))
 }</code></pre></div>
 <p>It is a nice and simple function that is easy to understand, but lists can get long, and then we run into problems with too deep recursions. A looping version is somewhat more complicated. An initial attempt could look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist) {
-    acc <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">0</span>
-    <span style="color:#66d9ef">repeat</span> {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist) {
+    acc &lt;- <span style="color:#3677a9">0</span>
+    <span style="color:#6ab825;font-weight:bold">repeat</span> {
         cases(llist,
-              NIL <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">return</span>(acc),
-              CONS(car, cdr) <span style="color:#f92672">-&gt;</span> {
-                  acc <span style="color:#f92672">&lt;-</span> acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-                  llist <span style="color:#f92672">&lt;-</span> cdr
+              NIL -&gt; <span style="color:#6ab825;font-weight:bold">return</span>(acc),
+              CONS(car, cdr) -&gt; {
+                  acc &lt;- acc + <span style="color:#3677a9">1</span>
+                  llist &lt;- cdr
               })
     }
 }</code></pre></div>
 <p>This version will not function, however, since it tries to <code>return</code> from inside a call to <code>cases</code>, and <code>return</code> only works inside the immediate scope.</p>
 
 <p>Instead, we can use <code>callCC</code> to implement a non-local return like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_llength <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(llist) {
-    <span style="color:#66d9ef">callCC</span>(<span style="color:#66d9ef">function</span>(escape) {
-        acc <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">0</span>
-        <span style="color:#66d9ef">repeat</span> {
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist) {
+    <span style="color:#6ab825">callCC</span>(<span style="color:#6ab825;font-weight:bold">function</span>(escape) {
+        acc &lt;- <span style="color:#3677a9">0</span>
+        <span style="color:#6ab825;font-weight:bold">repeat</span> {
             cases(llist,
-                  NIL <span style="color:#f92672">-&gt;</span> escape(acc),
-                  CONS(car, cdr) <span style="color:#f92672">-&gt;</span> {
-                      acc <span style="color:#f92672">&lt;&lt;-</span> acc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-                      llist <span style="color:#f92672">&lt;&lt;-</span> cdr
+                  NIL -&gt; escape(acc),
+                  CONS(car, cdr) -&gt; {
+                      acc &lt;&lt;- acc + <span style="color:#3677a9">1</span>
+                      llist &lt;&lt;- cdr
                   })
         }    
     })
@@ -388,21 +418,21 @@ insert <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">func
 <h2 id="the-tailr-package">The <code>tailr</code> package</h2>
 
 <p>To alleviate the problems I have with recursion, I wrote a meta-program for automatically translating tail-recursive functions into looping versions. This program is available in the <a href="https://github.com/mailund/tailr"><code>tail</code> package</a> that you can get from either CRAN:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">install.packages(<span style="color:#e6db74">&#34;tailr&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">install.packages(<span style="color:#ed9d13">&#34;tailr&#34;</span>)</code></pre></div>
 <p>or from GitHub (for the development version):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># install.packages(&#34;devtools&#34;)</span>
-devtools<span style="color:#f92672">::</span>install_github(<span style="color:#e6db74">&#34;mailund/tailr&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># install.packages(&#34;devtools&#34;)</span>
+devtools::install_github(<span style="color:#ed9d13">&#34;mailund/tailr&#34;</span>)</code></pre></div>
 <p>The goal of <code>tailr</code> is to automatically transform tail-recursive functions into loops or trampolines. At present, it implements the looping transformation, so it can handle simple tail-recursive functions, but will have problems with continuation-passing programming. Once I figure out how to handle that in a better way, I will write about it here.</p>
 
 <h3 id="examples-using-tailr">Examples using <code>tailr</code></h3>
 
 <p>As a simple example of how <code>tailr</code> can be used, can take the classical recursive function for <code>factorial</code> and write it in a tail-recursive form using an accumulator:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(n, acc <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) {
-    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) acc
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">factorial</span>(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, acc <span style="color:#f92672">*</span> n)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factorial &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(n, acc = <span style="color:#3677a9">1</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (n &lt;= <span style="color:#3677a9">1</span>) acc
+    <span style="color:#6ab825;font-weight:bold">else</span> <span style="color:#6ab825">factorial</span>(n - <span style="color:#3677a9">1</span>, acc * n)
 }</code></pre></div>
 <p>We can then, automatically, translate that into a looping version:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_factorial <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(<span style="color:#66d9ef">factorial</span>, byte_compile <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_factorial &lt;- tailr::loop_transform(<span style="color:#6ab825">factorial</span>, byte_compile = <span style="color:#6ab825;font-weight:bold">FALSE</span>)
 tr_factorial</code></pre></div>
 <pre><code>## function (n, acc = 1) 
 ## {
@@ -422,24 +452,24 @@ tr_factorial</code></pre></div>
 ##     })
 ## }
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_factorial(<span style="color:#ae81ff">100</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_factorial(<span style="color:#3677a9">100</span>)</code></pre></div>
 <pre><code>## [1] 9.332622e+157
 </code></pre>
 
 <p>I have disabled byte compilation to make running time comparisons fair; by default it is enabled. For a function as simple as <code>factorial</code>, though, byte compiling will not affect the running time in any substantial amount.</p>
 
 <p>We can compare the running time with the recursive function and a version that is written using a loop:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_factorial <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(n) {
-    val <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">while</span> (n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>) {
-        val <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> val
-        n <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">loop_factorial &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(n) {
+    val &lt;- <span style="color:#3677a9">1</span>
+    <span style="color:#6ab825;font-weight:bold">while</span> (n &gt; <span style="color:#3677a9">1</span>) {
+        val &lt;- n * val
+        n &lt;- n - <span style="color:#3677a9">1</span>
     }
     val
 }
 
-n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1000</span>
-microbenchmark<span style="color:#f92672">::</span>microbenchmark(<span style="color:#66d9ef">factorial</span>(n), 
+n &lt;- <span style="color:#3677a9">1000</span>
+microbenchmark::microbenchmark(<span style="color:#6ab825">factorial</span>(n), 
                                loop_factorial(n), 
                                tr_factorial(n))</code></pre></div>
 <pre><code>## Unit: microseconds
@@ -458,9 +488,9 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(<span style="c
 <p>There is <em>some</em> overhead in using the automatically translated version over the hand-written, naturally, and for a simple function such as <code>factorial</code>, it is not hard to write the loop-variant instead of the recursive function.</p>
 
 <p>As we saw, rewriting <code>llength</code> as a looping function was a bit harder. With <code>tailr</code> we can do this automatically, however:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_llength <span style="color:#f92672">&lt;-</span> tailr<span style="color:#f92672">::</span>loop_transform(llength)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_llength &lt;- tailr::loop_transform(llength)</code></pre></div>
 <p>The function we generate is rather complicated</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_llength</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tr_llength</code></pre></div>
 <pre><code>## function (lst, acc = 0) 
 ## {
 ##     .tailr_lst &lt;- lst
@@ -487,15 +517,15 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(<span style="c
 <p>but, then, it is not one we want to manually inspect in any case.</p>
 
 <p>The automatically generated function is complicated, but it actually outcompetes the hand-written loop version.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_llist <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(n) {
-    l <span style="color:#f92672">&lt;-</span> NIL
-    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>n) {
-        l <span style="color:#f92672">&lt;-</span> CONS(i, l)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_llist &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(n) {
+    l &lt;- NIL
+    <span style="color:#6ab825;font-weight:bold">for</span> (i <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#3677a9">1</span>:n) {
+        l &lt;- CONS(i, l)
     }
     l
 }
-test_llist <span style="color:#f92672">&lt;-</span> make_llist(<span style="color:#ae81ff">100</span>)
-microbenchmark<span style="color:#f92672">::</span>microbenchmark(llength(test_llist),
+test_llist &lt;- make_llist(<span style="color:#3677a9">100</span>)
+microbenchmark::microbenchmark(llength(test_llist),
                                loop_llength(test_llist),
                                tr_llength(test_llist))</code></pre></div>
 <pre><code>## Unit: milliseconds
@@ -516,15 +546,15 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(llength(test_l
 <p>As you have no doubt noticed about <code>llength</code>, it is not in fact tail-recursive, from the look of it, since the final recursion is enclosed by a call to <code>cases</code>. The function is only tail-recursive because it can be translated into one by rewriting the <code>cases</code> function call to a sequence of <code>if</code>-statements. The <code>tailr</code> package doesn&rsquo;t handle <code>cases</code> from <code>pmatch</code> by knowing about this package. Instead, it has a mechanism that lets you provide re-writing rules.</p>
 
 <p>If you set the attribute &ldquo;tailr_transform&rdquo; on a function, and set this attribute to a function, then that function will be called when <code>tailr</code> sees the function, before it attempts any other processing. The attribute must be a function that maps an expression to another, re-written, expression. The one for <code>cases</code> looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tailr_transform_call <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(expr) {
-    <span style="color:#66d9ef">stopifnot</span>(rlang<span style="color:#f92672">::</span>call_name(expr) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;cases&#34;</span>)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tailr_transform_call &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(expr) {
+    <span style="color:#6ab825">stopifnot</span>(rlang::call_name(expr) == <span style="color:#ed9d13">&#34;cases&#34;</span>)
 
-    args <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>call_args(expr)
-    value <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">args</span>[[<span style="color:#ae81ff">1</span>]]
-    patterns <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">args</span>[<span style="color:#ae81ff">-1</span>]
-    <span style="color:#66d9ef">eval</span>(rlang<span style="color:#f92672">::</span>expr(cases_expr(<span style="color:#f92672">!!</span>value, <span style="color:#f92672">!!!</span>patterns)))
+    args &lt;- rlang::call_args(expr)
+    value &lt;- <span style="color:#6ab825">args</span>[[<span style="color:#3677a9">1</span>]]
+    patterns &lt;- <span style="color:#6ab825">args</span>[<span style="color:#3677a9">-1</span>]
+    <span style="color:#6ab825">eval</span>(rlang::expr(cases_expr(!!value, !!!patterns)))
 }
-<span style="color:#66d9ef">attr</span>(cases, <span style="color:#e6db74">&#34;tailr_transform&#34;</span>) <span style="color:#f92672">&lt;-</span> tailr_transform_call</code></pre></div>
+<span style="color:#6ab825">attr</span>(cases, <span style="color:#ed9d13">&#34;tailr_transform&#34;</span>) &lt;- tailr_transform_call</code></pre></div>
 <p>You can use this mechanism to support tail-recursion for non-tail-recursive functions that can be rewritten to be tail-recursive.</p>
 <div class="footnotes">
 
@@ -621,5 +651,7 @@ microbenchmark<span style="color:#f92672">::</span>microbenchmark(llength(test_l
 </div>
 <script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
 </body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
 
 </html>

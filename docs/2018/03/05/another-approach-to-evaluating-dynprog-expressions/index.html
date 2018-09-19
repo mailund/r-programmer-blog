@@ -9,10 +9,35 @@
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
   <meta name="generator" content="Hugo 0.37.1" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
-  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -24,18 +49,23 @@
 
       <ul id="social-media">
         
-        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
           
-        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
          
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
       </ul>
       
       <p><em>Tips and tricks for serious software development in R</em></p>
       
+
     </header>
 
     
@@ -108,38 +138,38 @@
     
 
     <p>In the approach to evaluating dynamic-programming expressions, <a href="https://mailund.github.io/r-programmer-blog/2018/03/04/evaluating-dynprog-expressions/">that I wrote about yesterday</a>, I used ranges- and recursion-specifications to build a loop for updating a table and then evaluated that loop inside an environment where local variables would over-scope the quosure environment from the specifications. I constructed the loop-expression like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_loop_expr <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(tbl_name, update_expr) {
-    rlang<span style="color:#f92672">::</span>expr({
-        combs <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)
-        rlang<span style="color:#f92672">::</span>UQ(tbl_name) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(
-            <span style="color:#e6db74">&#34;numeric&#34;</span>,
-            length <span style="color:#f92672">=</span> <span style="color:#66d9ef">nrow</span>(combs)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_loop_expr &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tbl_name, update_expr) {
+    rlang::expr({
+        combs &lt;- <span style="color:#6ab825">do.call</span>(<span style="color:#6ab825">expand.grid</span>, ranges)
+        rlang::UQ(tbl_name) &lt;- <span style="color:#6ab825;font-weight:bold">vector</span>(
+            <span style="color:#ed9d13">&#34;numeric&#34;</span>,
+            length = <span style="color:#6ab825">nrow</span>(combs)
         )
-        <span style="color:#66d9ef">dim</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name)) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)
-        <span style="color:#66d9ef">for</span> (row <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(rlang<span style="color:#f92672">::</span>UQ(tbl_name))) {
-            rlang<span style="color:#f92672">::</span>UQ(tbl_name)[<span style="color:#66d9ef">row</span>] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(
-                combs[<span style="color:#66d9ef">row</span>, , drop <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>], {
-                    rlang<span style="color:#f92672">::</span>UQ(update_expr)
+        <span style="color:#6ab825">dim</span>(rlang::UQ(tbl_name)) &lt;- <span style="color:#6ab825">Map</span>(<span style="color:#6ab825">length</span>, ranges)
+        <span style="color:#6ab825;font-weight:bold">for</span> (row <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#6ab825">seq_along</span>(rlang::UQ(tbl_name))) {
+            rlang::UQ(tbl_name)[<span style="color:#6ab825">row</span>] &lt;- <span style="color:#6ab825">with</span>(
+                combs[<span style="color:#6ab825">row</span>, , drop = <span style="color:#6ab825;font-weight:bold">FALSE</span>], {
+                    rlang::UQ(update_expr)
                 }
             )
         }
-        rlang<span style="color:#f92672">::</span>UQ(tbl_name)
+        rlang::UQ(tbl_name)
     })
 }</code></pre></div>
 <p>We can see what this expression looks like if we insert the specifications for computing <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci numbers</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fib_ranges <span style="color:#f92672">&lt;-</span> parse_ranges(rlang<span style="color:#f92672">::</span>quo({
-    n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fib_ranges &lt;- parse_ranges(rlang::quo({
+    n &lt;- <span style="color:#3677a9">1</span>:<span style="color:#3677a9">10</span>
 }))
-fib_recursions <span style="color:#f92672">&lt;-</span> parse_recursion(rlang<span style="color:#f92672">::</span>quo({
-  F[n] <span style="color:#f92672">&lt;-</span> F[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> F[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
-  F[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>                   <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>
+fib_recursions &lt;- parse_recursion(rlang::quo({
+  F[n] &lt;- F[n - <span style="color:#3677a9">1</span>] + F[n - <span style="color:#3677a9">2</span>] ? n &gt; <span style="color:#3677a9">2</span>
+  F[n] &lt;- <span style="color:#3677a9">1</span>                   ? n &lt;= <span style="color:#3677a9">2</span>
 }))
-make_loop_expr(get_table_name(fib_recursions<span style="color:#f92672">$</span>patterns),
+make_loop_expr(get_table_name(fib_recursions$patterns),
                 make_update_expr(
                     fib_ranges,
-                    fib_recursions<span style="color:#f92672">$</span>patterns,
-                    fib_recursions<span style="color:#f92672">$</span>conditions,
-                    fib_recursions<span style="color:#f92672">$</span>recursions
+                    fib_recursions$patterns,
+                    fib_recursions$conditions,
+                    fib_recursions$recursions
                 ))</code></pre></div>
 <pre><code>## {
 ##     combs &lt;- do.call(expand.grid, ranges)
@@ -158,20 +188,20 @@ make_loop_expr(get_table_name(fib_recursions<span style="color:#f92672">$</span>
 </code></pre>
 
 <p>The loop needs to have access to the dynamic programming table and the index—in the general case indices, when there are more ranges—and on top of that it should be able to see any other variables defined in the scope where the ranges- and recursions-specifications are defined. The <code>with</code>-statement inside the loop makes sure that the expression can see the range-indices. If I just evaluated the loop expression in the quosure environment, I would get an error, because the loop needs to know <code>ranges</code>, so I solved that by putting the local environment in the evaluation function on top of the quosure-environment and evaluated the loop in this scope:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(ranges, recursions) {
-    loop <span style="color:#f92672">&lt;-</span> make_loop_expr(
-                get_table_name(recursions<span style="color:#f92672">$</span>patterns),
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(ranges, recursions) {
+    loop &lt;- make_loop_expr(
+                get_table_name(recursions$patterns),
                 make_update_expr(
                     ranges,
-                    recursions<span style="color:#f92672">$</span>patterns,
-                    recursions<span style="color:#f92672">$</span>conditions,
-                    recursions<span style="color:#f92672">$</span>recursions
+                    recursions$patterns,
+                    recursions$conditions,
+                    recursions$recursions
                 ))
-    eval_env <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>env_clone(
-        <span style="color:#66d9ef">environment</span>(), <span style="color:#75715e"># this function environment</span>
-        recursions<span style="color:#f92672">$</span>recursion_env <span style="color:#75715e"># quosure environment</span>
+    eval_env &lt;- rlang::env_clone(
+        <span style="color:#6ab825">environment</span>(), <span style="color:#999;font-style:italic"># this function environment</span>
+        recursions$recursion_env <span style="color:#999;font-style:italic"># quosure environment</span>
     )
-    <span style="color:#66d9ef">eval</span>(loop, envir <span style="color:#f92672">=</span> eval_env)
+    <span style="color:#6ab825">eval</span>(loop, envir = eval_env)
 }
 eval_recursion(fib_ranges, fib_recursions)</code></pre></div>
 <pre><code>##  [1]  1  1  2  3  5  8 13 21 34 55
@@ -188,63 +218,63 @@ eval_recursion(fib_ranges, fib_recursions)</code></pre></div>
 <p>I cannot evaluate an assignment in that setup, though. I won’t get an error, but I won’t be doing any assignment either. If I evaluate an assignment in an <code>eval</code>-call with a list as the second argument, I won’t be updating the evaluation environment. That environment is given as the third argument, but <code>eval</code> will not try to assign into it, just because it cannot assign into the second argument. Consequently, I have to split up the recursion evaluation and the assignment to the table. I use both <code>combs[row,]</code> and the evaluation environment when I compute the value for the recursion, but I use on the evaluation-environment when I assign.</p>
 
 <p>The new solution looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(ranges, recursions) {
-    tbl_name <span style="color:#f92672">&lt;-</span> get_table_name(recursions<span style="color:#f92672">$</span>patterns)
-    tbl_name_string <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">as.character</span>(tbl_name)
-    update_expr <span style="color:#f92672">&lt;-</span> make_update_expr(
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(ranges, recursions) {
+    tbl_name &lt;- get_table_name(recursions$patterns)
+    tbl_name_string &lt;- <span style="color:#6ab825">as.character</span>(tbl_name)
+    update_expr &lt;- make_update_expr(
         ranges,
-        recursions<span style="color:#f92672">$</span>patterns,
-        recursions<span style="color:#f92672">$</span>conditions,
-        recursions<span style="color:#f92672">$</span>recursions
+        recursions$patterns,
+        recursions$conditions,
+        recursions$recursions
     )
-    eval_env <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>child_env(recursions<span style="color:#f92672">$</span>recursion_env)
+    eval_env &lt;- rlang::child_env(recursions$recursion_env)
     
-    combs <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">do.call</span>(<span style="color:#66d9ef">expand.grid</span>, ranges)
-    tbl <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">vector</span>(<span style="color:#e6db74">&#34;numeric&#34;</span>, length <span style="color:#f92672">=</span> <span style="color:#66d9ef">nrow</span>(combs))
-    <span style="color:#66d9ef">dim</span>(tbl) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">Map</span>(<span style="color:#66d9ef">length</span>, ranges)
-    eval_env[[tbl_name_string]] <span style="color:#f92672">&lt;-</span> tbl
+    combs &lt;- <span style="color:#6ab825">do.call</span>(<span style="color:#6ab825">expand.grid</span>, ranges)
+    tbl &lt;- <span style="color:#6ab825;font-weight:bold">vector</span>(<span style="color:#ed9d13">&#34;numeric&#34;</span>, length = <span style="color:#6ab825">nrow</span>(combs))
+    <span style="color:#6ab825">dim</span>(tbl) &lt;- <span style="color:#6ab825">Map</span>(<span style="color:#6ab825">length</span>, ranges)
+    eval_env[[tbl_name_string]] &lt;- tbl
     
-    <span style="color:#66d9ef">for</span> (row <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(tbl)) {
-        val <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">eval</span>(
-            rlang<span style="color:#f92672">::</span>expr(rlang<span style="color:#f92672">::</span>UQ(update_expr)),
-            combs[<span style="color:#66d9ef">row</span>, , drop <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>],
+    <span style="color:#6ab825;font-weight:bold">for</span> (row <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#6ab825">seq_along</span>(tbl)) {
+        val &lt;- <span style="color:#6ab825">eval</span>(
+            rlang::expr(rlang::UQ(update_expr)),
+            combs[<span style="color:#6ab825">row</span>, , drop = <span style="color:#6ab825;font-weight:bold">FALSE</span>],
             eval_env
         )
-        <span style="color:#66d9ef">eval</span>(rlang<span style="color:#f92672">::</span>expr(
-                rlang<span style="color:#f92672">::</span>UQ(tbl_name)[rlang<span style="color:#f92672">::</span>UQ(<span style="color:#66d9ef">row</span>)] 
-                    <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>UQ(val)
+        <span style="color:#6ab825">eval</span>(rlang::expr(
+                rlang::UQ(tbl_name)[rlang::UQ(<span style="color:#6ab825">row</span>)] 
+                    &lt;- rlang::UQ(val)
             ), eval_env)
     }
     
     eval_env[[tbl_name_string]]
 }</code></pre></div>
 <p>For Fibonacci numbers, I get this result:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion(
-    ranges <span style="color:#f92672">=</span> fib_ranges, 
-    recursions <span style="color:#f92672">=</span> fib_recursions
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">eval_recursion(
+    ranges = fib_ranges, 
+    recursions = fib_recursions
 )</code></pre></div>
 <pre><code>##  [1]  1  1  2  3  5  8 13 21 34 55
 </code></pre>
 
 <p>For the edit-distance between two strings, I get this result:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;c&#34;</span>)
-y <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;c&#34;</span>)
-edit_ranges <span style="color:#f92672">&lt;-</span> parse_ranges(rlang<span style="color:#f92672">::</span>quo({
-    i <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(x) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
-    j <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>(<span style="color:#66d9ef">length</span>(y) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#6ab825;font-weight:bold">c</span>(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, <span style="color:#ed9d13">&#34;c&#34;</span>)
+y &lt;- <span style="color:#6ab825;font-weight:bold">c</span>(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, <span style="color:#ed9d13">&#34;c&#34;</span>)
+edit_ranges &lt;- parse_ranges(rlang::quo({
+    i &lt;- <span style="color:#3677a9">1</span>:(<span style="color:#6ab825">length</span>(x) + <span style="color:#3677a9">1</span>)
+    j &lt;- <span style="color:#3677a9">1</span>:(<span style="color:#6ab825">length</span>(y) + <span style="color:#3677a9">1</span>)
 }))
-edit_recursions <span style="color:#f92672">&lt;-</span> parse_recursion(rlang<span style="color:#f92672">::</span>quo({
-  E[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
-  E[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
-  E[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(
-      E[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-      E[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-      E[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> (x[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> y[j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>])
+edit_recursions &lt;- parse_recursion(rlang::quo({
+  E[<span style="color:#3677a9">1</span>,j] &lt;- j - <span style="color:#3677a9">1</span>
+  E[i,<span style="color:#3677a9">1</span>] &lt;- i - <span style="color:#3677a9">1</span>
+  E[i,j] &lt;- <span style="color:#6ab825">min</span>(
+      E[i - <span style="color:#3677a9">1</span>,j] + <span style="color:#3677a9">1</span>,
+      E[i,j - <span style="color:#3677a9">1</span>] + <span style="color:#3677a9">1</span>,
+      E[i - <span style="color:#3677a9">1</span>,j - <span style="color:#3677a9">1</span>] + (x[i - <span style="color:#3677a9">1</span>] != y[j - <span style="color:#3677a9">1</span>])
   )
 }))
 eval_recursion(
-    ranges <span style="color:#f92672">=</span> edit_ranges, 
-    recursions <span style="color:#f92672">=</span> edit_recursions
+    ranges = edit_ranges, 
+    recursions = edit_recursions
 )</code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5]
 ## [1,]    0    1    2    3    4
@@ -345,5 +375,7 @@ eval_recursion(
 </div>
 <script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
 </body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
 
 </html>
