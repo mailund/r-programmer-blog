@@ -1,0 +1,5 @@
+
+[*Metaprogramming in R*](https://amzn.to/2QHONDT)
+
+[*Domain-Specific Languages in R*](https://amzn.to/2QHMNLL)
+
