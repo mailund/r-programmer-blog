@@ -3,6 +3,7 @@ title = "Scoping Rules and NSE"
 date = 2018-09-20T05:00:15+02:00
 tags = ["scope-rules"]
 categories = ["Non-standard evaluation"]
+draft = true
 +++
 
 Earlier this week, I wrote some tweets about how you have to be careful about scopes when you do non-standard evaluation. I cover this in both [*Metaprogramming in R*](https://amzn.to/2QHONDT) and [*Domain-Specific Languages in R*](https://amzn.to/2QHMNLL), but this tweet
