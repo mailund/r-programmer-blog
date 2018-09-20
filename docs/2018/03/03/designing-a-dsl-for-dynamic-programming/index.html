@@ -9,10 +9,39 @@
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
   <meta name="generator" content="Hugo 0.40.2" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
-  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -24,18 +53,23 @@
 
       <ul id="social-media">
         
-        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
           
-        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
          
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
       </ul>
       
       <p><em>Tips and tricks for serious software development in R</em></p>
       
+
     </header>
 
     
@@ -108,43 +142,43 @@
     
 
     <p>I&rsquo;m working on an example for one of the chapters of <a href="http://amzn.to/2FO5MiQ">Domain Specific Languages in R</a> that will appear in the printed version but weren&rsquo;t included in the earlier e-book. The plan is to have one to three extra example chapters, depending on how much I can do before my deadline on April 1st. The first of these is a domain-specific language for specifying dynamic programming algorithms. The code will also be available as an R package I have named <code>dynprog</code>. You can get the current version on <a href="https://github.com/mailund/dynprog">GitHub</a>. You can, of course, install it from GitHub using <code>devtools</code>,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">devtools<span style="color:#f92672">::</span>install_github(<span style="color:#e6db74">&#34;mailund/dynprog&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">devtools::install_github(<span style="color:#ed9d13">&#34;mailund/dynprog&#34;</span>)</code></pre></div>
 <p>but there is no functionality yet, so there is little point to doing that.</p>
 
 <p>Anyway, my plan is to have functionality that fills out a dynamic programming table based on a recursion specification.</p>
 
 <p>The syntax I&rsquo;ve come up with looks like this for specifying a table of factorial values:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact <span style="color:#f92672">&lt;-</span> fact <span style="color:#f92672">%with%</span> {
-  fact[n] <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> fact[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>
-  fact[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>               <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>}</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact &lt;- fact %with% {
+  fact[n] &lt;- n * fact[n - <span style="color:#3677a9">1</span>] ? n &gt;= <span style="color:#3677a9">1</span>
+  fact[n] &lt;- <span style="color:#3677a9">1</span>               ? n &lt; <span style="color:#3677a9">1</span>
+} %where% {n &lt;- <span style="color:#3677a9">1</span>:<span style="color:#3677a9">4</span>}</code></pre></div>
 <p>I use two top-level infix operators, <code>%with%</code> and <code>%where%</code> to specify a recursion. With <code>%with%</code> (no pun) I specify the table to fill out and the recursion and <code>%where%</code> then combines the recursion with a ranges the algorithm should iterate over.</p>
 
 <p>Another example, for computing the edit-distance between two strings, could look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abccd&#34;</span>
-y <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abd&#34;</span>
-edit <span style="color:#f92672">&lt;-</span> edit <span style="color:#f92672">%with%</span> {
-  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j
-  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i
-  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> x[i] <span style="color:#f92672">==</span> y[j]) <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {i <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(x) ; j <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(y)}</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#ed9d13">&#34;abccd&#34;</span>
+y &lt;- <span style="color:#ed9d13">&#34;abd&#34;</span>
+edit &lt;- edit %with% {
+  edit[<span style="color:#3677a9">1</span>,j] &lt;- j
+  edit[i,<span style="color:#3677a9">1</span>] &lt;- i
+  edit[i,j] &lt;- <span style="color:#6ab825">min</span>(edit[i - <span style="color:#3677a9">1</span>,j] + <span style="color:#3677a9">1</span>,
+                   edit[i,j - <span style="color:#3677a9">1</span>] + <span style="color:#3677a9">1</span>,
+                   edit[i - <span style="color:#3677a9">1</span>,j - <span style="color:#3677a9">1</span>] + x[i] == y[j]) ? i &gt; <span style="color:#3677a9">1</span> &amp;&amp; j &gt; <span style="color:#3677a9">1</span>
+} %where% {i &lt;- <span style="color:#6ab825">seq_along</span>(x) ; j &lt;- <span style="color:#6ab825">seq_along</span>(y)}</code></pre></div>
 <p>I&rsquo;m not entirely sure I need the <code>%with%</code> operator. It is just a piece of syntax to get the recursion started, but I don&rsquo;t use the first argument, the table name, to anything yet. I can get it from the recursions if I wanted to, but I am not sure that I need it at all. So maybe I will end up with just a <code>%where%</code> operator and the recursions could look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact <span style="color:#f92672">&lt;-</span> {
-  fact[n] <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> fact[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>
-  fact[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>               <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>}
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact &lt;- {
+  fact[n] &lt;- n * fact[n - <span style="color:#3677a9">1</span>] ? n &gt;= <span style="color:#3677a9">1</span>
+  fact[n] &lt;- <span style="color:#3677a9">1</span>               ? n &lt; <span style="color:#3677a9">1</span>
+} %where% {n &lt;- <span style="color:#3677a9">1</span>:<span style="color:#3677a9">4</span>}
 
-x <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abccd&#34;</span>
-y <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abd&#34;</span>
-edit <span style="color:#f92672">&lt;-</span> {
-  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j
-  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i
-  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> x[i] <span style="color:#f92672">==</span> y[j]) <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {i <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(x) ; j <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(y)}</code></pre></div>
+x &lt;- <span style="color:#ed9d13">&#34;abccd&#34;</span>
+y &lt;- <span style="color:#ed9d13">&#34;abd&#34;</span>
+edit &lt;- {
+  edit[<span style="color:#3677a9">1</span>,j] &lt;- j
+  edit[i,<span style="color:#3677a9">1</span>] &lt;- i
+  edit[i,j] &lt;- <span style="color:#6ab825">min</span>(edit[i - <span style="color:#3677a9">1</span>,j] + <span style="color:#3677a9">1</span>,
+                   edit[i,j - <span style="color:#3677a9">1</span>] + <span style="color:#3677a9">1</span>,
+                   edit[i - <span style="color:#3677a9">1</span>,j - <span style="color:#3677a9">1</span>] + x[i] == y[j]) ? i &gt; <span style="color:#3677a9">1</span> &amp;&amp; j &gt; <span style="color:#3677a9">1</span>
+} %where% {i &lt;- <span style="color:#6ab825">seq_along</span>(x) ; j &lt;- <span style="color:#6ab825">seq_along</span>(y)}</code></pre></div>
 <p>I can&rsquo;t decide whether I want a keyword at the beginning of the recursion to make clear that we now have an expression in the DSL or go for the simpler solution with only one keyword/infix operator.</p>
 
 <p>Whether I keep <code>%with%</code> or not, the specification consists of a recursion and a set of ranges to evaluate the the recursion over. Both of these are a sequence of assignments. Of the two, the ranges specification is the simplest. Here, I just consider the sequence of assignments a list of iterator variables and the values they should iterate over in when I evaluate the recursion.</p>
@@ -156,32 +190,32 @@ edit <span style="color:#f92672">&lt;-</span> {
 <p>I have written the parser for the DSL now. I parse ranges into a list of the values provided in that part of the expression and I translate the recursion specification into three lists: <code>patterns</code> for the left-hand-side of the recursion assignments, <code>conditions</code> for the right-hand-side of <code>?</code> expressions, and finally <code>recursions</code> for the actual expression. To keep the scope in which the recursions should be evaluated, over-scoped by ranges, of course, I store that with the lists as well. An alternative would be to represent all the <code>recursions</code> expressions as quosures, but they will all have the same scope if they are from the same DSL expression, so I don&rsquo;t see the point in that.</p>
 
 <p>The parsed information for the <code>factorial</code> expression, in the version without <code>%with%</code>, looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(dynprog)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(dynprog)</code></pre></div>
 <pre><code>## Error in library(dynprog): there is no package called 'dynprog'
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact <span style="color:#f92672">&lt;-</span> {
-  fact[n] <span style="color:#f92672">&lt;-</span> n <span style="color:#f92672">*</span> fact[n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">?</span> n <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>
-  fact[n] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>               <span style="color:#f92672">?</span> n <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>}</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact &lt;- {
+  fact[n] &lt;- n * fact[n - <span style="color:#3677a9">1</span>] ? n &gt;= <span style="color:#3677a9">1</span>
+  fact[n] &lt;- <span style="color:#3677a9">1</span>               ? n &lt; <span style="color:#3677a9">1</span>
+} %where% {n &lt;- <span style="color:#3677a9">1</span>:<span style="color:#3677a9">4</span>}</code></pre></div>
 <pre><code>## Error in {: could not find function &quot;%where%&quot;
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fact</code></pre></div>
 <pre><code>## Error in eval(expr, envir, enclos): objekt 'fact' blev ikke fundet
 </code></pre>
 
 <p>For edit distance, the parsed information is this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abccd&#34;</span>
-y <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;abd&#34;</span>
-edit <span style="color:#f92672">&lt;-</span> {
-  edit[<span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">&lt;-</span> j
-  edit[i,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;-</span> i
-  edit[i,j] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">min</span>(edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-                   edit[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>,j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> x[i] <span style="color:#f92672">==</span> y[j]) <span style="color:#f92672">?</span> i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
-} <span style="color:#f92672">%where%</span> {i <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(x) ; j <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">seq_along</span>(y)}</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#ed9d13">&#34;abccd&#34;</span>
+y &lt;- <span style="color:#ed9d13">&#34;abd&#34;</span>
+edit &lt;- {
+  edit[<span style="color:#3677a9">1</span>,j] &lt;- j
+  edit[i,<span style="color:#3677a9">1</span>] &lt;- i
+  edit[i,j] &lt;- <span style="color:#6ab825">min</span>(edit[i - <span style="color:#3677a9">1</span>,j] + <span style="color:#3677a9">1</span>,
+                   edit[i,j - <span style="color:#3677a9">1</span>] + <span style="color:#3677a9">1</span>,
+                   edit[i - <span style="color:#3677a9">1</span>,j - <span style="color:#3677a9">1</span>] + x[i] == y[j]) ? i &gt; <span style="color:#3677a9">1</span> &amp;&amp; j &gt; <span style="color:#3677a9">1</span>
+} %where% {i &lt;- <span style="color:#6ab825">seq_along</span>(x) ; j &lt;- <span style="color:#6ab825">seq_along</span>(y)}</code></pre></div>
 <pre><code>## Error in {: could not find function &quot;%where%&quot;
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">edit</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">edit</code></pre></div>
 <pre><code>## function (name, ...) 
 ## UseMethod(&quot;edit&quot;)
 ## &lt;bytecode: 0x7f8d5a4e15f8&gt;
@@ -280,5 +314,7 @@ edit <span style="color:#f92672">&lt;-</span> {
 </div>
 <script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
 </body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
 
 </html>

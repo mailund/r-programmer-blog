@@ -9,10 +9,39 @@
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
   <meta name="generator" content="Hugo 0.40.2" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
-  <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -24,18 +53,23 @@
 
       <ul id="social-media">
         
-        <li><a href="https://twitter.com/ThomasMailund"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
          
-        <li><a href="https://github.com/mailund"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
           
-        <li><a href="https://www.facebook.com/mailund"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
          
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
       </ul>
       
       <p><em>Tips and tricks for serious software development in R</em></p>
       
+
     </header>
 
     
@@ -110,20 +144,20 @@
     
 
 <p>I just added a new feature to my <a href="https://github.com/mailund/pmatch"><code>pmatch</code> package</a>. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># install.packages(&#34;devtools&#34;)</span>
-devtools<span style="color:#f92672">::</span>install_github(<span style="color:#e6db74">&#34;mailund/pmatch&#34;</span>)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># install.packages(&#34;devtools&#34;)</span>
+devtools::install_github(<span style="color:#ed9d13">&#34;mailund/pmatch&#34;</span>)</code></pre></div>
 <p>This package implements Haskell- or ML-like pattern matching, and I showed some examples of it in my post on <a href="https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/">tail-recursion optimisation</a>. The goal of the package was to make it easier to write more functional code in R—which is also the goal of the tail-recursion optimisation project I’m working on—but the features in <code>pmatch</code> also makes it easier to implement a variant of parallel/multiple-variable assignments.</p>
 
 <p>What I mean by that term is the kind of assignments that in Python, for example, looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span></code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z = <span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <span style="color:#3677a9">3</span></code></pre></div>
 <p>Here, we assign to all three variables, <code>x</code>, <code>y</code>, and <code>z</code>, as a single instruction, and if we assign values that refer to the parameters, we get the values <em>before</em> they are assigned to, so</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>
-x, y, z <span style="color:#f92672">=</span> z, x, y</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z = <span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <span style="color:#3677a9">3</span>
+x, y, z = z, x, y</code></pre></div>
 <p>leaves <code>x</code> with the value 3, <code>y</code> with the value 1, and <code>z</code> with the value 2. This, in contrast to</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>
-x <span style="color:#f92672">=</span> z
-y <span style="color:#f92672">=</span> x
-z <span style="color:#f92672">=</span> y</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x, y, z = <span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <span style="color:#3677a9">3</span>
+x = z
+y = x
+z = y</code></pre></div>
 <p>where the assignments are executed sequentially and all variables end up holding the value 3.</p>
 
 <p>I have implemented this functionality before, in different ways, and I know that I am not the only one. With pattern-matching, though, it gets a little more exciting.</p>
@@ -131,45 +165,45 @@ z <span style="color:#f92672">=</span> y</code></pre></div>
 <h2 id="the-bind-object-and-variable-bindings">The <code>bind</code> object and variable bindings</h2>
 
 <p>The entire implementation looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">structure</span>(<span style="color:#66d9ef">NA</span>, class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tailr_bind&#34;</span>)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind &lt;- <span style="color:#6ab825">structure</span>(<span style="color:#6ab825;font-weight:bold">NA</span>, class = <span style="color:#ed9d13">&#34;tailr_bind&#34;</span>)
 
-<span style="color:#e6db74">`[&lt;-.tailr_bind`</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(dummy, <span style="color:#66d9ef">...</span>, value) {
-    <span style="color:#66d9ef">force</span>(value)
-    var_env <span style="color:#f92672">&lt;-</span> rlang<span style="color:#f92672">::</span>caller_env()
-    patterns <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">eval</span>(<span style="color:#66d9ef">substitute</span>(<span style="color:#66d9ef">alist</span>(<span style="color:#66d9ef">...</span>)))
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">length</span>(patterns) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
-          value <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">list</span>(value)
+<span style="color:#ed9d13">`[&lt;-.tailr_bind`</span> &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(dummy, <span style="color:#6ab825;font-weight:bold">...</span>, value) {
+    <span style="color:#6ab825">force</span>(value)
+    var_env &lt;- rlang::caller_env()
+    patterns &lt;- <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">substitute</span>(<span style="color:#6ab825">alist</span>(<span style="color:#6ab825;font-weight:bold">...</span>)))
+    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">length</span>(patterns) == <span style="color:#3677a9">1</span>) {
+          value &lt;- <span style="color:#6ab825;font-weight:bold">list</span>(value)
     }
 
-    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">seq_along</span>(patterns)) {
-        var_bindings <span style="color:#f92672">&lt;-</span> test_pattern_(
+    <span style="color:#6ab825;font-weight:bold">for</span> (i <span style="color:#6ab825;font-weight:bold">in</span> <span style="color:#6ab825">seq_along</span>(patterns)) {
+        var_bindings &lt;- test_pattern_(
             value[[i]],
             patterns[[i]], 
-            eval_env <span style="color:#f92672">=</span> var_env
+            eval_env = var_env
         )
-        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">is.null</span>(var_bindings)) {
-            <span style="color:#66d9ef">stop</span>(<span style="color:#e6db74">&#34;error&#34;</span>)
+        <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(var_bindings)) {
+            <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;error&#34;</span>)
         }
-        copy_env(from <span style="color:#f92672">=</span> var_bindings, to <span style="color:#f92672">=</span> var_env)
+        copy_env(from = var_bindings, to = var_env)
     }
 
     dummy
 }</code></pre></div>
 <p>where I use this function to copy variables from one environment to another:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">copy_env <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(from, to, names<span style="color:#f92672">=</span><span style="color:#66d9ef">ls</span>(from, all.names <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)) {
-    <span style="color:#66d9ef">mapply</span>(
-        <span style="color:#66d9ef">assign</span>, <span style="color:#66d9ef">names</span>, <span style="color:#66d9ef">mget</span>(<span style="color:#66d9ef">names</span>, from), <span style="color:#66d9ef">list</span>(to),
-        SIMPLIFY <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>, USE.NAMES <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">copy_env &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(from, to, names=<span style="color:#6ab825">ls</span>(from, all.names = <span style="color:#6ab825;font-weight:bold">TRUE</span>)) {
+    <span style="color:#6ab825">mapply</span>(
+        <span style="color:#6ab825">assign</span>, <span style="color:#6ab825">names</span>, <span style="color:#6ab825">mget</span>(<span style="color:#6ab825">names</span>, from), <span style="color:#6ab825;font-weight:bold">list</span>(to),
+        SIMPLIFY = <span style="color:#6ab825;font-weight:bold">FALSE</span>, USE.NAMES = <span style="color:#6ab825;font-weight:bold">FALSE</span>
     )
-    <span style="color:#66d9ef">invisible</span>(<span style="color:#66d9ef">NULL</span>)
+    <span style="color:#6ab825">invisible</span>(<span style="color:#6ab825;font-weight:bold">NULL</span>)
 }</code></pre></div>
 <p>The <code>bind</code> object only exists to give me a class where I can specialise the subscript operator so I can get syntax such as</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[x, y, z] <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span>
-<span style="color:#66d9ef">c</span>(x, y, z)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[x, y, z] &lt;- <span style="color:#3677a9">1</span>:<span style="color:#3677a9">3</span>
+<span style="color:#6ab825;font-weight:bold">c</span>(x, y, z)</code></pre></div>
 <pre><code>## [1] 1 2 3
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[x, y, z] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(z, x, y)
-<span style="color:#66d9ef">c</span>(x, y, z)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[x, y, z] &lt;- <span style="color:#6ab825;font-weight:bold">c</span>(z, x, y)
+<span style="color:#6ab825;font-weight:bold">c</span>(x, y, z)</code></pre></div>
 <pre><code>## [1] 3 1 2
 </code></pre>
 
@@ -178,8 +212,8 @@ z <span style="color:#f92672">=</span> y</code></pre></div>
 <p>I explicitly <code>force</code> them to make sure that the values are evaluated before I start messing with the environment and updating variables. Strictly speaking,  this isn’t necessary—the promise will be evaluated the first time I invoke <code>value[[i]]</code> inside the loop—but I prefer to be explicit when it comes to lazy evaluation that might bite me at some later time. It is essential that the <code>value</code> promise is evaluated before I start assigning to variables. Otherwise, the assignments would look like the sequential version of the Python code. Because I evaluate all the values before the loop, when I call <code>force</code>, the assignments will occur in parallel.</p>
 
 <p>The</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">length</span>(patterns) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
-          value <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">list</span>(value)
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">length</span>(patterns) == <span style="color:#3677a9">1</span>) {
+          value &lt;- <span style="color:#6ab825;font-weight:bold">list</span>(value)
     }</code></pre></div>
 <p>statement might look a little odd, but it is needed when I match against values made from <code>pmatch</code> constructors. These are lists, and if there is only a single one provided, I make sure it is wrapped as a list with a single element so the indices in the loop will function correctly.</p>
 
@@ -188,33 +222,33 @@ z <span style="color:#f92672">=</span> y</code></pre></div>
 <h2 id="pattern-matching-and-bindings">Pattern matching and bindings</h2>
 
 <p>The reason I found it interesting to implement this type of variable assignments one more time is the combination with pattern matching. I can define something like a linked list:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llist <span style="color:#f92672">:=</span> NIL <span style="color:#f92672">|</span> CONS(car, cdr <span style="color:#f92672">:</span> llist)
-L <span style="color:#f92672">&lt;-</span> CONS(<span style="color:#ae81ff">1</span>, CONS(<span style="color:#ae81ff">2</span>, CONS(<span style="color:#ae81ff">3</span>, NIL)))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llist := NIL | CONS(car, cdr : llist)
+L &lt;- CONS(<span style="color:#3677a9">1</span>, CONS(<span style="color:#3677a9">2</span>, CONS(<span style="color:#3677a9">3</span>, NIL)))
 L</code></pre></div>
 <pre><code>## CONS(car = 1, cdr = CONS(car = 2, cdr = CONS(car = 3, cdr = NIL)))
 </code></pre>
 
 <p>and then match against constructor-patterns to assign parts of a list to variables:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[CONS(first, CONS(second, rest))] <span style="color:#f92672">&lt;-</span> L
-<span style="color:#66d9ef">c</span>(first, second)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[CONS(first, CONS(second, rest))] &lt;- L
+<span style="color:#6ab825;font-weight:bold">c</span>(first, second)</code></pre></div>
 <pre><code>## [1] 1 2
 </code></pre>
 
 <p>Similarly for binary trees:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree <span style="color:#f92672">:=</span> L(elm <span style="color:#f92672">:</span> <span style="color:#66d9ef">numeric</span>) <span style="color:#f92672">|</span> T(left <span style="color:#f92672">:</span> tree, right <span style="color:#f92672">:</span> tree)
-x <span style="color:#f92672">&lt;-</span> T(T(L(<span style="color:#ae81ff">1</span>),L(<span style="color:#ae81ff">2</span>)), T(T(L(<span style="color:#ae81ff">3</span>),L(<span style="color:#ae81ff">4</span>)),L(<span style="color:#ae81ff">5</span>)))
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree := L(elm : <span style="color:#6ab825;font-weight:bold">numeric</span>) | T(left : tree, right : tree)
+x &lt;- T(T(L(<span style="color:#3677a9">1</span>),L(<span style="color:#3677a9">2</span>)), T(T(L(<span style="color:#3677a9">3</span>),L(<span style="color:#3677a9">4</span>)),L(<span style="color:#3677a9">5</span>)))
 x</code></pre></div>
 <pre><code>## T(left = T(left = L(elm = 1), right = L(elm = 2)), right = T(left = T(left = L(elm = 3), right = L(elm = 4)), right = L(elm = 5)))
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[T(left, right)] <span style="color:#f92672">&lt;-</span> x
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[T(left, right)] &lt;- x
 left</code></pre></div>
 <pre><code>## T(left = L(elm = 1), right = L(elm = 2))
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">right</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">right</code></pre></div>
 <pre><code>## T(left = T(left = L(elm = 3), right = L(elm = 4)), right = L(elm = 5))
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[T(L(one),L(two)), T(left2, L(five))] <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">list</span>(left, right)
-<span style="color:#66d9ef">c</span>(one, two, five)</code></pre></div>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">bind[T(L(one),L(two)), T(left2, L(five))] &lt;- <span style="color:#6ab825;font-weight:bold">list</span>(left, right)
+<span style="color:#6ab825;font-weight:bold">c</span>(one, two, five)</code></pre></div>
 <pre><code>## [1] 1 2 5
 </code></pre>
 
@@ -306,5 +340,7 @@ left</code></pre></div>
 </div>
 <script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
 </body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
 
 </html>

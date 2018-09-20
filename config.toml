@@ -4,13 +4,17 @@ copyright = "Copyright &copy; 2018 - Thomas Mailund"
 canonifyurls = true
 theme = "hugo-kiera"
 publishDir = "docs"
-googleAnalytics = ""
-disqusShortname = "r-programmer-blog"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+googleAnalytics = "UA-126024558-1"
+disqusShortname = "r-programmer-blog"
 
 paginate = 20
 summaryLength = 30
 pygmentsCodeFences = true
+pygmentsStyle = "native"
+
+
 
 [author]
     name = "Thomas Mailund"
@@ -18,20 +22,15 @@ pygmentsCodeFences = true
     twitter = "ThomasMailund"
     linkedin = "thomas-mailund-94153b1"
     facebook = "mailund"
+    patreon = "mailund"
+    goodreads = "15484380.Thomas_Mailund"
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
 
 [params]
     tagline = "Tips and tricks for serious software development in R"
-
-
-    # options for highlight.js (version, additional languages, and theme)
-    highlightjsVersion = "9.11.0"
-    highlightjsCDN = "//cdn.bootcss.com"
-    highlightjsLang = ["r", "yaml"]
-    highlightjsTheme = "github"
-
-    MathJaxCDN = "//cdn.bootcss.com"
-    MathJaxVersion = "2.7.1"
-
+    
+    googlefonts = ["Droid Sans", "Fira Code"]
+    fontbody = 'Droid Sans'
+    fontcode = 'Fira Code'
