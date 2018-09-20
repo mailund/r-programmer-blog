@@ -3,3 +3,8 @@
 
 [*Domain-Specific Languages in R*](https://amzn.to/2QHMNLL)
 
+[*Introduction to Computational Thinking*](https://leanpub.com/comp-thinking)
+
+[*The Joys of Hashing*](https://amzn.to/2pngZQ0)
+
+
