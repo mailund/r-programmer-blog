@@ -96,12 +96,473 @@
         </li>
         
 
-        <li>0 min read</li>
+        <li>16 min read</li>
     </ul>
 </aside>
     
 
     
+
+<p>Earlier this week, I wrote some tweets about how you have to be careful about scopes when you do non-standard evaluation. I cover this in both <a href="https://amzn.to/2QHONDT"><em>Metaprogramming in R</em></a> and <a href="https://amzn.to/2QHMNLL"><em>Domain-Specific Languages in R</em></a>, but this tweet</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Comprehensive overview of NSE. Should be of interest to <a href="https://twitter.com/ThomasMailund?ref_src=twsrc%5Etfw">@ThomasMailund</a> <a href="https://twitter.com/MilesMcBain?ref_src=twsrc%5Etfw">@MilesMcBain</a> <a href="https://twitter.com/_ColinFay?ref_src=twsrc%5Etfw">@_ColinFay</a> and <a href="https://twitter.com/edwin_thoen?ref_src=twsrc%5Etfw">@edwin_thoen</a> <a href="https://t.co/2uI1HSnfEN">https://t.co/2uI1HSnfEN</a></p>&mdash; Deemah 🇺🇦  🇳🇴 (@dmi3k) <a href="https://twitter.com/dmi3k/status/1041563992332881920?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>made me write about it again—only this time in a twitter thread.</p>
+
+<p>Well, I say thread—I don&rsquo;t actually know how to do that, it seams; I just replied to the tweet a bunch of times and apparently that doesn&rsquo;t make a thread, it therefore my reply was hard to read. This is apparently where I went wrong</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sorry there is only one Tweet, remember you have to reply to one of the main tweet from the thread not a comment.<br>If you think I&#39;m buggy please let me know by DM or email 😊<br>Need help? check this link: <a href="https://t.co/dz8sHGkl3T">https://t.co/dz8sHGkl3T</a> 🤖</p>&mdash; Thread Reader App (@threadreaderapp) <a href="https://twitter.com/threadreaderapp/status/1041815478493229061?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Anyway, the first tweet links to <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">this page</a> that contains a list of tools for implementing &ldquo;macros&rdquo; in R. This just means &ldquo;tools for substituting expressions into other expressions&rdquo; (preferably with some control over where they are put).<sup class="footnote-ref" id="fnref:macros"><a href="#fn:macros">1</a></sup> If you evaluate those expressions after the substitution, either right away or at some later time, it is also called <em>non-standard evaluation</em>. Not surprisingly, it is called that because it differs (at least it can differ) from standard evaluation where you simply have an expression and evaluate it.</p>
+
+<p>The motivation for the <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">overview on macro methods</a> was apparently that a paper on <a href="https://cran.r-project.org/web/packages/wrapr/">the <code>wrapr</code> package</a> was rejected because it didn&rsquo;t compare the package with quasi-quotation from <a href="https://cran.r-project.org/web/packages/rlang/"><code>rlang</code></a>. I might be partially responsible for this, since I reviewed the paper, but I didn&rsquo;t complain about the lack of comparison—I complained that <code>wrapr</code> doesn&rsquo;t deal with scopes (which <code>rlang</code> does), and that this makes <code>wrapr</code>&rsquo;s <code>let</code> function very risky to use. You can <em>very</em> easily write a function that seems to work but contains subtle errors.</p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Erh.. but the paper they had rejected — mentioned at the beginning — was reviewed by me :-/<br><br>There were some pretty serious issues with overscoping with their wrapr package. It doesn’t handle it at all, so you very easily get some very hard to notice errors…</p>&mdash; Thomas Mailund (@ThomasMailund) <a href="https://twitter.com/ThomasMailund/status/1041567698239606785?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">It occurs to me that my previous tweet makes it sound like there is something especially bad with wrapr. There isn’t. But NSE is hard, and wrapr doesn’t make it easier — just easier to get scoping wrong. I find that rlang’s quosures does a good job (your mileage may vary). 1/</p>&mdash; Thomas Mailund (@ThomasMailund) <a href="https://twitter.com/ThomasMailund/status/1041677761130229761?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</p>
+
+<p>Since I didn&rsquo;t manage to make my tweets into a proper thread, so they would be easy to read, I will try to repeat it here. I can add a few things here, now that I have a whole post to work with, but I cannot get around all the interesting scope and NSE topics I would like to. For that, I will send you to my books, or return to those topics at a later time.</p>
+
+<p>Before I get started, though, I once more want to stress that <em>this is not an attack on wrapr::let!</em> The issues with scope are there for pretty much <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">all tools that manipulate expressions</a>. The <code>rlang</code> package has &ldquo;quosures&rdquo;—expressions plus scopes—that alleviates many of the issues. This is the reason I prefer it over the others. If you do not explicitly handle scopes, you are likely to get into trouble with non-standard evaluation. Regardless of how you implement it.</p>
+
+<p>I am simplifying a few things below to make the explanation easier; I am not describing what R <em>actually</em> does, but how it <em>conceptually</em> works with expressions and scopes. There are more details in it, but those are not relevant for this topic.</p>
+
+<h2 id="the-rules-for-expressions-and-evaluation">The rules for expressions and evaluation</h2>
+
+<p>Whenever you write an expression in R, you create an expression object, an abstract syntax tree if you will, and then evaluates it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">2</span> ; y <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span> ; z <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">3</span>
+x <span style="color:#f92672">*</span> (y <span style="color:#f92672">+</span> z)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>You do not <em>have</em> to evaluate it, though. You can avoid this by <em>quoting</em> the expression</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">quote</span>(x <span style="color:#f92672">*</span> (y <span style="color:#f92672">+</span> z))</code></pre></div>
+<pre><code>## x * (y + z)
+</code></pre>
+
+<p>This gives you the abstract syntax tree instead of the result of evaluating it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">expr <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">quote</span>(x <span style="color:#f92672">*</span> (y <span style="color:#f92672">+</span> z))
+<span style="color:#66d9ef">class</span>(expr)</code></pre></div>
+<pre><code>## [1] &quot;call&quot;
+</code></pre>
+
+<p>In this particular case, it says that the syntax tree is a <em>call</em>. It is, because <code>*</code> is a function and that is what we are calling at the outermost level. There are other kinds an expression can be, e.g. constants and variables, but for this post that doesn&rsquo;t matter. What matters is that you can create non-evaluated (quoted) expressions.</p>
+
+<p>That, alone, isn&rsquo;t that interesting. The interesting part is that you can:</p>
+
+<ol>
+<li>Evaluate expressions later, in alternative scopes,</li>
+<li>You can manipulate expressions and modify them before you evaluate them.</li>
+</ol>
+
+<p>You evaluate an expression using the <code>eval</code> function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">eval</span>(expr)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>and you can modify it in several ways; one way is using the built-in <code>substitute</code> function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">expr2 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">substitute</span>(x <span style="color:#f92672">*</span> (y <span style="color:#f92672">+</span> z), <span style="color:#66d9ef">list</span>(x <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span>))
+expr2</code></pre></div>
+<pre><code>## 42 * (y + z)
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">eval</span>(expr2)</code></pre></div>
+<pre><code>## [1] 168
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">12345</span>)
+
+<span style="color:#75715e"># Data:</span>
+d1 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(x <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>), y <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>))
+d2 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(a <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>), b <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>))
+
+<span style="color:#75715e"># Not unreasonable usage:</span>
+<span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d1))[[<span style="color:#e6db74">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+## -1.19510172  1.28778546  0.15138692  0.04667528 -0.29074594
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d2))[[<span style="color:#e6db74">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.3655564 -0.3493650 -0.5340553  0.9946969 -0.4768330
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">xx <span style="color:#f92672">&lt;-</span> rnorm(<span style="color:#ae81ff">5</span>) <span style="color:#75715e"># for partial over-scoping</span>
+<span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> xx, data <span style="color:#f92672">=</span> d1))[[<span style="color:#e6db74">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> xx, data <span style="color:#f92672">=</span> d2))[[<span style="color:#e6db74">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Parameterise:</span>
+lm_prop <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, y, d, prop) {
+    m <span style="color:#f92672">&lt;-</span> lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d)
+    <span style="color:#66d9ef">summary</span>(m)[[prop]]
+}
+lm_prop(x, y, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>)</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+## -1.19510172  1.28778546  0.15138692  0.04667528 -0.29074594
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># lm_prop(a, b, d2, &#34;residuals&#34;)</span>
+<span style="color:#75715e"># -&gt; Error: a and b do not exist; we need NSE for this</span>
+
+<span style="color:#f92672">library</span>(wrapr)</code></pre></div>
+<pre><code>## Error in library(wrapr): there is no package called 'wrapr'
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, y, d, prop, <span style="color:#66d9ef">eval</span>) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> x, y <span style="color:#f92672">=</span> y, prop <span style="color:#f92672">=</span> prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+
+<span style="color:#75715e"># Complete overscoping</span>
+lm_prop2(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+## -1.19510172  1.28778546  0.15138692  0.04667528 -0.29074594
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Partial overscoping</span>
+lm_prop2(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> xx, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Complete overscoping</span>
+lm_prop2(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.3655564 -0.3493650 -0.5340553  0.9946969 -0.4768330
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Partial overscoping</span>
+lm_prop2(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> xx, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># -&gt; Works as intended!</span>
+
+<span style="color:#75715e"># What if I used a different variable for the partial</span>
+<span style="color:#75715e"># overscoping -- that should also work</span>
+x <span style="color:#f92672">&lt;-</span> a <span style="color:#f92672">&lt;-</span> xx
+lm_prop2(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = x, y = y, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># lm_prop2(&#34;x&#34;, &#34;b&#34;, d2, &#34;residuals&#34;, eval = TRUE)</span>
+<span style="color:#75715e"># -&gt; Error: in expression, x is the *string* &#34;x&#34;</span>
+<span style="color:#75715e">#    At least we get an error</span>
+
+<span style="color:#75715e"># Fix: don&#39;t substitute with the same name?</span>
+lm_prop3 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(a, b, d, prop, <span style="color:#66d9ef">eval</span>) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> a, y <span style="color:#f92672">=</span> b, prop <span style="color:#f92672">=</span> prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+lm_prop3(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = a, y = b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = a, y = b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>,  d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = a, y = b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># lm_prop3(&#34;a&#34;, &#34;y&#34;,  d1, &#34;residuals&#34;, eval = TRUE)</span>
+<span style="color:#75715e"># -&gt; Error: even if we do not use it to substitute,</span>
+<span style="color:#75715e">#    then a is still a local variable.</span>
+<span style="color:#75715e">#    We *cannot* call this function with names</span>
+<span style="color:#75715e">#    that can be local variables!</span>
+
+
+<span style="color:#75715e"># Avoid any conflict btw args and local variables</span>
+lm_prop4 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>a, <span style="color:#ae81ff">.</span>b, d, prop, <span style="color:#66d9ef">eval</span>) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>a, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>b, prop <span style="color:#f92672">=</span> prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+lm_prop4(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>,  d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>,  d1, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, d2, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, prop = prop), summary(lm(y ~ x, data = d))$prop, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># All is well!</span>
+
+<span style="color:#75715e"># What if we had done this?</span>
+lm_prop5 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>a, <span style="color:#ae81ff">.</span>b, <span style="color:#ae81ff">.</span>d, prop, <span style="color:#66d9ef">eval</span>) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>a, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>b, d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, prop <span style="color:#f92672">=</span> prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+lm_prop5(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>,  <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> a, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -1.3927303  0.9882521  0.2902905  0.3724643 -0.2582766
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop5(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>,  <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop5(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>,  <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">summary</span>(lm(b <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d2))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9484049 -0.5472260 -0.6373186  0.5359077 -0.2997679
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop5(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>,  <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Great!?</span>
+
+indirect <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(xx, yy, <span style="color:#66d9ef">eval</span>) {
+    d <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(x <span style="color:#f92672">=</span> xx, y <span style="color:#f92672">=</span> yy)
+    lm_prop5(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+
+aa <span style="color:#f92672">&lt;-</span> rnorm(<span style="color:#ae81ff">5</span>) ; bb <span style="color:#f92672">&lt;-</span> rnorm(<span style="color:#ae81ff">5</span>)
+<span style="color:#66d9ef">summary</span>(lm(bb <span style="color:#f92672">~</span> aa))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -0.2855751  0.5968646  0.6913960  0.2728369 -1.2755224
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect(aa, bb, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect(aa, bb, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># -&gt; Error: d isn&#39;t known (it is in the wrong scope)</span>
+
+d <span style="color:#f92672">&lt;-</span> d1 <span style="color:#75715e"># what would have happened if we had a global d?</span>
+indirect(aa, bb, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>) <span style="color:#75715e"># no error, but wrong result!</span></code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># You get:</span>
+<span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d1))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+## -1.19510172  1.28778546  0.15138692  0.04667528 -0.29074594
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># You expected:</span>
+<span style="color:#66d9ef">summary</span>(lm(bb <span style="color:#f92672">~</span> aa))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -0.2855751  0.5968646  0.6913960  0.2728369 -1.2755224
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># The problem is that the d variable is found in the</span>
+<span style="color:#75715e"># global scope and not the calling scope. Fix:</span>
+lm_prop6 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>a, <span style="color:#ae81ff">.</span>b, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop, <span style="color:#66d9ef">eval</span>) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>a, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>b, d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, prop <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        envir <span style="color:#f92672">=</span> <span style="color:#66d9ef">parent.frame</span>(),
+        eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+indirect2 <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(xx, yy, <span style="color:#66d9ef">eval</span>) {
+    d <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(x <span style="color:#f92672">=</span> xx, y <span style="color:#f92672">=</span> yy)
+    lm_prop6(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d&#34;</span>, <span style="color:#e6db74">&#34;residuals&#34;</span>, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">eval</span>)
+}
+<span style="color:#66d9ef">summary</span>(lm(bb <span style="color:#f92672">~</span> aa))<span style="color:#f92672">$</span>residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -0.2855751  0.5968646  0.6913960  0.2728369 -1.2755224
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect2(aa, bb, eval <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>) <span style="color:#75715e"># Fixed!</span></code></pre></div>
+<pre><code>## Error in let(c(x = .a, y = .b, d = .d, prop = .prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">## New example...</span>
+<span style="color:#66d9ef">rm</span>(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;aa&#34;</span>, <span style="color:#e6db74">&#34;bb&#34;</span>, <span style="color:#e6db74">&#34;xx&#34;</span>)
+model_prop <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop) {
+    let(<span style="color:#66d9ef">c</span>(x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>x, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>y, d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, prop <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>prop),
+        <span style="color:#66d9ef">summary</span>(lm(y <span style="color:#f92672">~</span> x, data <span style="color:#f92672">=</span> d))<span style="color:#f92672">$</span>prop,
+        envir <span style="color:#f92672">=</span> <span style="color:#66d9ef">parent.frame</span>())
+}
+<span style="color:#75715e"># This works both with global variables</span>
+<span style="color:#75715e"># and variables in the calling scope</span>
+
+<span style="color:#75715e"># Now let us use it...</span>
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>)
+ylen <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(d1, <span style="color:#66d9ef">length</span>(y))
+<span style="color:#ae81ff">.</span>z <span style="color:#f92672">&lt;-</span> rnorm(ylen)
+<span style="color:#66d9ef">list</span>(xy <span style="color:#f92672">=</span> model_prop(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>),
+     xz <span style="color:#f92672">=</span> model_prop(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;.z&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>))</code></pre></div>
+<pre><code>## Error in let(c(x = .x, y = .y, d = .d, prop = .prop), summary(lm(y ~ x, : could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Parameterise</span>
+<span style="color:#66d9ef">rm</span>(<span style="color:#e6db74">&#34;ylen&#34;</span>, <span style="color:#e6db74">&#34;.z&#34;</span>)
+xyz <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop) {
+    let(<span style="color:#66d9ef">c</span>(d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>x, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>y),
+        {
+            ylen <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(d, <span style="color:#66d9ef">length</span>(y))
+            <span style="color:#ae81ff">.</span>z <span style="color:#f92672">&lt;-</span> rnorm(ylen)
+            <span style="color:#75715e"># NB: don&#39;t mess up the parameters here</span>
+            <span style="color:#75715e"># You cannot use the substituted and you</span>
+            <span style="color:#75715e"># have to use &#34;.z&#34; as string</span>
+            <span style="color:#66d9ef">list</span>(xy <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop),
+                 xz <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#e6db74">&#34;.z&#34;</span>, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop))
+        })
+}
+
+<span style="color:#75715e"># works with overscoping</span>
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># works with global vars.</span>
+xx <span style="color:#f92672">&lt;-</span> d1<span style="color:#f92672">$</span>x ; yy <span style="color:#f92672">&lt;-</span> d1<span style="color:#f92672">$</span>y
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;yy&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;yy&#34;</span>, <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># works with partial overscoping</span>
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;yy&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;xx&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;yy&#34;</span>, <span style="color:#e6db74">&#34;d2&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">xyz_df <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(d, prop) xyz(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d&#34;</span>, prop)
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz_df(d1, <span style="color:#e6db74">&#34;r.squared&#34;</span>) </code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># We get the same result, so this should be fine?!??</span>
+<span style="color:#75715e"># Wrong, the function finds the global d; it doesn&#39;t use d1</span>
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">4321</span>) ; d <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(x <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>), y <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>))
+
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz_df(d1, <span style="color:#e6db74">&#34;r.squared&#34;</span>) </code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">4123</span>) ; d <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">data.frame</span>(x <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>), y <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">5</span>))
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz_df(d1, <span style="color:#e6db74">&#34;r.squared&#34;</span>) </code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Oops, we use the global d and not d1!</span>
+
+
+xyz <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop) {
+    let(<span style="color:#66d9ef">c</span>(d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>x, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>y),
+        {
+            ylen <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(d, <span style="color:#66d9ef">length</span>(y))
+            <span style="color:#ae81ff">.</span>z <span style="color:#f92672">&lt;-</span> rnorm(ylen)
+            <span style="color:#75715e"># NB: don&#39;t mess up the parameters here</span>
+            <span style="color:#75715e"># You cannot use the substituted and you</span>
+            <span style="color:#75715e"># have to use &#34;.z&#34; as string</span>
+            <span style="color:#66d9ef">list</span>(xy <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop),
+                 xz <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#e6db74">&#34;.z&#34;</span>, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop))
+        },
+        envir <span style="color:#f92672">=</span> <span style="color:#66d9ef">parent.frame</span>())
+}
+<span style="color:#75715e"># set.seed(1234) ; xyz_df(d1, &#34;r.squared&#34;) </span>
+<span style="color:#75715e"># -&gt; Error: now it doesn&#39;t know .x (fair enough, it is a local var)</span>
+
+
+xyz <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop) {
+    <span style="color:#75715e"># we need to chain environments...</span>
+    my_env <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">environment</span>()
+    <span style="color:#66d9ef">parent.env</span>(my_env) <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">parent.frame</span>()
+    let(<span style="color:#66d9ef">c</span>(d <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>d, x <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>x, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">.</span>y),
+        {
+            ylen <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">with</span>(d, <span style="color:#66d9ef">length</span>(y))
+            <span style="color:#ae81ff">.</span>z <span style="color:#f92672">&lt;-</span> rnorm(ylen)
+            <span style="color:#75715e"># NB: don&#39;t mess up the parameters here</span>
+            <span style="color:#75715e"># You cannot use the substituted and you</span>
+            <span style="color:#75715e"># have to use &#34;.z&#34; as string</span>
+            <span style="color:#66d9ef">list</span>(xy <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#ae81ff">.</span>y, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop),
+                 xz <span style="color:#f92672">=</span> model_prop(<span style="color:#ae81ff">.</span>x, <span style="color:#e6db74">&#34;.z&#34;</span>, <span style="color:#ae81ff">.</span>d, <span style="color:#ae81ff">.</span>prop))
+        },
+        envir <span style="color:#f92672">=</span> my_env)
+}
+<span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz_df(d1, <span style="color:#e6db74">&#34;r.squared&#34;</span>) </code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#66d9ef">set.seed</span>(<span style="color:#ae81ff">1234</span>) ; xyz(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>, <span style="color:#e6db74">&#34;r.squared&#34;</span>)</code></pre></div>
+<pre><code>## Error in let(c(d = .d, x = .x, y = .y), {: could not find function &quot;let&quot;
+</code></pre>
+
+<hr/>
+
+<p><small>If you liked what you read, and want more like it, consider supporting me at <a href="https://www.patreon.com/mailund">Patreon</a>.</small>
+<hr/></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:macros">I don&rsquo;t like the term macro here, because to me it sounds like something that would happen at compile time (which in R would be when you translate code into bytecode). This doesn&rsquo;t happen. There is no way (that I am aware of) to implement your own syntactic sugar that doesn&rsquo;t involve evaluating code at runtime.
+ <a class="footnote-return" href="#fnref:macros"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
 
 </article>
 
