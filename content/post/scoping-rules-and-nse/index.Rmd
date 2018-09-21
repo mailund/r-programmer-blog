@@ -418,7 +418,7 @@ Traditionally, we call function instances on the call stack frames. Since instan
 
 Well, `eval` is implemented using magic, and this is exactly what it does; it evaluates its input in the caller's frame.^[When I say magic, I am not far from the truth. The `eval` function uses a function that is built into the R runtime system, and that means that it can do more than we can do with normal R functions. We cannot implement `eval` as a normal R function, because we need the functionality that `eval` provides to do that. Some magic is needed. Once we have it, though, we can exploit the hell out of it.]
 
-We cannot write magical functions, but we can use `eval` to get the same effect. We can give `eval` a second argument, and it will use that as the environment to evaluate the expression in. We can get the caller's environment, rather than our own, through the function `parent.frame`. This is an unusually poor choice of function name, because the caller's frame has nothing to do with parent environments, but that is what it is called. The function `rlang::caller_frame` does the same, and it has a more sensible name.
+We cannot write magical functions, but we can use `eval` to get the same effect. We can give `eval` a second argument, and it will use that as the environment to evaluate the expression in. We can get the caller's environment, rather than our own, through the function `parent.frame`. This is an unusually poor choice of function name, because the caller's frame has nothing to do with parent environments, but that is what it is called. The function `rlang::caller_env` does the same, and it has a more sensible name.
 
 Consider this setup:
 

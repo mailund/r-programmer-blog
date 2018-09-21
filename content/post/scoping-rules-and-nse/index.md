@@ -363,7 +363,7 @@ lm(y ~ x)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.83544      0.01251
+##     -0.4119      -0.5684
 ```
 
 ```r
@@ -377,7 +377,7 @@ lm(y ~ x, data = d)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.2194       0.5842
+##    -0.69288      0.05575
 ```
 
 We give the `lm` function the same formula to work with, but when we give it a data frame, then `x` and `y` refer to values there, while otherwise they refer to the global variables. The values that `x` and `y` refers to change when we give `lm` a data frame; it seems it is evaluated in a different context when we give it the data frame.
@@ -391,7 +391,7 @@ eval(ex)
 ```
 
 ```
-## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
+## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
 ```
 
 ```r
@@ -399,7 +399,7 @@ eval(ex, d)
 ```
 
 ```
-## [1] -0.2611779  1.8509168 -2.9479462  0.6238554  1.6672398
+## [1] -2.7241520  1.6886362 -1.4607677  0.5952856  0.7167546
 ```
 
 When we give `eval` the data frame `d`, it will find `x` and `y` in there; when we do not give it `d` it finds them in the global scope.
@@ -412,7 +412,7 @@ eval(x + y)
 ```
 
 ```
-## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
+## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
 ```
 
 ```r
@@ -420,7 +420,7 @@ eval(x + y, d)
 ```
 
 ```
-## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
+## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
 ```
 
 This, again, has to do with how parameters are passed as promises. Promises are not *just* expressions. For the rest of this post, just think of function arguments as passed by value *unless* we get the expressions using `substitute`. It isn't exactly true, but I have to leave promises for another post. I promise.
@@ -680,7 +680,7 @@ Traditionally, we call function instances on the call stack frames. Since instan
 
 Well, `eval` is implemented using magic, and this is exactly what it does; it evaluates its input in the caller's frame.^[When I say magic, I am not far from the truth. The `eval` function uses a function that is built into the R runtime system, and that means that it can do more than we can do with normal R functions. We cannot implement `eval` as a normal R function, because we need the functionality that `eval` provides to do that. Some magic is needed. Once we have it, though, we can exploit the hell out of it.]
 
-We cannot write magical functions, but we can use `eval` to get the same effect. We can give `eval` a second argument, and it will use that as the environment to evaluate the expression in. We can get the caller's environment, rather than our own, through the function `parent.frame`. This is an unusually poor choice of function name, because the caller's frame has nothing to do with parent environments, but that is what it is called. The function `rlang::caller_frame` does the same, and it has a more sensible name.
+We cannot write magical functions, but we can use `eval` to get the same effect. We can give `eval` a second argument, and it will use that as the environment to evaluate the expression in. We can get the caller's environment, rather than our own, through the function `parent.frame`. This is an unusually poor choice of function name, because the caller's frame has nothing to do with parent environments, but that is what it is called. The function `rlang::caller_env` does the same, and it has a more sensible name.
 
 Consider this setup:
 
@@ -758,7 +758,7 @@ summary(lm(y ~ x, data = d1))[["residuals"]]
 
 ```
 ##           1           2           3           4           5 
-##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
 ```
 
 ```r
@@ -767,7 +767,7 @@ summary(lm(b ~ a, data = d2))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
 ```
 
 The way formulas work in R, you can combine variables from data frames with variables known where you created the formula. In this case the global environment. So we can mix global variables with variables from the data frames like this:
@@ -780,7 +780,7 @@ summary(lm(y ~ xx, data = d1))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -789,7 +789,7 @@ summary(lm(b ~ xx, data = d2))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 Now, I might want to parameterise these expressions in a function that looks like this:
@@ -805,7 +805,7 @@ lm_prop(x, y, d1, "residuals")
 
 ```
 ##           1           2           3           4           5 
-##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
 ```
 
 Great, this looks like it is working, but that is an unfortunate coincidence. It works because the data frame `d1` contains variables `x` and `y` and those happens to be the ones we want to fit. In the `lm(y ~ x, data = d)` call, however, the variables are quoted, so to speak. The formula is `y ~ x` and we do not substitute `x` and `y` with the arguments to `lm_prop`.
@@ -855,7 +855,7 @@ summary(lm(y ~ x, data = d1))$residuals
 
 ```
 ##           1           2           3           4           5 
-##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
 ```
 
 ```r
@@ -864,7 +864,7 @@ lm_prop2("x", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##           1           2           3           4           5 
-##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
 ```
 
 ```r
@@ -882,7 +882,7 @@ lm_prop2("xx", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -891,7 +891,7 @@ summary(lm(y ~ xx, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -909,7 +909,7 @@ summary(lm(b ~ a, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
 ```
 
 ```r
@@ -918,7 +918,7 @@ lm_prop2("a", "b", d2, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
 ```
 
 ```r
@@ -936,7 +936,7 @@ summary(lm(b ~ xx, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 ```r
@@ -945,7 +945,7 @@ lm_prop2("xx", "b", d2, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 Great, it looks like it is working.
@@ -978,7 +978,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -987,7 +987,7 @@ lm_prop2("a", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 Ok, so far it looks fine.
@@ -1009,7 +1009,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 ```r
@@ -1068,7 +1068,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -1093,7 +1093,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 ```r
@@ -1128,7 +1128,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -1137,7 +1137,7 @@ lm_prop4("a", "y",  "d1", "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
 ```
 
 ```r
@@ -1154,7 +1154,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 ```r
@@ -1163,7 +1163,7 @@ lm_prop4("x", "b",  "d2", "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
 ```
 
 This looks like it is working. Can you spot where the problem is?
@@ -1182,8 +1182,8 @@ summary(lm(bb ~ aa))$residuals
 ```
 
 ```
-##          1          2          3          4          5 
-## -0.9138281 -0.6546838  1.1573312  0.9020162 -0.4908355
+##            1            2            3            4            5 
+##  0.426055517 -0.926637137 -0.016540618  0.525773963 -0.008651724
 ```
 
 ```r
