@@ -179,9 +179,9 @@ This is also the same as
 eval(x + y)
 ```
 
-but don't confuse the two. When you write `expr(x + y)` you give `expr` a value. Well, strictly speaking you give it a promise, but it amounts to a value because `expr` doesn't capture it and make it into a quoted expression.
+but don't confuse the two. When you write `eval(x + y)` you give `eval` a value. Well, strictly speaking you give it a promise, but it amounts to a value because `expr` doesn't capture it and make it into a quoted expression.
 
-When you use `expr(x + y)` the expression `x + y` is, conceptually, evaluated before it is passed to `expr`. If you change `x` or `y` it doesn't change that value. If you create the quoted expression `quote(x + y)` it *isn't* evaluated before you explicitly do so, and if you change `x` or `y` before you evaluate the expression, that affects what the expression evaluates to.
+When you use `eval(x + y)` the expression `x + y` is, conceptually, evaluated before it is passed to `eval`. If you change `x` or `y` it doesn't change that value. If you create the quoted expression `quote(x + y)` it *isn't* evaluated before you explicitly do so, and if you change `x` or `y` before you evaluate the expression, that affects what the expression evaluates to.
 
 ```{r}
 val <- x + y
@@ -199,7 +199,7 @@ When we run the code
 val <- x + y
 ```
 
-we evaluate `x + y` before we assign it to `val`, and when we run `expr(val)` we get it back. With
+we evaluate `x + y` before we assign it to `val`, and when we run `eval(val)` we get it back. With
 
 ```r
 ex <- quote(x + y)
@@ -308,7 +308,7 @@ it will contain those two variables:
 ls()
 ```
 
-{{< figure src="global-scope.tiff" >}}
+{{< figure src="global-scope.png" >}}
 
 When you call `ls()` without arguments, you get the list of variables in the environment you are currently in. In this case, the global environment. You can also explicitly give `ls()` an environment. You get the global environment by calling the function `globalenv()`:
 
@@ -338,7 +338,7 @@ environment(f)
 
 You can chance this environment if you want to, but by default it is the environment in which you defined the function. In this case, the global environment.
 
-{{< figure src="global scope with function.tiff" >}}
+{{< figure src="global scope with function.png" >}}
 
 The function environment is *not* a new environment, however. You do not create an environment when you define a function. You just associate an environment with it. This environment is used as the parent of environments you create when you *call* a function.
 
@@ -350,7 +350,7 @@ f(5)
 
 you *will* create a new environment. You put function arguments and local variables into this environment, and the parent of the environment is the environment associated with the function.
 
-{{< figure src="global scope with function instance.tiff" >}}
+{{< figure src="global scope with function instance.png" >}}
 
 When you evaluate the `x + y` in the body of `f`, R will first check the function instance environment, where it will find `x` mapped to five, and then search up the parent chain for `y`, which it will find in the global environment mapped to three.
 
@@ -368,27 +368,27 @@ f <- function(x) {
 
 After we have defined the function and assigned it to `f`, the global environment maps `f` to the function and the function's environment is the global variable.
 
-{{< figure src="nested function before call.tiff" >}}
+{{< figure src="nested function before call.png" >}}
 
 It doesn't matter what happens inside the function body, because we haven't evaluated it yet. There is no inner function yet; it doesn't exist before we evaluate `f`.
 
 Now, let us call `f` with argument 2. This creates an instance environment and set its parent to the global environment (the environment of function f). Inside this environment we store the argument `x` and the local function `g`. The environment of `g` is the instance environment of the `f(2)` call.
 
-{{< figure src="nested function outer fall before h.tiff" >}}
+{{< figure src="nested function outer fall before h.png" >}}
 
 When you return from the call to `f`, and assign the result to `h`, you have this setup:
 
-{{< figure src="nested functions after outer call.tiff" >}}
+{{< figure src="nested functions after outer call.png" >}}
 
 You do not have a direct handle on the instance-environment from the call to `f`, but it exists as the parent of the function environment of `h`.
 
 If you then call `h(3)` you create another instance environment in which you map `y` to three. The parent environment is the function `h`'s environment—we are applying the same rule as before about instance environments and functions—so the state of the system in the call is this:
 
-{{< figure src="nested functions inner call.tiff" >}}
+{{< figure src="nested functions inner call.png" >}}
 
 To evaluate `x + y` inside the `h(3)` call, we have this chain of environments:
 
-{{< figure src="evaluate in inner.tiff" >}}
+{{< figure src="evaluate in inner.png" >}}
 
 When we look for `y` we can find it directly in the current environment. To find `x` we need to look in its parent. If we wanted `f`, `g`, and `h` we would find them in the chain as well.
 
@@ -414,7 +414,7 @@ When we call `eval`, we do not want it to evaluate its input in its own environm
 
 Traditionally, we call function instances on the call stack frames. Since instance environment can survive longer than function calls, we are not really working with proper frames, but the terminology persists. We want to evaluate the expression we give `eval` in the caller's frame, not in `eval`'s environment.
 
-{{< figure src="calling eval.tiff" >}}
+{{< figure src="calling eval.png" >}}
 
 Well, `eval` is implemented using magic, and this is exactly what it does; it evaluates its input in the caller's frame.^[When I say magic, I am not far from the truth. The `eval` function uses a function that is built into the R runtime system, and that means that it can do more than we can do with normal R functions. We cannot implement `eval` as a normal R function, because we need the functionality that `eval` provides to do that. Some magic is needed. Once we have it, though, we can exploit the hell out of it.]
 
@@ -433,7 +433,7 @@ Here, we have two functions that creates closures and we create one from each. I
 
 After creation `lex_closure` and `dyn_closures`, the setup looks very similar.
 
-{{< figure src="lex vs dyn.tiff" >}}
+{{< figure src="lex vs dyn.png" >}}
 
 Both closures have an environment that contains a value for `x`—in both cases that value is 1—and both environments have the global environment as parent. The only difference in the two closures is the function body we execute when we call them.
 
@@ -447,15 +447,15 @@ caller(2, dyn_closure)
 
 The two calls to `caller` look the same. You get this graph of function instances with parent environments (in brown) and caller frames (in blue) regardless of whether you use the lex closure or the dyn closure.
 
-{{< figure src="Lex dyn call.tiff" >}}
+{{< figure src="Lex dyn call.png" >}}
 
 The difference in the two call is the path that R takes to search for `x`. In the lexical scoping closures, `eval` will look in its caller frame, which is the `lex_closure` instance, and then search up the parent chain there.
 
-{{< figure src="Lex dyn call search.tiff" >}}
+{{< figure src="Lex dyn call search.png" >}}
 
 With `dyn_closure` we connect `eval` with `dyn_closure`'s calling frame, so we skip `dyn_closure`'s instance environment entirely and search in `caller` instead, where we find `x`.
 
-{{< figure src="Lex dyn call search 2.tiff" >}}
+{{< figure src="Lex dyn call search 2.png" >}}
 
 The figures are getting a bit crowded by now, but I am sure you can work your way through them, with little effort. They capture most of what you need to know about scopes and evaluation: how environments are chained together by lexical scope and how function call-stacks are chained together through caller frames.
 
@@ -582,11 +582,11 @@ The `let` function does exactly what it is supposed to do with the substitution.
 
 The setup that works look like this:
 
-{{< figure src="lm_prob2 ok.tiff" >}}
+{{< figure src="lm_prob2 ok.png" >}}
 
 The one that fails, looks like this:
 
-{{< figure src="lm_prob2 fail.tiff" >}}
+{{< figure src="lm_prob2 fail.png" >}}
 
 They look very similar, almost identically, so why does one work while the other does not?
 
@@ -594,11 +594,11 @@ The function `lm` also does non-standard evaluation. If we give it a data frame,
 
 When we evaluate `lm(y ~ a, data = d)`, we search for `a` and `y` like this:
 
-{{< figure src="lm2 details ok.tiff" >}}
+{{< figure src="lm2 details ok.png" >}}
 
 When we evaluate `lm(b ~ x, data = d)`, we search for `x` and `b` like this:
 
-{{< figure src="lm2 details ok fail.tiff" >}}
+{{< figure src="lm2 details ok fail.png" >}}
 
 The `x` we find is the local variable, not the global one. That is why the function call fails.
 
@@ -658,7 +658,7 @@ It cannot find `d` because that name only exists in the call-environment of `ind
 
 The search for `d` goes as follows:
 
-{{< figure src="lm prob 5 failure.tiff" >}}
+{{< figure src="lm prob 5 failure.png" >}}
 
 We do not follow the "caller frame" reference from `lm_prob4` to `indirect`. We do get an error; we would be worse off if the global scope had a data frame called `d`. Then we might not get an error but instead just get the wrong result. That can be hard to debug.
 

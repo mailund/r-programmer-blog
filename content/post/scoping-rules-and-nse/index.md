@@ -303,9 +303,9 @@ eval(x + y)
 ## [1] 8
 ```
 
-but don't confuse the two. When you write `expr(x + y)` you give `expr` a value. Well, strictly speaking you give it a promise, but it amounts to a value because `expr` doesn't capture it and make it into a quoted expression.
+but don't confuse the two. When you write `eval(x + y)` you give `eval` a value. Well, strictly speaking you give it a promise, but it amounts to a value because `expr` doesn't capture it and make it into a quoted expression.
 
-When you use `expr(x + y)` the expression `x + y` is, conceptually, evaluated before it is passed to `expr`. If you change `x` or `y` it doesn't change that value. If you create the quoted expression `quote(x + y)` it *isn't* evaluated before you explicitly do so, and if you change `x` or `y` before you evaluate the expression, that affects what the expression evaluates to.
+When you use `eval(x + y)` the expression `x + y` is, conceptually, evaluated before it is passed to `eval`. If you change `x` or `y` it doesn't change that value. If you create the quoted expression `quote(x + y)` it *isn't* evaluated before you explicitly do so, and if you change `x` or `y` before you evaluate the expression, that affects what the expression evaluates to.
 
 
 ```r
@@ -335,7 +335,7 @@ When we run the code
 val <- x + y
 ```
 
-we evaluate `x + y` before we assign it to `val`, and when we run `expr(val)` we get it back. With
+we evaluate `x + y` before we assign it to `val`, and when we run `eval(val)` we get it back. With
 
 ```r
 ex <- quote(x + y)
@@ -363,7 +363,7 @@ lm(y ~ x)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1232       0.2767
+##    -0.83544      0.01251
 ```
 
 ```r
@@ -377,7 +377,7 @@ lm(y ~ x, data = d)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.4124       0.3277
+##     -0.2194       0.5842
 ```
 
 We give the `lm` function the same formula to work with, but when we give it a data frame, then `x` and `y` refer to values there, while otherwise they refer to the global variables. The values that `x` and `y` refers to change when we give `lm` a data frame; it seems it is evaluated in a different context when we give it the data frame.
@@ -391,7 +391,7 @@ eval(ex)
 ```
 
 ```
-## [1]  0.6754259 -0.5331812  0.2490072 -1.0065061  1.5964483
+## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
 ```
 
 ```r
@@ -399,7 +399,7 @@ eval(ex, d)
 ```
 
 ```
-## [1]  0.8466327 -2.1985742 -2.9064922  1.0264684 -1.7050837
+## [1] -0.2611779  1.8509168 -2.9479462  0.6238554  1.6672398
 ```
 
 When we give `eval` the data frame `d`, it will find `x` and `y` in there; when we do not give it `d` it finds them in the global scope.
@@ -412,7 +412,7 @@ eval(x + y)
 ```
 
 ```
-## [1]  0.6754259 -0.5331812  0.2490072 -1.0065061  1.5964483
+## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
 ```
 
 ```r
@@ -420,7 +420,7 @@ eval(x + y, d)
 ```
 
 ```
-## [1]  0.6754259 -0.5331812  0.2490072 -1.0065061  1.5964483
+## [1]  0.1703110 -1.3982507 -1.7200192 -1.2105850 -0.1077106
 ```
 
 This, again, has to do with how parameters are passed as promises. Promises are not *just* expressions. For the rest of this post, just think of function arguments as passed by value *unless* we get the expressions using `substitute`. It isn't exactly true, but I have to leave promises for another post. I promise.
@@ -546,7 +546,7 @@ ls()
 ## [1] "x" "y"
 ```
 
-{{< figure src="global-scope.tiff" >}}
+{{< figure src="global-scope.png" >}}
 
 When you call `ls()` without arguments, you get the list of variables in the environment you are currently in. In this case, the global environment. You can also explicitly give `ls()` an environment. You get the global environment by calling the function `globalenv()`:
 
@@ -587,7 +587,7 @@ environment(f)
 
 You can chance this environment if you want to, but by default it is the environment in which you defined the function. In this case, the global environment.
 
-{{< figure src="global scope with function.tiff" >}}
+{{< figure src="global scope with function.png" >}}
 
 The function environment is *not* a new environment, however. You do not create an environment when you define a function. You just associate an environment with it. This environment is used as the parent of environments you create when you *call* a function.
 
@@ -599,7 +599,7 @@ f(5)
 
 you *will* create a new environment. You put function arguments and local variables into this environment, and the parent of the environment is the environment associated with the function.
 
-{{< figure src="global scope with function instance.tiff" >}}
+{{< figure src="global scope with function instance.png" >}}
 
 When you evaluate the `x + y` in the body of `f`, R will first check the function instance environment, where it will find `x` mapped to five, and then search up the parent chain for `y`, which it will find in the global environment mapped to three.
 
@@ -618,27 +618,27 @@ f <- function(x) {
 
 After we have defined the function and assigned it to `f`, the global environment maps `f` to the function and the function's environment is the global variable.
 
-{{< figure src="nested function before call.tiff" >}}
+{{< figure src="nested function before call.png" >}}
 
 It doesn't matter what happens inside the function body, because we haven't evaluated it yet. There is no inner function yet; it doesn't exist before we evaluate `f`.
 
 Now, let us call `f` with argument 2. This creates an instance environment and set its parent to the global environment (the environment of function f). Inside this environment we store the argument `x` and the local function `g`. The environment of `g` is the instance environment of the `f(2)` call.
 
-{{< figure src="nested function outer fall before h.tiff" >}}
+{{< figure src="nested function outer fall before h.png" >}}
 
 When you return from the call to `f`, and assign the result to `h`, you have this setup:
 
-{{< figure src="nested functions after outer call.tiff" >}}
+{{< figure src="nested functions after outer call.png" >}}
 
 You do not have a direct handle on the instance-environment from the call to `f`, but it exists as the parent of the function environment of `h`.
 
 If you then call `h(3)` you create another instance environment in which you map `y` to three. The parent environment is the function `h`'s environment—we are applying the same rule as before about instance environments and functions—so the state of the system in the call is this:
 
-{{< figure src="nested functions inner call.tiff" >}}
+{{< figure src="nested functions inner call.png" >}}
 
 To evaluate `x + y` inside the `h(3)` call, we have this chain of environments:
 
-{{< figure src="evaluate in inner.tiff" >}}
+{{< figure src="evaluate in inner.png" >}}
 
 When we look for `y` we can find it directly in the current environment. To find `x` we need to look in its parent. If we wanted `f`, `g`, and `h` we would find them in the chain as well.
 
@@ -676,7 +676,7 @@ When we call `eval`, we do not want it to evaluate its input in its own environm
 
 Traditionally, we call function instances on the call stack frames. Since instance environment can survive longer than function calls, we are not really working with proper frames, but the terminology persists. We want to evaluate the expression we give `eval` in the caller's frame, not in `eval`'s environment.
 
-{{< figure src="calling eval.tiff" >}}
+{{< figure src="calling eval.png" >}}
 
 Well, `eval` is implemented using magic, and this is exactly what it does; it evaluates its input in the caller's frame.^[When I say magic, I am not far from the truth. The `eval` function uses a function that is built into the R runtime system, and that means that it can do more than we can do with normal R functions. We cannot implement `eval` as a normal R function, because we need the functionality that `eval` provides to do that. Some magic is needed. Once we have it, though, we can exploit the hell out of it.]
 
@@ -696,7 +696,7 @@ Here, we have two functions that creates closures and we create one from each. I
 
 After creation `lex_closure` and `dyn_closures`, the setup looks very similar.
 
-{{< figure src="lex vs dyn.tiff" >}}
+{{< figure src="lex vs dyn.png" >}}
 
 Both closures have an environment that contains a value for `x`—in both cases that value is 1—and both environments have the global environment as parent. The only difference in the two closures is the function body we execute when we call them.
 
@@ -722,15 +722,15 @@ caller(2, dyn_closure)
 
 The two calls to `caller` look the same. You get this graph of function instances with parent environments (in brown) and caller frames (in blue) regardless of whether you use the lex closure or the dyn closure.
 
-{{< figure src="Lex dyn call.tiff" >}}
+{{< figure src="Lex dyn call.png" >}}
 
 The difference in the two call is the path that R takes to search for `x`. In the lexical scoping closures, `eval` will look in its caller frame, which is the `lex_closure` instance, and then search up the parent chain there.
 
-{{< figure src="Lex dyn call search.tiff" >}}
+{{< figure src="Lex dyn call search.png" >}}
 
 With `dyn_closure` we connect `eval` with `dyn_closure`'s calling frame, so we skip `dyn_closure`'s instance environment entirely and search in `caller` instead, where we find `x`.
 
-{{< figure src="Lex dyn call search 2.tiff" >}}
+{{< figure src="Lex dyn call search 2.png" >}}
 
 The figures are getting a bit crowded by now, but I am sure you can work your way through them, with little effort. They capture most of what you need to know about scopes and evaluation: how environments are chained together by lexical scope and how function call-stacks are chained together through caller frames.
 
@@ -758,7 +758,7 @@ summary(lm(y ~ x, data = d1))[["residuals"]]
 
 ```
 ##           1           2           3           4           5 
-## -1.25579308 -0.91019101 -0.05690085  1.23163876  0.99124618
+##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
 ```
 
 ```r
@@ -767,7 +767,7 @@ summary(lm(b ~ a, data = d2))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-## -0.5948172 -0.0992894  0.6916727 -0.2975874  0.3000213
+##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
 ```
 
 The way formulas work in R, you can combine variables from data frames with variables known where you created the formula. In this case the global environment. So we can mix global variables with variables from the data frames like this:
@@ -780,7 +780,7 @@ summary(lm(y ~ xx, data = d1))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -789,7 +789,7 @@ summary(lm(b ~ xx, data = d2))[["residuals"]]
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 Now, I might want to parameterise these expressions in a function that looks like this:
@@ -805,7 +805,7 @@ lm_prop(x, y, d1, "residuals")
 
 ```
 ##           1           2           3           4           5 
-## -1.25579308 -0.91019101 -0.05690085  1.23163876  0.99124618
+##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
 ```
 
 Great, this looks like it is working, but that is an unfortunate coincidence. It works because the data frame `d1` contains variables `x` and `y` and those happens to be the ones we want to fit. In the `lm(y ~ x, data = d)` call, however, the variables are quoted, so to speak. The formula is `y ~ x` and we do not substitute `x` and `y` with the arguments to `lm_prop`.
@@ -818,7 +818,7 @@ lm_prop(a, b, d2, "residuals")
 ```
 
 ```
-## Error in eval(predvars, data, env): objekt 'b' blev ikke fundet
+## Error in eval(predvars, data, env): object 'b' not found
 ```
 
 To get this to work, we need to substitute arguments into the model-fitting.
@@ -855,7 +855,7 @@ summary(lm(y ~ x, data = d1))$residuals
 
 ```
 ##           1           2           3           4           5 
-## -1.25579308 -0.91019101 -0.05690085  1.23163876  0.99124618
+##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
 ```
 
 ```r
@@ -864,7 +864,7 @@ lm_prop2("x", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##           1           2           3           4           5 
-## -1.25579308 -0.91019101 -0.05690085  1.23163876  0.99124618
+##  0.07741166 -0.20278206 -0.10604822  0.55641439 -0.32499577
 ```
 
 ```r
@@ -882,7 +882,7 @@ lm_prop2("xx", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -891,7 +891,7 @@ summary(lm(y ~ xx, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -909,7 +909,7 @@ summary(lm(b ~ a, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -0.5948172 -0.0992894  0.6916727 -0.2975874  0.3000213
+##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
 ```
 
 ```r
@@ -918,7 +918,7 @@ lm_prop2("a", "b", d2, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -0.5948172 -0.0992894  0.6916727 -0.2975874  0.3000213
+##  0.9660145 -0.6454435  0.4787097  0.3636013 -1.1628820
 ```
 
 ```r
@@ -936,7 +936,7 @@ summary(lm(b ~ xx, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 ```r
@@ -945,7 +945,7 @@ lm_prop2("xx", "b", d2, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 Great, it looks like it is working.
@@ -978,7 +978,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -987,7 +987,7 @@ lm_prop2("a", "y", d1, "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 Ok, so far it looks fine.
@@ -1009,7 +1009,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 ```r
@@ -1026,11 +1026,11 @@ The `let` function does exactly what it is supposed to do with the substitution.
 
 The setup that works look like this:
 
-{{< figure src="lm_prob2 ok.tiff" >}}
+{{< figure src="lm_prob2 ok.png" >}}
 
 The one that fails, looks like this:
 
-{{< figure src="lm_prob2 fail.tiff" >}}
+{{< figure src="lm_prob2 fail.png" >}}
 
 They look very similar, almost identically, so why does one work while the other does not?
 
@@ -1038,11 +1038,11 @@ The function `lm` also does non-standard evaluation. If we give it a data frame,
 
 When we evaluate `lm(y ~ a, data = d)`, we search for `a` and `y` like this:
 
-{{< figure src="lm2 details ok.tiff" >}}
+{{< figure src="lm2 details ok.png" >}}
 
 When we evaluate `lm(b ~ x, data = d)`, we search for `x` and `b` like this:
 
-{{< figure src="lm2 details ok fail.tiff" >}}
+{{< figure src="lm2 details ok fail.png" >}}
 
 The `x` we find is the local variable, not the global one. That is why the function call fails.
 
@@ -1068,7 +1068,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -1093,7 +1093,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 ```r
@@ -1128,7 +1128,7 @@ summary(lm(y ~ a, data = d1))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -1137,7 +1137,7 @@ lm_prop4("a", "y",  "d1", "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -1.9539513 -0.7806780  0.9703054  0.5978946  1.1664292
+##  0.3547103  0.3194020 -0.6716218 -0.2567259  0.2542354
 ```
 
 ```r
@@ -1154,7 +1154,7 @@ summary(lm(b ~ x, data = d2))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 ```r
@@ -1163,7 +1163,7 @@ lm_prop4("x", "b",  "d2", "residuals", eval = TRUE)
 
 ```
 ##          1          2          3          4          5 
-## -0.2243595 -1.2451048  0.7771018  0.8060383 -0.1136758
+##  0.9892798 -0.8160543 -0.1747234  0.8304665 -0.8289687
 ```
 
 This looks like it is working. Can you spot where the problem is?
@@ -1183,7 +1183,7 @@ summary(lm(bb ~ aa))$residuals
 
 ```
 ##          1          2          3          4          5 
-## -1.2072720  1.2040162  0.3425431  0.4758723 -0.8151597
+## -0.9138281 -0.6546838  1.1573312  0.9020162 -0.4908355
 ```
 
 ```r
@@ -1199,14 +1199,14 @@ indirect(aa, bb, eval = TRUE)
 ```
 
 ```
-## Error in is.data.frame(data): objekt 'd' blev ikke fundet
+## Error in is.data.frame(data): object 'd' not found
 ```
 
 It cannot find `d` because that name only exists in the call-environment of `indirect(aa, bb, eval = TRUE)`.
 
 The search for `d` goes as follows:
 
-{{< figure src="lm prob 5 failure.tiff" >}}
+{{< figure src="lm prob 5 failure.png" >}}
 
 We do not follow the "caller frame" reference from `lm_prob4` to `indirect`. We do get an error; we would be worse off if the global scope had a data frame called `d`. Then we might not get an error but instead just get the wrong result. That can be hard to debug.
 
