@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pmatch on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/pmatch/</link>
+    <description>Recent content in Pmatch on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Fri, 30 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/pmatch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>“Optional” types using pmatch</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</guid>
+      <description>Some programming languages, e.g. Swift, have special &amp;ldquo;optional&amp;rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</description>
+    </item>
+    
+    <item>
+      <title>pmatch 0.1.3</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/22/pmatch-0-1-3/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/22/pmatch-0-1-3/</guid>
+      <description>I have just released version 0.1.3 of pmatch to CRAN. There are not a lot of changes to this version compared to 0.1.2, but enough that I felt it would be good to get a version out before I pull the entire package apart to make it dependent on toolbox for its transformation function.</description>
+    </item>
+    
+    <item>
+      <title>Transforming functions with cases calls</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/</link>
+      <pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/</guid>
+      <description>The issue with byte-compilation I wrote about yesterday can indeed be fixed by transforming functions that call cases. And that was very easy to implement since I already had all the bits and pieces I needed for it from the tailr transformations.</description>
+    </item>
+    
+    <item>
+      <title>Building a package that uses pattern matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</link>
+      <pubDate>Sat, 17 Mar 2018 14:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</guid>
+      <description>After a week spend programming string algorithms in C—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of tailr today, so that is good, but what I really wanted to work on was matchbox.</description>
+    </item>
+    
+    <item>
+      <title>Red-black trees in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</link>
+      <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</guid>
+      <description>I&amp;rsquo;m working on implementing red-black search trees in matchbox and have managed most of it by now. I still need to implement deletion and the re-balancing code for handling those, but I have insertion up and running.</description>
+    </item>
+    
+    <item>
+      <title>Linked lists in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</guid>
+      <description>I have started playing with data structures in matchbox and the first structure I implement had to be linked lists. That is the most versatile data structure I use and it is missing from R.</description>
+    </item>
+    
+    <item>
+      <title>Matchbox and CMD CHECK</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</guid>
+      <description>Ok, first, the package I wrote about yesterday will be called matchbox, following Dmytro Perepolkin&amp;rsquo;s suggestion (thanks!). You can get it at GitHub.
+There isn&amp;rsquo;t much to it yet since I haven&amp;rsquo;t really started implementing the data structures I want to put in it.</description>
+    </item>
+    
+    <item>
+      <title>Help Me Choose a Package Name</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</link>
+      <pubDate>Wed, 07 Mar 2018 07:07:11 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</guid>
+      <description>What&amp;rsquo;s in a name? That which we call a rose By any other word would smell as sweet — William Shakespeare, Romeo and Juliet
+ I have plans for re-implementing several of the data structures I wrote about in Functional Data Structures in R.</description>
+    </item>
+    
+    <item>
+      <title>Variable bindings with pattern matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</link>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</guid>
+      <description>I just added a new feature to my pmatch package. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</description>
+    </item>
+    
+  </channel>
+</rss>

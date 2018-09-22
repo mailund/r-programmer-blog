@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Structures on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/categories/data-structures/</link>
+    <description>Recent content in Data Structures on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Mon, 12 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/data-structures/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Red-black trees in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</link>
+      <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</guid>
+      <description>I&amp;rsquo;m working on implementing red-black search trees in matchbox and have managed most of it by now. I still need to implement deletion and the re-balancing code for handling those, but I have insertion up and running.</description>
+    </item>
+    
+    <item>
+      <title>Linked lists in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</guid>
+      <description>I have started playing with data structures in matchbox and the first structure I implement had to be linked lists. That is the most versatile data structure I use and it is missing from R.</description>
+    </item>
+    
+    <item>
+      <title>Matchbox and CMD CHECK</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</link>
+      <pubDate>Thu, 08 Mar 2018 06:59:09 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</guid>
+      <description>Ok, first, the package I wrote about yesterday will be called matchbox, following Dmytro Perepolkin&amp;rsquo;s suggestion (thanks!). You can get it at GitHub.
+There isn&amp;rsquo;t much to it yet since I haven&amp;rsquo;t really started implementing the data structures I want to put in it.</description>
+    </item>
+    
+    <item>
+      <title>Help Me Choose a Package Name</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</link>
+      <pubDate>Wed, 07 Mar 2018 07:07:11 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</guid>
+      <description>What&amp;rsquo;s in a name? That which we call a rose By any other word would smell as sweet — William Shakespeare, Romeo and Juliet
+ I have plans for re-implementing several of the data structures I wrote about in Functional Data Structures in R.</description>
+    </item>
+    
+  </channel>
+</rss>

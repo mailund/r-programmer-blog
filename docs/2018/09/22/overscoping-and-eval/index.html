@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.40.2" />
+  <meta name="generator" content="Hugo 0.37" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -113,7 +113,7 @@ ga('send', 'pageview');
             <em>
                 
                     
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">“Non-standard evaluation”</a>
                 
             </em>
         </li>
@@ -213,7 +213,7 @@ x &lt;- y &lt;- z &lt;- <span style="color:#3677a9">1</span></code></pre></div>
 
 <p>Now, we can explicitly tell R to use a different environment in which to evaluate an expression. We need to do two things: we have to replace expressions with quoted expressions and then evaluate them using the <code>eval</code> function with the alternative environment.</p>
 
-<p>We have to use quoted expressions, because otherwise we will evaluate the expressions where we call <code>env</code> and not inside it, in the environment we tell <code>env</code> to do the evaluation.<sup class="footnote-ref" id="fnref:How-arguments-ar"><a href="#fn:How-arguments-ar">1</a></sup></p>
+<p>We have to use quoted expressions, because otherwise we will evaluate the expressions where we call <code>eval</code> and not inside it, in the environment we tell <code>eval</code> to do the evaluation.<sup class="footnote-ref" id="fnref:How-arguments-ar"><a href="#fn:How-arguments-ar">1</a></sup></p>
 
 <p>We can do something like this:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x)
@@ -258,7 +258,7 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fa8c9578e78&gt;
+## &lt;environment: 0x7ff6a2c4fcd0&gt;
 </code></pre>
 
 <pre><code>## [1] 3
@@ -269,11 +269,11 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;g's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7fa8ca9cd538&gt;
+## &lt;environment: 0x7ff6a36a0da8&gt;
 ## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fa8ca9d9160&gt;
+## &lt;environment: 0x7ff6a36a7160&gt;
 </code></pre>
 
 <pre><code>## [1] 3
@@ -284,15 +284,15 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;h's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;h's environment:&quot;
-## &lt;environment: 0x7fa8cae0fc78&gt;
+## &lt;environment: 0x7ff6a50dd6e8&gt;
 ## [1] &quot;g's caller env:&quot;
-## &lt;environment: 0x7fa8cae0fc78&gt;
+## &lt;environment: 0x7ff6a50dd6e8&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7fa8cae13c40&gt;
+## &lt;environment: 0x7ff6a50e16b0&gt;
 ## [1] &quot;f's caller env:&quot;
-## &lt;environment: 0x7fa8cae0fc78&gt;
+## &lt;environment: 0x7ff6a50dd6e8&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fa8ca446768&gt;
+## &lt;environment: 0x7ff6a46b84f8&gt;
 </code></pre>
 
 <pre><code>## [1] 7
@@ -469,7 +469,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.01439     -0.11698
+##      0.1443       0.1429
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(y ~ x, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -478,7 +478,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     0.18313      0.07093
+##    -0.03016     -0.72617
 </code></pre>
 
 <p>We can also assign a formula to a variable and use that the same way:</p>
@@ -490,7 +490,7 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.01439     -0.11698
+##      0.1443       0.1429
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -499,7 +499,7 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     0.18313      0.07093
+##    -0.03016     -0.72617
 </code></pre>
 
 <p>However, formulae have their own environments and these can work as closures. If you define a formula in a function, it will be associated with that function call&rsquo;s environment.</p>
@@ -516,7 +516,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     0.17980     -0.05463
+##     -0.2684       0.5214
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f3) <span style="color:#999;font-style:italic"># f3 defined in a closure</span></code></pre></div>
 <pre><code>## 
@@ -525,7 +525,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1844       0.2960
+##     -0.5758      -1.1077
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">rm</span>(x, y) <span style="color:#999;font-style:italic"># no global variables</span>
 <span style="color:#6ab825">ls</span>(<span style="color:#6ab825">environment</span>(f2)) <span style="color:#999;font-style:italic"># f2 still remember&#39;s an x</span></code></pre></div>
@@ -534,7 +534,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 
 <p>If we try to fit a linear model to <code>f2</code> we get an error—there is no <code>y</code> variable anywhere.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f2)</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
+<pre><code>## Error in eval(predvars, data, env): object 'y' not found
 </code></pre>
 
 <p>We can still get it from the data frame, though</p>
@@ -545,7 +545,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.2794       0.5182
+##      0.2143      -0.5398
 </code></pre>
 
 <p>Once you start passing formulae around in function calls, everything gets just a tad more complicated. Consider these two functions for building a linear model:</p>
@@ -553,12 +553,12 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 fit_model2 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) lm(f)</code></pre></div>
 <p>The first tries to build a model from the formula <code>x ~ y</code> created inside the function call. It fails, because we do not have any <code>x</code> variable in the function call&rsquo;s environment or in its parent, the global environment.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit_model1(rnorm(<span style="color:#3677a9">5</span>))</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): objekt 'x' blev ikke fundet
+<pre><code>## Error in eval(predvars, data, env): object 'x' not found
 </code></pre>
 
 <p>The second fails because we do not have the variable <code>y</code> in the formula&rsquo;s environment—we have one in the function call&rsquo;s environment, but the formula isn&rsquo;t defined there, it was created in the earlier closure.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit_model2(rnorm(<span style="color:#3677a9">5</span>))</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
+<pre><code>## Error in eval(predvars, data, env): object 'y' not found
 </code></pre>
 
 <p>The <code>lm</code> function first looks in the data frame you give it, if any. If it doesn&rsquo;t find the variables it needs there, it looks in the formula&rsquo;s environment. It doesn&rsquo;t look in the calling environment.</p>
@@ -578,7 +578,7 @@ fit_model2 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y)
 <hr />
 
 <ol>
-<li id="fn:How-arguments-ar">How arguments are actually evaluated is more complicated than this; notice that I wrote that &ldquo;we will evaluate the expressions where we call <code>env</code>&rdquo;. I didn&rsquo;t say we would evaluate them <em>before</em> we call <code>env</code>. We still evaluate the argument after we call <code>env</code>, we just won&rsquo;t use the alternative environment. I have explained how lazy evaluation works in <a href="https://mailund.dk/books/">a couple of books</a> and even how you can exploit it to implement lazy data structures in <a href="https://amzn.to/2znwsW8"><em>Functional Data-Structures in R</em></a>. I won&rsquo;t repeat it here, but might in a later post. There is enough to cover in this post as it is. <a class="footnote-return" href="#fnref:How-arguments-ar"><sup>[return]</sup></a></li>
+<li id="fn:How-arguments-ar">How arguments are actually evaluated is more complicated than this; notice that I wrote that &ldquo;we will evaluate the expressions where we call <code>eval</code>&rdquo;. I didn&rsquo;t say we would evaluate them <em>before</em> we call <code>eval</code>. We still evaluate the argument after we call <code>eval</code>, we just won&rsquo;t use the alternative environment. I have explained how lazy evaluation works in <a href="https://mailund.dk/books/">a couple of books</a> and even how you can exploit it to implement lazy data structures in <a href="https://amzn.to/2znwsW8"><em>Functional Data-Structures in R</em></a>. I won&rsquo;t repeat it here, but might in a later post. There is enough to cover in this post as it is. <a class="footnote-return" href="#fnref:How-arguments-ar"><sup>[return]</sup></a></li>
 </ol>
 </div>
 

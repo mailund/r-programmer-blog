@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/post/</loc>
+    <lastmod>2018-09-22T12:23:09+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/about/</loc>
+    <lastmod>2018-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</loc>
+    <lastmod>2018-09-22T12:23:09+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/</loc>
+    <lastmod>2018-09-20T05:00:15+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</loc>
+    <lastmod>2018-04-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</loc>
+    <lastmod>2018-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</loc>
+    <lastmod>2018-03-27T19:34:39+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/22/pmatch-0-1-3/</loc>
+    <lastmod>2018-03-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/</loc>
+    <lastmod>2018-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</loc>
+    <lastmod>2018-03-17T14:35:16+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</loc>
+    <lastmod>2018-03-17T12:35:16+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/</loc>
+    <lastmod>2018-03-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</loc>
+    <lastmod>2018-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</loc>
+    <lastmod>2018-03-09T18:38:52+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/08/matchbox-and-cmd-check/</loc>
+    <lastmod>2018-03-08T06:59:09+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/</loc>
+    <lastmod>2018-03-07T07:07:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</loc>
+    <lastmod>2018-03-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/05/another-approach-to-evaluating-dynprog-expressions/</loc>
+    <lastmod>2018-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/04/comments/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/04/evaluating-dynprog-expressions/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/03/tick-marks-for-log10-axis/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</loc>
+    <lastmod>2018-03-03T10:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/02/blog-setup/</loc>
+    <lastmod>2018-03-02T09:48:01+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/02/purpose-of-this-blog/</loc>
+    <lastmod>2018-03-02T07:58:24+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/2018/03/01/first-post/</loc>
+    <lastmod>2018-03-01T22:46:35+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/1/01/01/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/blog/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/blogdown/</loc>
+    <lastmod>2018-03-02T09:48:01+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/data-structures/</loc>
+    <lastmod>2018-03-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/disqus/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/dsl/</loc>
+    <lastmod>2018-03-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/dynamic-programming/</loc>
+    <lastmod>2018-03-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/dynprog/</loc>
+    <lastmod>2018-03-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/foolbox/</loc>
+    <lastmod>2018-04-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/ggplot2/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/graphics/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/hugo/</loc>
+    <lastmod>2018-03-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/matchbox/</loc>
+    <lastmod>2018-03-17T14:35:16+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</loc>
+    <lastmod>2018-04-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/</loc>
+    <lastmod>2018-09-22T12:23:09+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/package-development/</loc>
+    <lastmod>2018-03-17T14:35:16+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/categories/pattern-matching/</loc>
+    <lastmod>2018-03-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/plotting/</loc>
+    <lastmod>2018-03-03T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/pmatch/</loc>
+    <lastmod>2018-03-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/rmarkdown/</loc>
+    <lastmod>2018-03-02T07:58:24+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/roxygen/</loc>
+    <lastmod>2018-03-08T06:59:09+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/scope-rules/</loc>
+    <lastmod>2018-09-20T05:00:15+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/scoping-rules/</loc>
+    <lastmod>2018-09-22T12:23:09+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/</loc>
+    <lastmod>2018-03-02T09:48:01+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/tail-recursion/</loc>
+    <lastmod>2018-03-02T10:38:06+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/tags/tailr/</loc>
+    <lastmod>2018-04-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mailund.github.io/r-programmer-blog/</loc>
+    <lastmod>2018-03-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

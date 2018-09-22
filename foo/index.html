@@ -1,0 +1,543 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.40.2" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<section id="home">
+        <ul>
+          
+          <li class="first">
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/" title="Overscoping and eval">Overscoping and eval</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-09-22T12:23:09&#43;02:00">Sep 22, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/scoping-rules/">#scoping-rules</a>
+                
+            </em>
+        </li>
+        
+
+        <li>16 min read</li>
+    </ul>
+</aside>
+            <p>In my previous post I used the lm function for an example of scope rules, but I left a few details out. I didn&rsquo;t want to muddy the example with too many details, so I choice to lie a little.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/" title="Scoping Rules and NSE">Scoping Rules and NSE</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-09-20T05:00:15&#43;02:00">Sep 20, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/scope-rules/">#scope-rules</a>
+                
+            </em>
+        </li>
+        
+
+        <li>30 min read</li>
+    </ul>
+</aside>
+            <p>Earlier this week, I wrote some tweets about how you have to be careful about scopes when you do non-standard evaluation. I cover this in both Metaprogramming in R and Domain-Specific Languages in R, but this tweet</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/" title="New Package Releases: foolbox and tailr">New Package Releases: foolbox and tailr</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-04-27T00:00:00Z">Apr 27, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/foolbox/">#foolbox</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
+                
+            </em>
+        </li>
+        
+
+        <li>1 min read</li>
+    </ul>
+</aside>
+            <p>I have just released version 0.1.0 of foolbox and version 0.1.2 of tailr. I haven&rsquo;t actually done much on the packages the last three weeks, and they have been very close to these releases for a while, but now I had the spare time and energy to actually send them off.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/" title="“Optional” types using pmatch">“Optional” types using pmatch</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-30T00:00:00Z">Mar 30, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/dsl/">DSL</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>3 min read</li>
+    </ul>
+</aside>
+            <p>Some programming languages, e.g. Swift, have special &ldquo;optional&rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/" title="Lots of Function Transformations">Lots of Function Transformations</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-27T19:34:39&#43;02:00">Mar 27, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/foolbox/">#foolbox</a>
+                
+            </em>
+        </li>
+        
+
+        <li>2 min read</li>
+    </ul>
+</aside>
+            <p>The last couple of days I&rsquo;ve been doing a lot of experimenting with a package for function rewriting: foolbox. I am doing some function transformations in both pmatch and tailr and they look very much alike, so I figured I should collect the shared functionality in a separate package.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/22/pmatch-0-1-3/" title="pmatch 0.1.3">pmatch 0.1.3</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-22T00:00:00Z">Mar 22, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>2 min read</li>
+    </ul>
+</aside>
+            <p>I have just released version 0.1.3 of pmatch to CRAN. There are not a lot of changes to this version compared to 0.1.2, but enough that I felt it would be good to get a version out before I pull the entire package apart to make it dependent on toolbox for its transformation function.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/22/pmatch-0-1-3/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/" title="Transforming functions with cases calls">Transforming functions with cases calls</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-18T00:00:00Z">Mar 18, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>4 min read</li>
+    </ul>
+</aside>
+            <p>The issue with byte-compilation I wrote about yesterday can indeed be fixed by transforming functions that call cases. And that was very easy to implement since I already had all the bits and pieces I needed for it from the tailr transformations.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/18/transforming-functions-with-cases-calls/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/" title="Building a package that uses pattern matching">Building a package that uses pattern matching</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-17T14:35:16&#43;01:00">Mar 17, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/package-development/">Package-development</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/dsl/">DSL</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
+                
+            </em>
+        </li>
+        
+
+        <li>7 min read</li>
+    </ul>
+</aside>
+            <p>After a week spend programming string algorithms in C—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of tailr today, so that is good, but what I really wanted to work on was matchbox.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/" title="tailr v0.1.1">tailr v0.1.1</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-17T12:35:16&#43;01:00">Mar 17, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/metaprogramming/">Metaprogramming</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
+                
+            </em>
+        </li>
+        
+
+        <li>1 min read</li>
+    </ul>
+</aside>
+            <p>As I wrote about here and here, I had a problem in tailr with higher-order functions. In the transformation for tail-recursion optimisation, I need to know which actual functions each name refer to, in order to apply user-defined transformations, but with higher-order functions, those are not known until runtime.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/" title="Red-black trees in matchbox">Red-black trees in matchbox</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-12T00:00:00Z">Mar 12, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>6 min read</li>
+    </ul>
+</aside>
+            <p>I&rsquo;m working on implementing red-black search trees in matchbox and have managed most of it by now. I still need to implement deletion and the re-balancing code for handling those, but I have insertion up and running.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/12/red-black-trees-in-matchbox/">Read more&hellip;</a>
+            
+          </li>
+          
+        </ul>
+      </section>
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>

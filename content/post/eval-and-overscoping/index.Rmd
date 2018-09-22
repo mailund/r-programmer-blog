@@ -1,7 +1,7 @@
 ---
 title: "Overscoping and eval"
 date: 2018-09-22T12:23:09+02:00
-categories: "Non-standard evaluation"
+categories: [“Non-standard evaluation”]
 tags: ["scoping-rules"]
 ---
 
@@ -66,7 +66,7 @@ I have shown the caller environments in blue-ish. For each function, it shows th
 
 Now, we can explicitly tell R to use a different environment in which to evaluate an expression. We need to do two things: we have to replace expressions with quoted expressions and then evaluate them using the `eval` function with the alternative environment.
 
-We have to use quoted expressions, because otherwise we will evaluate the expressions where we call `env` and not inside it, in the environment we tell `env` to do the evaluation.^[How arguments are actually evaluated is more complicated than this; notice that I wrote that "we will evaluate the expressions where we call `env`". I didn't say we would evaluate them *before* we call `env`. We still evaluate the argument after we call `env`, we just won't use the alternative environment. I have explained how lazy evaluation works in [a couple of books](https://mailund.dk/books/) and even how you can exploit it to implement lazy data structures in [*Functional Data-Structures in R*](https://amzn.to/2znwsW8). I won't repeat it here, but might in a later post. There is enough to cover in this post as it is.]
+We have to use quoted expressions, because otherwise we will evaluate the expressions where we call `eval` and not inside it, in the environment we tell `eval` to do the evaluation.^[How arguments are actually evaluated is more complicated than this; notice that I wrote that "we will evaluate the expressions where we call `eval`". I didn't say we would evaluate them *before* we call `eval`. We still evaluate the argument after we call `eval`, we just won't use the alternative environment. I have explained how lazy evaluation works in [a couple of books](https://mailund.dk/books/) and even how you can exploit it to implement lazy data structures in [*Functional Data-Structures in R*](https://amzn.to/2znwsW8). I won't repeat it here, but might in a later post. There is enough to cover in this post as it is.]
 
 We can do something like this:
 

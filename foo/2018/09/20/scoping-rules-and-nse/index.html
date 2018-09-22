@@ -1,0 +1,1083 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.40.2" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Scoping Rules and NSE</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-09-20T05:00:15&#43;02:00">Sep 20, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/scope-rules/">#scope-rules</a>
+                
+            </em>
+        </li>
+        
+
+        <li>30 min read</li>
+    </ul>
+</aside>
+    
+
+    
+
+<p>Earlier this week, I wrote some tweets about how you have to be careful about scopes when you do non-standard evaluation. I cover this in both <a href="https://amzn.to/2QHONDT"><em>Metaprogramming in R</em></a> and <a href="https://amzn.to/2QHMNLL"><em>Domain-Specific Languages in R</em></a>, but this tweet</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Comprehensive overview of NSE. Should be of interest to <a href="https://twitter.com/ThomasMailund?ref_src=twsrc%5Etfw">@ThomasMailund</a> <a href="https://twitter.com/MilesMcBain?ref_src=twsrc%5Etfw">@MilesMcBain</a> <a href="https://twitter.com/_ColinFay?ref_src=twsrc%5Etfw">@_ColinFay</a> and <a href="https://twitter.com/edwin_thoen?ref_src=twsrc%5Etfw">@edwin_thoen</a> <a href="https://t.co/2uI1HSnfEN">https://t.co/2uI1HSnfEN</a></p>&mdash; Deemah 🇺🇦  🇳🇴 (@dmi3k) <a href="https://twitter.com/dmi3k/status/1041563992332881920?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>made me write about it again—only this time in a twitter thread.</p>
+
+<p>Well, I say thread—I don&rsquo;t actually know how to do that, it seams; I just replied to the tweet a bunch of times and apparently that doesn&rsquo;t make a thread, it therefore my reply was hard to read. This is apparently where I went wrong</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sorry there is only one Tweet, remember you have to reply to one of the main tweet from the thread not a comment.<br>If you think I&#39;m buggy please let me know by DM or email 😊<br>Need help? check this link: <a href="https://t.co/dz8sHGkl3T">https://t.co/dz8sHGkl3T</a> 🤖</p>&mdash; Thread Reader App (@threadreaderapp) <a href="https://twitter.com/threadreaderapp/status/1041815478493229061?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Anyway, the first tweet links to <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">this page</a> that contains a list of tools for implementing &ldquo;macros&rdquo; in R. This just means &ldquo;tools for substituting expressions into other expressions&rdquo; (preferably with some control over where they are put).<sup class="footnote-ref" id="fnref:macros"><a href="#fn:macros">1</a></sup> If you evaluate those expressions after the substitution, either right away or at some later time, it is also called <em>non-standard evaluation</em>. Not surprisingly, it is called that because it differs (at least it can differ) from standard evaluation where you simply have an expression and evaluate it.</p>
+
+<p>The motivation for the <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">overview on macro methods</a> was apparently that a paper on <a href="https://cran.r-project.org/web/packages/wrapr/">the <code>wrapr</code> package</a> was rejected because it didn&rsquo;t compare the package with quasi-quotation from <a href="https://cran.r-project.org/web/packages/rlang/"><code>rlang</code></a>. I might be partially responsible for this, since I reviewed the paper, but I didn&rsquo;t complain about the lack of comparison—I complained that <code>wrapr</code> doesn&rsquo;t deal with scopes (which <code>rlang</code> does), and that this makes <code>wrapr</code>&rsquo;s <code>let</code> function very risky to use. You can <em>very</em> easily write a function that seems to work but contains subtle errors.</p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Erh.. but the paper they had rejected — mentioned at the beginning — was reviewed by me :-/<br><br>There were some pretty serious issues with overscoping with their wrapr package. It doesn’t handle it at all, so you very easily get some very hard to notice errors…</p>&mdash; Thomas Mailund (@ThomasMailund) <a href="https://twitter.com/ThomasMailund/status/1041567698239606785?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">It occurs to me that my previous tweet makes it sound like there is something especially bad with wrapr. There isn’t. But NSE is hard, and wrapr doesn’t make it easier — just easier to get scoping wrong. I find that rlang’s quosures does a good job (your mileage may vary). 1/</p>&mdash; Thomas Mailund (@ThomasMailund) <a href="https://twitter.com/ThomasMailund/status/1041677761130229761?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</p>
+
+<p>Since I didn&rsquo;t manage to make my tweets into a proper thread, so they would be easy to read, I will try to repeat it here. I can add a few things here, now that I have a whole post to work with, but I cannot get around all the interesting scope and NSE topics I would like to. For that, I will send you to my books, or return to those topics at a later time.</p>
+
+<p>Before I get started, though, I once more want to stress that <em>this is not an attack on wrapr::let!</em> The issues with scope are there for pretty much <a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">all tools that manipulate expressions</a>. The <code>rlang</code> package has &ldquo;quosures&rdquo;—expressions plus scopes—that alleviates many of the issues. This is the reason I prefer it over the others. If you do not explicitly handle scopes, you are likely to get into trouble with non-standard evaluation. Regardless of how you implement it.</p>
+
+<p>I am simplifying a few things below to make the explanation easier; I am not describing what R <em>actually</em> does, but how it <em>conceptually</em> works with expressions and scopes. There are more details in it, but those are not relevant for this topic.</p>
+
+<h2 id="quoting-and-evaluating-expressions">Quoting and evaluating expressions</h2>
+
+<p>Whenever you write an expression in R, you create an expression object, an abstract syntax tree if you will, and then evaluates it.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#3677a9">2</span> ; y &lt;- <span style="color:#3677a9">1</span> ; z &lt;- <span style="color:#3677a9">3</span>
+x * (y + z)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>You do not <em>have</em> to evaluate it, though. You can avoid this by <em>quoting</em> the expression</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">quote</span>(x * (y + z))</code></pre></div>
+<pre><code>## x * (y + z)
+</code></pre>
+
+<p>This gives you the abstract syntax tree instead of the result of evaluating it.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">expr &lt;- <span style="color:#6ab825">quote</span>(x * (y + z))
+<span style="color:#6ab825">class</span>(expr)</code></pre></div>
+<pre><code>## [1] &quot;call&quot;
+</code></pre>
+
+<p>In this particular case, it says that the syntax tree is a <em>call</em>. It is, because <code>*</code> is a function and that is what we are calling at the outermost level. There are other kinds an expression can be, e.g. constants and variables, but for this post that doesn&rsquo;t matter. What matters is that you can create non-evaluated (quoted) expressions.</p>
+
+<p>That, alone, isn&rsquo;t that interesting. The interesting part is that you can:</p>
+
+<ol>
+<li>Evaluate expressions later, in alternative scopes,</li>
+<li>You can manipulate expressions and modify them before you evaluate them.</li>
+</ol>
+
+<p>You evaluate an expression using the <code>eval</code> function</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(expr)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>and you can modify it in several ways; one way is using the built-in <code>substitute</code> function</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">expr2 &lt;- <span style="color:#6ab825">substitute</span>(x * (y + z), <span style="color:#6ab825;font-weight:bold">list</span>(x = <span style="color:#3677a9">42</span>))
+expr2</code></pre></div>
+<pre><code>## 42 * (y + z)
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(expr2)</code></pre></div>
+<pre><code>## [1] 168
+</code></pre>
+
+<p>The substitute function quotes its input itself and it returns a quoted expression. This can make them a little hard to work with. If we want to substitute <code>x</code> with <code>42</code> in <code>expr</code> from before—for example, if the expression was a function argument, we couldn&rsquo;t simply use</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">substitute</span>(expr, <span style="color:#6ab825;font-weight:bold">list</span>(x = <span style="color:#3677a9">42</span>))</code></pre></div>
+<pre><code>## expr
+</code></pre>
+
+<p>This is because <code>substitute</code> quotes its input, which is <code>expr</code>. It doesn&rsquo;t care that it is a variable we have assigned a value to; it only sees it as an expression. To get the value of <code>expr</code> into the <code>substitute</code> call, you need to substitute it:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">substitute</span>(<span style="color:#6ab825">substitute</span>(expr, <span style="color:#6ab825;font-weight:bold">list</span>(x = <span style="color:#3677a9">42</span>)), <span style="color:#6ab825;font-weight:bold">list</span>(expr = expr))</code></pre></div>
+<pre><code>## substitute(x * (y + z), list(x = 42))
+</code></pre>
+
+<p>Then, to do the actual substitution, you need to actually evaluate it. If you actually want to get the value of the modified expression, you need to evaluate <em>that</em>. So the whole thing can be done like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">expr2 &lt;- <span style="color:#6ab825">substitute</span>(<span style="color:#6ab825">substitute</span>(expr, <span style="color:#6ab825;font-weight:bold">list</span>(x = <span style="color:#3677a9">42</span>)), <span style="color:#6ab825;font-weight:bold">list</span>(expr = expr))
+expr3 &lt;- <span style="color:#6ab825">eval</span>(expr2)
+expr3</code></pre></div>
+<pre><code>## 42 * (y + z)
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(expr3)</code></pre></div>
+<pre><code>## [1] 168
+</code></pre>
+
+<p>To make <code>substitute</code> just a little bit more confusing—because why not—it works slightly different inside functions. In the global scope, we do not substitute variables with their values</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#6ab825">quote</span>(x + x)
+<span style="color:#6ab825">substitute</span>(x)</code></pre></div>
+<pre><code>## x
+</code></pre>
+
+<p>Inside functions, we do</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+	<span style="color:#6ab825">substitute</span>(x)
+}
+f(x + x)</code></pre></div>
+<pre><code>## x + x
+</code></pre>
+
+<p>We only substitute known variables and only inside functions</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">substitute</span>(x * y)</code></pre></div>
+<pre><code>## x * y
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+	<span style="color:#6ab825">substitute</span>(x * y)
+}
+g(x + x)</code></pre></div>
+<pre><code>## (x + x) * y
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+	y &lt;- <span style="color:#3677a9">42</span>
+	<span style="color:#6ab825">substitute</span>(x * y)
+}
+h(x + x)</code></pre></div>
+<pre><code>## (x + x) * 42
+</code></pre>
+
+<p>You can use <code>substitute</code> this way to translate an input into an expression. Function arguments are passed as something called *promises*—among other things they are expressions that are not yet evaluated—so you can capture them and get the quoted expressions.</p>
+
+<p>Capturing parameters and treating them as quoted expressions is at the heart of non-standard evaluation. If you do not capture parameters they are evaluated where they are used and you get standard evaluation. If you capture them—quote them—and do something with them that doesn&rsquo;t involved immediately evaluating them, then you are doing something non-standard. Well, it is called non-standard, but it is used all over R, so it is a little bit standard…</p>
+
+<p>Be careful when you call non-standard evaluation functions from other functions. When you capture an input variable you get the exact expression the function was called with. You don&rsquo;t get the expression it potentially refers to.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(<span style="color:#3677a9">2</span> + <span style="color:#3677a9">2</span>)</code></pre></div>
+<pre><code>## 2 + 2
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) f(x)
+g(<span style="color:#3677a9">2</span> + <span style="color:#3677a9">2</span>)</code></pre></div>
+<pre><code>## x
+</code></pre>
+
+<p>There are ways to fix this—R is very flexible and you can always come up with different ways to solve a problem—but the easiest fix is just not to do this. You can write functions that take quoted expressions as input and manipulate or evaluate them, and keep the non-standard evaluation to functions you expect not to be called by other functions. Non-standard evaluation is great for writing domain-specific languages, but you don&rsquo;t want to combine functions that uses it in other ways.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f_ &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(<span style="color:#6ab825">exp</span>) {
+	<span style="color:#6ab825">substitute</span>(x * x, <span style="color:#6ab825;font-weight:bold">list</span>(x = <span style="color:#6ab825">exp</span>))
+}
+f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) f_(<span style="color:#6ab825">substitute</span>(x))
+f(<span style="color:#3677a9">2</span> + <span style="color:#3677a9">2</span>)</code></pre></div>
+<pre><code>## (2 + 2) * (2 + 2)
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) <span style="color:#6ab825">eval</span>(f_(<span style="color:#6ab825">substitute</span>(x)))
+g(<span style="color:#3677a9">2</span> + <span style="color:#3677a9">2</span>)</code></pre></div>
+<pre><code>## [1] 16
+</code></pre>
+
+<p>Substitute is not the only way to manipulate expressions;
+<a href="https://github.com/WinVector/wrapr/blob/master/extras/MacrosInR.md">many ways to do this</a> that all do it in slightly different ways. (My <a href="https://mailund.github.io/foolbox/">foolbox</a> does it for rewriting functions). But that must be a topic for another day. Now I want to get to the <em>evaluation</em> part of non-standard evaluation.</p>
+
+<p>When you have a quoted expression, you can evaluate it. Writing</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x + y</code></pre></div>
+<p>is essentially the same as writing</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y))</code></pre></div>
+<p>For example</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#3677a9">2</span>; y &lt;- <span style="color:#3677a9">6</span>
+x + y</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y))</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>This is also the same as</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(x + y)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+
+<p>but don&rsquo;t confuse the two. When you write <code>eval(x + y)</code> you give <code>eval</code> a value. Well, strictly speaking you give it a promise, but it amounts to a value because <code>expr</code> doesn&rsquo;t capture it and make it into a quoted expression.</p>
+
+<p>When you use <code>eval(x + y)</code> the expression <code>x + y</code> is, conceptually, evaluated before it is passed to <code>eval</code>. If you change <code>x</code> or <code>y</code> it doesn&rsquo;t change that value. If you create the quoted expression <code>quote(x + y)</code> it <em>isn&rsquo;t</em> evaluated before you explicitly do so, and if you change <code>x</code> or <code>y</code> before you evaluate the expression, that affects what the expression evaluates to.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">val &lt;- x + y
+ex &lt;- <span style="color:#6ab825">quote</span>(x + y)
+x &lt;- <span style="color:#3677a9">2</span> * x
+<span style="color:#6ab825">eval</span>(val)</code></pre></div>
+<pre><code>## [1] 8
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(ex)</code></pre></div>
+<pre><code>## [1] 10
+</code></pre>
+
+<p>If you just remember that values are expressions too, this shouldn&rsquo;t cause you any problems ever. If you do not quote an expression, you get its value, if you do, you get an expression. If you give <code>eval</code> a value, you get it back, if you give it a quoted expression, that expression is evaluated.</p>
+
+<p>When we run the code</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">val &lt;- x + y</code></pre></div>
+<p>we evaluate <code>x + y</code> before we assign it to <code>val</code>, and when we run <code>eval(val)</code> we get it back. With</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ex &lt;- <span style="color:#6ab825">quote</span>(x + y)</code></pre></div>
+<p>we create an expression that we haven&rsquo;t evaluated yet.</p>
+
+<p>With functions it gets a little more complicated. Arguments to functions are not evaluate right away, so you can get the corresponding expressions using <code>substitute</code>. It is because function arguments are not &ldquo;passed by value&rdquo; that this is possible, but if you evaluate an argument it doesn&rsquo;t matter much. Using <code>substitute</code> is just a way of getting a quoted expression without requiring that the caller gives you one explicitly.</p>
+
+<p>Ok, so why is quoting and evaluating that interesting? Two reasons, one is that you can manipulate an expression before you evaluate it—if you are into that kind of things—and second, you can change the context an expression is evaluate in.</p>
+
+<p>Consider this example:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- rnorm(<span style="color:#3677a9">5</span>) ; y &lt;- rnorm(<span style="color:#3677a9">5</span>)
+d &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(x = rnorm(<span style="color:#3677a9">5</span>), y = rnorm(<span style="color:#3677a9">5</span>))
+lm(y ~ x)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Coefficients:
+## (Intercept)            x  
+##     -0.4119      -0.5684
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(y ~ x, data = d)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x, data = d)
+## 
+## Coefficients:
+## (Intercept)            x  
+##    -0.69288      0.05575
+</code></pre>
+
+<p>We give the <code>lm</code> function the same formula to work with, but when we give it a data frame, then <code>x</code> and <code>y</code> refer to values there, while otherwise they refer to the global variables. The values that <code>x</code> and <code>y</code> refers to change when we give <code>lm</code> a data frame; it seems it is evaluated in a different context when we give it the data frame.</p>
+
+<p>We can do the same thing. We can make an expression and evaluate it in two different contexts:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ex &lt;- <span style="color:#6ab825">quote</span>(x + y)
+<span style="color:#6ab825">eval</span>(ex)</code></pre></div>
+<pre><code>## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(ex, d)</code></pre></div>
+<pre><code>## [1] -2.7241520  1.6886362 -1.4607677  0.5952856  0.7167546
+</code></pre>
+
+<p>When we give <code>eval</code> the data frame <code>d</code>, it will find <code>x</code> and <code>y</code> in there; when we do not give it <code>d</code> it finds them in the global scope.</p>
+
+<p>Do not forget to use a quoted expression if you want this to work. If you just give <code>eval</code> an expression—without quoting it—you get the value of that expression. Changing the context in which it is evaluated does nothing.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(x + y)</code></pre></div>
+<pre><code>## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">eval</span>(x + y, d)</code></pre></div>
+<pre><code>## [1] -1.8023808 -0.9027141 -0.2647009 -0.4753439 -0.5578488
+</code></pre>
+
+<p>This, again, has to do with how parameters are passed as promises. Promises are not <em>just</em> expressions. For the rest of this post, just think of function arguments as passed by value <em>unless</em> we get the expressions using <code>substitute</code>. It isn&rsquo;t exactly true, but I have to leave promises for another post. I promise.</p>
+
+<h2 id="scopes-and-how-to-modify-them">Scopes and how to modify them</h2>
+
+<p>If you do not do anything special, then <code>eval</code> evaluates its input in the scope it is in. If you give it a value, it doesn&rsquo;t matter what scope it is in—a value evaluates to a value—but for quoted expressions it does.</p>
+
+<p>Consider this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(ex) {
+	x &lt;- <span style="color:#3677a9">2</span>
+	<span style="color:#6ab825">eval</span>(ex)
+}
+x &lt;- <span style="color:#3677a9">4</span> ; y &lt;- <span style="color:#3677a9">2</span> ; z &lt;- <span style="color:#3677a9">1</span>
+f(<span style="color:#6ab825">quote</span>(x))</code></pre></div>
+<pre><code>## [1] 2
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(<span style="color:#6ab825">quote</span>(y))</code></pre></div>
+<pre><code>## [1] 2
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(<span style="color:#6ab825">quote</span>(z))</code></pre></div>
+<pre><code>## [1] 1
+</code></pre>
+
+<p>Inside <code>f</code> we set the variable <code>x</code> and evaluate the input. The input is evaluated in the scope of the function. This means that <code>quote(x)</code> is evaluated in a context where <code>x</code> refers to 2, not 4. The other expressions are also evaluated inside the scope of the function, but the variables are the global variables. The scope of <code>f</code> is enclosed by the global scope.</p>
+
+<p>If you don&rsquo;t quote the input, you get the value in the global scope</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(x)</code></pre></div>
+<pre><code>## [1] 4
+</code></pre>
+
+<p>If you use substitute inside <code>f</code>, you get a quoted expression, and then it works as before, except that you do not need to explicitly quote the argument to f:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+	ex &lt;- <span style="color:#6ab825">substitute</span>(x)
+	x &lt;- <span style="color:#3677a9">2</span>
+	<span style="color:#6ab825">eval</span>(ex)
+}
+f(x)</code></pre></div>
+<pre><code>## [1] 2
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(y)</code></pre></div>
+<pre><code>## [1] 2
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(z)</code></pre></div>
+<pre><code>## [1] 1
+</code></pre>
+
+<p>The scoping rules in R are surprisingly simple, but you can manipulate scopes and that can make it difficult to see how they interact with quoted expressions. The rules are simple, but so are the rules of chess. The combinations can be complex.</p>
+
+<h3 id="environments">Environments</h3>
+
+<p>Scopes, in R, are implemented through so-called <em>environments</em>. These are essentially tables that maps from variables to values. Whenever you evaluate an expression, you do so in an environment. R uses this environment to get the values that correspond to the variables in the expression.</p>
+
+<p>Now, an environment doesn&rsquo;t necessarily know what all the variables in the expression refers to. If it doesn&rsquo;t, R has to look elsewhere for it. The way this works is that all environments have a <em>parent</em>; R looks in the parent of an environment if it doesn&rsquo;t find the variable it is looking for. It keeps searching up the chain of parents until it either finds the variable or runs out of parents.</p>
+
+<p>In the following, I am going to assume that the global environment doesn&rsquo;t have a parent. This isn&rsquo;t true, but what actually happens above the global variable is a bit complicated and has to do with package namespaces. It has nothing to do with the examples I am going to show you. In all the examples, all environment chains end in the global environment. They do not have to, chains can end in the <em>empty environment</em>, but that isn&rsquo;t important for the examples either.</p>
+
+<p>Ok, assume that we have a global environment with nothing in it.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">rm</span>(<span style="color:#6ab825;font-weight:bold">list</span>=<span style="color:#6ab825">ls</span>())
+<span style="color:#6ab825">ls</span>()</code></pre></div>
+<pre><code>## character(0)
+</code></pre>
+
+<p>If we assign to variables <code>x</code> and <code>y</code></p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- <span style="color:#3677a9">2</span>; y &lt;- <span style="color:#3677a9">3</span></code></pre></div>
+<p>it will contain those two variables:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">ls</span>()</code></pre></div>
+<pre><code>## [1] &quot;x&quot; &quot;y&quot;
+</code></pre>
+
+
+<figure>
+    
+        <img src="global-scope.png" />
+    
+    
+</figure>
+
+
+<p>When you call <code>ls()</code> without arguments, you get the list of variables in the environment you are currently in. In this case, the global environment. You can also explicitly give <code>ls()</code> an environment. You get the global environment by calling the function <code>globalenv()</code>:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">ls</span>(<span style="color:#6ab825">globalenv</span>())</code></pre></div>
+<pre><code>## [1] &quot;x&quot; &quot;y&quot;
+</code></pre>
+
+<p>Now, let&rsquo;s define a function:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) x + y</code></pre></div>
+<p>We are really doing two things in this statement. We create a function</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">function</span>(x) x + y</code></pre></div>
+<p>and we assign it to the variable <code>f</code>. The effect of the assignment is simple; we add <code>f</code> to the (global) environment and make it point to the function. The function definition is a bit more involved.</p>
+
+<p>We don&rsquo;t need to know all the gory details of how functions work, but we need to know that functions have associated environments. You can get these by calling the function <code>environment()</code> on them.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">environment</span>(f)</code></pre></div>
+<pre><code>## &lt;environment: R_GlobalEnv&gt;
+</code></pre>
+
+<p>You can chance this environment if you want to, but by default it is the environment in which you defined the function. In this case, the global environment.</p>
+
+
+<figure>
+    
+        <img src="global%20scope%20with%20function.png" />
+    
+    
+</figure>
+
+
+<p>The function environment is <em>not</em> a new environment, however. You do not create an environment when you define a function. You just associate an environment with it. This environment is used as the parent of environments you create when you <em>call</em> a function.</p>
+
+<p>If you call a function, e.g. call</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(<span style="color:#3677a9">5</span>)</code></pre></div>
+<p>you <em>will</em> create a new environment. You put function arguments and local variables into this environment, and the parent of the environment is the environment associated with the function.</p>
+
+
+<figure>
+    
+        <img src="global%20scope%20with%20function%20instance.png" />
+    
+    
+</figure>
+
+
+<p>When you evaluate the <code>x + y</code> in the body of <code>f</code>, R will first check the function instance environment, where it will find <code>x</code> mapped to five, and then search up the parent chain for <code>y</code>, which it will find in the global environment mapped to three.</p>
+
+<p>The combination of associating environments to functions and making these the parents of function-call environment enables you to get closures.</p>
+
+<p>Get rid of <code>x</code> and <code>y</code> and define a function that nests another function</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">rm</span>(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>)
+f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
+	g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) x + y
+	g
+}</code></pre></div>
+<p>After we have defined the function and assigned it to <code>f</code>, the global environment maps <code>f</code> to the function and the function&rsquo;s environment is the global variable.</p>
+
+
+<figure>
+    
+        <img src="nested%20function%20before%20call.png" />
+    
+    
+</figure>
+
+
+<p>It doesn&rsquo;t matter what happens inside the function body, because we haven&rsquo;t evaluated it yet. There is no inner function yet; it doesn&rsquo;t exist before we evaluate <code>f</code>.</p>
+
+<p>Now, let us call <code>f</code> with argument 2. This creates an instance environment and set its parent to the global environment (the environment of function f). Inside this environment we store the argument <code>x</code> and the local function <code>g</code>. The environment of <code>g</code> is the instance environment of the <code>f(2)</code> call.</p>
+
+
+<figure>
+    
+        <img src="nested%20function%20outer%20fall%20before%20h.png" />
+    
+    
+</figure>
+
+
+<p>When you return from the call to <code>f</code>, and assign the result to <code>h</code>, you have this setup:</p>
+
+
+<figure>
+    
+        <img src="nested%20functions%20after%20outer%20call.png" />
+    
+    
+</figure>
+
+
+<p>You do not have a direct handle on the instance-environment from the call to <code>f</code>, but it exists as the parent of the function environment of <code>h</code>.</p>
+
+<p>If you then call <code>h(3)</code> you create another instance environment in which you map <code>y</code> to three. The parent environment is the function <code>h</code>&rsquo;s environment—we are applying the same rule as before about instance environments and functions—so the state of the system in the call is this:</p>
+
+
+<figure>
+    
+        <img src="nested%20functions%20inner%20call.png" />
+    
+    
+</figure>
+
+
+<p>To evaluate <code>x + y</code> inside the <code>h(3)</code> call, we have this chain of environments:</p>
+
+
+<figure>
+    
+        <img src="evaluate%20in%20inner.png" />
+    
+    
+</figure>
+
+
+<p>When we look for <code>y</code> we can find it directly in the current environment. To find <code>x</code> we need to look in its parent. If we wanted <code>f</code>, <code>g</code>, and <code>h</code> we would find them in the chain as well.</p>
+
+<p>If you have done any functional programming in R, this behaviour shouldn&rsquo;t surprise you. It is lexical scope and pretty much all modern languages have similar rules.</p>
+
+<p>When we have quoted expressions added to the mix, we do not have to put the expression inside the nested function&rsquo;s body. We can make it take an expression and evaluate it in its body. This separates where we define the (quoted) expression from where we evaluate it:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) <span style="color:#6ab825;font-weight:bold">function</span>(y) <span style="color:#6ab825;font-weight:bold">function</span>(ex) <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">substitute</span>(ex))
+g &lt;- f(<span style="color:#3677a9">2</span>)
+h &lt;- g(<span style="color:#3677a9">3</span>)
+h(x + y)</code></pre></div>
+<pre><code>## [1] 5
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">h(x * y)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>Here, I use <code>substitute</code> to translate an argument into an expression. If you want to quote the arguments explicitly that is even simpler; I leave that as an exercise.</p>
+
+<p>The expression we give the final nested function is evaluated in the scope of the innermost function. But how does <code>eval</code> know about that environment?</p>
+
+<p>The parent environment of the <code>eval</code> call is the environment where we defined the <code>eval</code> function, which is the global environment.<sup class="footnote-ref" id="fnref:Actually-eval-do"><a href="#fn:Actually-eval-do">2</a></sup> That environment doesn&rsquo;t know anything about the variables we captured in the different closures when we constructed the function <code>h</code>.</p>
+
+<p>When we call <code>eval</code>, we do not want it to evaluate its input in its own environment; rather, we want it to evaluate it in the caller&rsquo;s environment.</p>
+
+<p>Traditionally, we call function instances on the call stack frames. Since instance environment can survive longer than function calls, we are not really working with proper frames, but the terminology persists. We want to evaluate the expression we give <code>eval</code> in the caller&rsquo;s frame, not in <code>eval</code>&rsquo;s environment.</p>
+
+
+<figure>
+    
+        <img src="calling%20eval.png" />
+    
+    
+</figure>
+
+
+<p>Well, <code>eval</code> is implemented using magic, and this is exactly what it does; it evaluates its input in the caller&rsquo;s frame.<sup class="footnote-ref" id="fnref:When-I-say-magic"><a href="#fn:When-I-say-magic">3</a></sup></p>
+
+<p>We cannot write magical functions, but we can use <code>eval</code> to get the same effect. We can give <code>eval</code> a second argument, and it will use that as the environment to evaluate the expression in. We can get the caller&rsquo;s environment, rather than our own, through the function <code>parent.frame</code>. This is an unusually poor choice of function name, because the caller&rsquo;s frame has nothing to do with parent environments, but that is what it is called. The function <code>rlang::caller_env</code> does the same, and it has a more sensible name.</p>
+
+<p>Consider this setup:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lexical &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) <span style="color:#6ab825;font-weight:bold">function</span>(ex) <span style="color:#6ab825">eval</span>(ex)
+dynamic &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) <span style="color:#6ab825;font-weight:bold">function</span>(ex) <span style="color:#6ab825">eval</span>(ex, <span style="color:#6ab825">parent.frame</span>())
+lex_closure &lt;- lexical(<span style="color:#3677a9">1</span>)
+dyn_closure &lt;- dynamic(<span style="color:#3677a9">1</span>)</code></pre></div>
+<p>Here, we have two functions that creates closures and we create one from each. I have called them <code>lexical</code> and <code>dynamic</code> because they implement lexical and dynamic scoping, respectively. Don&rsquo;t worry about the terminology if it is unfamiliar. All sensible languages use lexical scoping—it is much easier to reason about—but dynamic scoping is something we can exploit in non-standard evaluation. You will see the difference between the two in just a second.</p>
+
+<p>After creation <code>lex_closure</code> and <code>dyn_closures</code>, the setup looks very similar.</p>
+
+
+<figure>
+    
+        <img src="lex%20vs%20dyn.png" />
+    
+    
+</figure>
+
+
+<p>Both closures have an environment that contains a value for <code>x</code>—in both cases that value is 1—and both environments have the global environment as parent. The only difference in the two closures is the function body we execute when we call them.</p>
+
+<p>Try this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">caller &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, f) f(<span style="color:#6ab825">quote</span>(x))
+caller(<span style="color:#3677a9">2</span>, lex_closure)</code></pre></div>
+<pre><code>## [1] 1
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">caller(<span style="color:#3677a9">2</span>, dyn_closure)</code></pre></div>
+<pre><code>## [1] 2
+</code></pre>
+
+<p>The two calls to <code>caller</code> look the same. You get this graph of function instances with parent environments (in brown) and caller frames (in blue) regardless of whether you use the lex closure or the dyn closure.</p>
+
+
+<figure>
+    
+        <img src="Lex%20dyn%20call.png" />
+    
+    
+</figure>
+
+
+<p>The difference in the two call is the path that R takes to search for <code>x</code>. In the lexical scoping closures, <code>eval</code> will look in its caller frame, which is the <code>lex_closure</code> instance, and then search up the parent chain there.</p>
+
+
+<figure>
+    
+        <img src="Lex%20dyn%20call%20search.png" />
+    
+    
+</figure>
+
+
+<p>With <code>dyn_closure</code> we connect <code>eval</code> with <code>dyn_closure</code>&rsquo;s calling frame, so we skip <code>dyn_closure</code>&rsquo;s instance environment entirely and search in <code>caller</code> instead, where we find <code>x</code>.</p>
+
+
+<figure>
+    
+        <img src="Lex%20dyn%20call%20search%202.png" />
+    
+    
+</figure>
+
+
+<p>The figures are getting a bit crowded by now, but I am sure you can work your way through them, with little effort. They capture most of what you need to know about scopes and evaluation: how environments are chained together by lexical scope and how function call-stacks are chained together through caller frames.</p>
+
+<p>When you evaluate an expression you always search for variable-value bindings in the chain of environment parents. Non-standard evaluation is all about starting the search somewhere you do not normally start it or constructing alternative parent-chains than those you would normally use.</p>
+
+<p>There&rsquo;s a bit more to the story. Functions are not the only objects that have environments attached to them. Promises and formulas and quosures (which are really formulas) have as well. There&rsquo;s also environment rules for packages, but to understand the actual language that is not so essential. There is also more to how <code>eval</code> finds values—it doesn&rsquo;t just let you choose an alternative environment path, it also lets you find values in lists and data frames. All that must wait for another post; this one is getting long enough as it is.</p>
+
+<p>In any case, to understand the tweets that I wrote a few days ago, the explanation above will suffice. I will repeat the examples from my tweets below. They use <code>wrapr::let</code> to substitute variables in expressions with values. This function works slightly different from <code>substitute</code> so there are some differences, but you should easily be able to understand the examples. Maybe I will try to rewrite them using <code>substitute</code> in a later post.</p>
+
+<h2 id="examples-using-wrapr-let">Examples using wrapr::let</h2>
+
+<p>Ok, for the examples I imagined that I had some data frames, that I want to fit a linear model on the data, and that I then want to extract some property from the fitted model. The variables in the model depend on the the data frame, though, and I might want to extract different properties.</p>
+
+<p>So, I have this setup:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Data:</span>
+d1 &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(x = rnorm(<span style="color:#3677a9">5</span>), y = rnorm(<span style="color:#3677a9">5</span>))
+d2 &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(a = rnorm(<span style="color:#3677a9">5</span>), b = rnorm(<span style="color:#3677a9">5</span>))
+
+<span style="color:#999;font-style:italic"># Not unreasonable usage:</span>
+<span style="color:#6ab825">summary</span>(lm(y ~ x, data = d1))[[<span style="color:#ed9d13">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ a, data = d2))[[<span style="color:#ed9d13">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
+</code></pre>
+
+<p>The way formulas work in R, you can combine variables from data frames with variables known where you created the formula. In this case the global environment. So we can mix global variables with variables from the data frames like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">xx &lt;- rnorm(<span style="color:#3677a9">5</span>)
+<span style="color:#6ab825">summary</span>(lm(y ~ xx, data = d1))[[<span style="color:#ed9d13">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ xx, data = d2))[[<span style="color:#ed9d13">&#34;residuals&#34;</span>]]</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+
+<p>Now, I might want to parameterise these expressions in a function that looks like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, y, d, prop) {
+    m &lt;- lm(y ~ x, data = d)
+    <span style="color:#6ab825">summary</span>(m)[[prop]]
+}
+lm_prop(x, y, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>)</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
+</code></pre>
+
+<p>Great, this looks like it is working, but that is an unfortunate coincidence. It works because the data frame <code>d1</code> contains variables <code>x</code> and <code>y</code> and those happens to be the ones we want to fit. In the <code>lm(y ~ x, data = d)</code> call, however, the variables are quoted, so to speak. The formula is <code>y ~ x</code> and we do not substitute <code>x</code> and <code>y</code> with the arguments to <code>lm_prop</code>.</p>
+
+<p>Because of this, we get an error if we try to fit a model from <code>d2</code>:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop(a, b, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>)</code></pre></div>
+<pre><code>## Error in eval(predvars, data, env): object 'b' not found
+</code></pre>
+
+<p>To get this to work, we need to substitute arguments into the model-fitting.</p>
+
+<p>The <code>wrapr::let</code> function works that way. It lets us substitute variables and after the substitution we can evaluate the expression. If the parameter <code>eval</code> is <code>TRUE</code> the expression will be evaluated; if it is <code>FALSE</code> it will not.</p>
+
+<p>We can define our <code>lm_prop</code> function like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(wrapr)
+lm_prop2 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, y, d, prop, <span style="color:#6ab825">eval</span>) {
+    let(<span style="color:#6ab825;font-weight:bold">c</span>(x = x, y = y, prop = prop),
+        <span style="color:#6ab825">summary</span>(lm(y ~ x, data = d))$prop,
+        eval = <span style="color:#6ab825">eval</span>)
+}</code></pre></div>
+<p>We can check that it works:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Data frame variables</span>
+lm_prop2(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ x, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(y ~ x, data = d1))$residuals</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##           1           2           3           4           5 
+##  0.55173765 -0.41726936  0.10077695 -0.00100951 -0.23423572
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Mixed variables</span>
+lm_prop2(<span style="color:#ed9d13">&#34;xx&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ xx, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;xx&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(y ~ xx, data = d1))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Data frame variables</span>
+lm_prop2(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(b ~ a, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ a, data = d2))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.7087989 -0.5569254 -0.4858279 -0.3054258  0.6393802
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Mixed variables</span>
+lm_prop2(<span style="color:#ed9d13">&#34;xx&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(b ~ xx, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ xx, data = d2))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;xx&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+
+<p>Great, it looks like it is working.</p>
+
+<p>Whenever your code looks like it is working, if you are using non-standard evaluation, it is time to figure out why it only <em>looks</em> that way.</p>
+
+<p>Surprisingly often, we get fooled by scopes—which is why I spent so much time explaining them above. That is also happening here.</p>
+
+<p>Consider what we are doing when we mix global variables with data frame variables. If a variable can be found in the data frame then we use it, otherwise we find a global variable. Since <code>a</code> isn&rsquo;t found in <code>d1</code> and <code>x</code> isn&rsquo;t found in <code>d2</code> we should be able to rename <code>xx</code></p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- a &lt;- xx</code></pre></div>
+<p>and still be able to mix a data frame with global variables.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ a, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(y ~ a, data = d1))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+
+<p>Ok, so far it looks fine.</p>
+
+<p>Now try this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(b ~ x, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ x, data = d2))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop2(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>## Error in model.frame.default(formula = b ~ x, data = d, drop.unused.levels = TRUE): variable lengths differ (found for 'x')
+</code></pre>
+
+<p>Wait, what? Why doesn&rsquo;t it work with <code>x</code> for <code>d2</code>?</p>
+
+<p>The <code>let</code> function does exactly what it is supposed to do with the substitution. The problem is when we evaluate the result.</p>
+
+<p>The setup that works look like this:</p>
+
+
+<figure>
+    
+        <img src="lm_prob2%20ok.png" />
+    
+    
+</figure>
+
+
+<p>The one that fails, looks like this:</p>
+
+
+<figure>
+    
+        <img src="lm_prob2%20fail.png" />
+    
+    
+</figure>
+
+
+<p>They look very similar, almost identically, so why does one work while the other does not?</p>
+
+<p>The function <code>lm</code> also does non-standard evaluation. If we give it a data frame, it will look for variables there before it looks in the enclosing scope, i.e. the function that calls <code>lm</code>.</p>
+
+<p>When we evaluate <code>lm(y ~ a, data = d)</code>, we search for <code>a</code> and <code>y</code> like this:</p>
+
+
+<figure>
+    
+        <img src="lm2%20details%20ok.png" />
+    
+    
+</figure>
+
+
+<p>When we evaluate <code>lm(b ~ x, data = d)</code>, we search for <code>x</code> and <code>b</code> like this:</p>
+
+
+<figure>
+    
+        <img src="lm2%20details%20ok%20fail.png" />
+    
+    
+</figure>
+
+
+<p>The <code>x</code> we find is the local variable, not the global one. That is why the function call fails.</p>
+
+<p>For this function to work, you cannot have local variables that over-shadows global ones. You can fix the function like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(<span style="color:#3677a9">.</span>a, <span style="color:#3677a9">.</span>b, d, <span style="color:#3677a9">.</span>prop, <span style="color:#6ab825">eval</span>) {
+    let(<span style="color:#6ab825;font-weight:bold">c</span>(x = <span style="color:#3677a9">.</span>a, y = <span style="color:#3677a9">.</span>b, prop = <span style="color:#3677a9">.</span>prop),
+        <span style="color:#6ab825">summary</span>(lm(y ~ x, data = d))$<span style="color:#3677a9">.</span>prop,
+        eval = <span style="color:#6ab825">eval</span>)
+}
+lm_prop3(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>,  d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ a, data = d))$.prop
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(y ~ a, data = d1))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>,  d1, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>## NULL
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(b ~ x, data = d))$.prop
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ x, data = d2))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop3(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>, d2, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>## NULL
+</code></pre>
+
+<p>This will work, I think.</p>
+
+<p>But what if we had written the function in an almost identical way like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(<span style="color:#3677a9">.</span>a, <span style="color:#3677a9">.</span>b, <span style="color:#3677a9">.</span>d, prop, <span style="color:#6ab825">eval</span>) {
+    let(<span style="color:#6ab825;font-weight:bold">c</span>(x = <span style="color:#3677a9">.</span>a, y = <span style="color:#3677a9">.</span>b, d = <span style="color:#3677a9">.</span>d, prop = prop),
+        <span style="color:#6ab825">summary</span>(lm(y ~ x, data = d))$prop,
+        eval = <span style="color:#6ab825">eval</span>)
+}
+lm_prop4(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>,  <span style="color:#ed9d13">&#34;d1&#34;</span>, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ a, data = d1))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(y ~ a, data = d1))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#ed9d13">&#34;a&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>,  <span style="color:#ed9d13">&#34;d1&#34;</span>, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.2514251 -0.9236466  1.3388122 -0.4841500 -0.1824407
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>,  <span style="color:#ed9d13">&#34;d2&#34;</span>, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(b ~ x, data = d2))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">summary</span>(lm(b ~ x, data = d2))$residuals</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm_prop4(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;b&#34;</span>,  <span style="color:#ed9d13">&#34;d2&#34;</span>, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+##  0.9312696  0.4056633 -0.9277120 -0.5383978  0.1291769
+</code></pre>
+
+<p>This looks like it is working. Can you spot where the problem is?</p>
+
+<p>What happens if we call <code>lm_prop4</code> from another function?</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(xx, yy, <span style="color:#6ab825">eval</span>) {
+    d &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(x = xx, y = yy)
+    lm_prop4(<span style="color:#ed9d13">&#34;x&#34;</span>, <span style="color:#ed9d13">&#34;y&#34;</span>, <span style="color:#ed9d13">&#34;d&#34;</span>, <span style="color:#ed9d13">&#34;residuals&#34;</span>, eval = <span style="color:#6ab825">eval</span>)
+}
+
+aa &lt;- rnorm(<span style="color:#3677a9">5</span>) ; bb &lt;- rnorm(<span style="color:#3677a9">5</span>)
+<span style="color:#6ab825">summary</span>(lm(bb ~ aa))$residuals</code></pre></div>
+<pre><code>##            1            2            3            4            5 
+##  0.426055517 -0.926637137 -0.016540618  0.525773963 -0.008651724
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect(aa, bb, eval = <span style="color:#6ab825;font-weight:bold">FALSE</span>)</code></pre></div>
+<pre><code>## summary(lm(y ~ x, data = d))$residuals
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">indirect(aa, bb, eval = <span style="color:#6ab825;font-weight:bold">TRUE</span>)</code></pre></div>
+<pre><code>## Error in is.data.frame(data): object 'd' not found
+</code></pre>
+
+<p>It cannot find <code>d</code> because that name only exists in the call-environment of <code>indirect(aa, bb, eval = TRUE)</code>.</p>
+
+<p>The search for <code>d</code> goes as follows:</p>
+
+
+<figure>
+    
+        <img src="lm%20prob%205%20failure.png" />
+    
+    
+</figure>
+
+
+<p>We do not follow the &ldquo;caller frame&rdquo; reference from <code>lm_prob4</code> to <code>indirect</code>. We do get an error; we would be worse off if the global scope had a data frame called <code>d</code>. Then we might not get an error but instead just get the wrong result. That can be hard to debug.</p>
+
+<p>If you want to fix the example, you can easily do so. You can give the <code>let</code> function an environment in which to evaluate the expression. If you do that, however, you cannot see the local variables in the function that calls <code>let</code>; it will look in the environment you give it instead of the caller frame.</p>
+
+<p>It isn&rsquo;t hard to change the current environment&rsquo;s parent, and you can use that to chain the environment inside <code>lm_prop4</code> and its caller, but then you loose the enclosing scope of <code>lm_prop4</code>—that scope is found through the parent chain, and you have just changed that.</p>
+
+<p>It is not entirely impossible to get values both from the enclosing scope—through the parent pointer—as well as the calling scope. There are more environment around than those I have described here, and you can exploit that. I might explain that in another post. I explain it, in some detail, in my <a href="https://amzn.to/2QHMNLL">domain-specific language book</a>, so you can always check it out there.</p>
+
+<p>The take-home message of this post is not to pick on <code>wrapr::let</code>. It does what it says it does. I just think it is problematic with quick fixes for non-standard evaluation. If it looks easy, you might think it is. Worse, you might attempt to use it.</p>
+
+<p>If you do not explicitly worry about scopes, non-standard evaluation can get very complex very quickly. If you are lucky, you will get crash-errors, but you can also very easily just get the wrong result. If you do not spot that, you can be in a lot of trouble.</p>
+
+<p>Non-standard evaluation is a powerful tool, but powerful tools should be handled with care.</p>
+
+<hr/>
+
+<p><small>If you liked what you read, and want more like it, consider supporting me at <a href="https://www.patreon.com/mailund">Patreon</a>.</small>
+<hr/></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:macros">I don&rsquo;t like the term macro here, because to me it sounds like something that would happen at compile time (which in R would be when you translate code into bytecode). This doesn&rsquo;t happen. There is no way (that I am aware of) to implement your own syntactic sugar that doesn&rsquo;t involve evaluating code at runtime.
+ <a class="footnote-return" href="#fnref:macros"><sup>[return]</sup></a></li>
+<li id="fn:Actually-eval-do">Actually, <code>eval</code> doesn&rsquo;t live in the global environment, but as I said earlier, we simplify the discussion by pretending that the global environment is the root of all the environments. It doesn&rsquo;t matter that it isn&rsquo;t for the points I want to make in this post. <a class="footnote-return" href="#fnref:Actually-eval-do"><sup>[return]</sup></a></li>
+<li id="fn:When-I-say-magic">When I say magic, I am not far from the truth. The <code>eval</code> function uses a function that is built into the R runtime system, and that means that it can do more than we can do with normal R functions. We cannot implement <code>eval</code> as a normal R function, because we need the functionality that <code>eval</code> provides to do that. Some magic is needed. Once we have it, though, we can exploit the hell out of it. <a class="footnote-return" href="#fnref:When-I-say-magic"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/"><i class="fa fa-chevron-circle-left"></i> New Package Releases: foolbox and tailr</a>
+        </li>
+        
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/">Overscoping and eval <i class="fa fa-chevron-circle-right"></i> </a>
+        </li>
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>
