@@ -3,7 +3,6 @@ title: "Overscoping and eval"
 date: 2018-09-22T12:23:09+02:00
 category: "Non-standard evaluation"
 tags: ["scoping-rules"]
-draft: true
 ---
 
 In my [previous post](https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/) I used the `lm` function for an example of scope rules, but I left a few details out. I didn't want to muddy the example with too many details, so I choice to lie a little.
