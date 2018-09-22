@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Overscoping and eval</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</link>
+      <pubDate>Sat, 22 Sep 2018 12:23:09 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</guid>
+      <description>In my previous post I used the lm function for an example of scope rules, but I left a few details out. I didn&amp;rsquo;t want to muddy the example with too many details, so I choice to lie a little.</description>
+    </item>
+    
+    <item>
       <title>Scoping Rules and NSE</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/</link>
       <pubDate>Thu, 20 Sep 2018 05:00:15 +0200</pubDate>
