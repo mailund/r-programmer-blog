@@ -258,7 +258,7 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fc9eb8bf640&gt;
+## &lt;environment: 0x7fa8c9578e78&gt;
 </code></pre>
 
 <pre><code>## [1] 3
@@ -269,11 +269,11 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;g's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7fc9ec1b8570&gt;
+## &lt;environment: 0x7fa8ca9cd538&gt;
 ## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fc9e99d8398&gt;
+## &lt;environment: 0x7fa8ca9d9160&gt;
 </code></pre>
 
 <pre><code>## [1] 3
@@ -284,15 +284,15 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;h's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;h's environment:&quot;
-## &lt;environment: 0x7fc9ead598b0&gt;
+## &lt;environment: 0x7fa8cae0fc78&gt;
 ## [1] &quot;g's caller env:&quot;
-## &lt;environment: 0x7fc9ead598b0&gt;
+## &lt;environment: 0x7fa8cae0fc78&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7fc9ead5d878&gt;
+## &lt;environment: 0x7fa8cae13c40&gt;
 ## [1] &quot;f's caller env:&quot;
-## &lt;environment: 0x7fc9ead598b0&gt;
+## &lt;environment: 0x7fa8cae0fc78&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7fc9ec3741a0&gt;
+## &lt;environment: 0x7fa8ca446768&gt;
 </code></pre>
 
 <pre><code>## [1] 7
@@ -469,7 +469,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.05253      0.30534
+##    -0.01439     -0.11698
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(y ~ x, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -478,7 +478,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1084      -0.2886
+##     0.18313      0.07093
 </code></pre>
 
 <p>We can also assign a formula to a variable and use that the same way:</p>
@@ -490,7 +490,7 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.05253      0.30534
+##    -0.01439     -0.11698
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -499,7 +499,7 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1084      -0.2886
+##     0.18313      0.07093
 </code></pre>
 
 <p>However, formulae have their own environments and these can work as closures. If you define a formula in a function, it will be associated with that function call&rsquo;s environment.</p>
@@ -516,7 +516,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1566       1.7181
+##     0.17980     -0.05463
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f3) <span style="color:#999;font-style:italic"># f3 defined in a closure</span></code></pre></div>
 <pre><code>## 
@@ -525,7 +525,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1344       0.2063
+##      0.1844       0.2960
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">rm</span>(x, y) <span style="color:#999;font-style:italic"># no global variables</span>
 <span style="color:#6ab825">ls</span>(<span style="color:#6ab825">environment</span>(f2)) <span style="color:#999;font-style:italic"># f2 still remember&#39;s an x</span></code></pre></div>
@@ -545,7 +545,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.2104      -0.1968
+##     -0.2794       0.5182
 </code></pre>
 
 <p>Once you start passing formulae around in function calls, everything gets just a tad more complicated. Consider these two functions for building a linear model:</p>

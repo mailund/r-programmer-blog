@@ -139,7 +139,7 @@ f(x)
 ## [1] "f's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "f's environment:"
-## <environment: 0x7fc9eb8bf640>
+## <environment: 0x7fa8c9578e78>
 ```
 
 ```
@@ -157,11 +157,11 @@ g(y)
 ## [1] "g's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "g's environment:"
-## <environment: 0x7fc9ec1b8570>
+## <environment: 0x7fa8ca9cd538>
 ## [1] "f's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "f's environment:"
-## <environment: 0x7fc9e99d8398>
+## <environment: 0x7fa8ca9d9160>
 ```
 
 ```
@@ -179,15 +179,15 @@ h(5)
 ## [1] "h's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "h's environment:"
-## <environment: 0x7fc9ead598b0>
+## <environment: 0x7fa8cae0fc78>
 ## [1] "g's caller env:"
-## <environment: 0x7fc9ead598b0>
+## <environment: 0x7fa8cae0fc78>
 ## [1] "g's environment:"
-## <environment: 0x7fc9ead5d878>
+## <environment: 0x7fa8cae13c40>
 ## [1] "f's caller env:"
-## <environment: 0x7fc9ead598b0>
+## <environment: 0x7fa8cae0fc78>
 ## [1] "f's environment:"
-## <environment: 0x7fc9ec3741a0>
+## <environment: 0x7fa8ca446768>
 ```
 
 ```
@@ -450,7 +450,7 @@ lm(y ~ x) # local x and y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.05253      0.30534
+##    -0.01439     -0.11698
 ```
 
 ```r
@@ -464,7 +464,7 @@ lm(y ~ x, data = d) # local x, data frame y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1084      -0.2886
+##     0.18313      0.07093
 ```
 
 We can also assign a formula to a variable and use that the same way:
@@ -482,7 +482,7 @@ lm(f) # local x and y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.05253      0.30534
+##    -0.01439     -0.11698
 ```
 
 ```r
@@ -496,7 +496,7 @@ lm(f, data = d) # local x, data frame y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1084      -0.2886
+##     0.18313      0.07093
 ```
 
 However, formulae have their own environments and these can work as closures. If you define a formula in a function, it will be associated with that function call's environment.
@@ -524,7 +524,7 @@ lm(f2) # f2 defined in a closure
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.1566       1.7181
+##     0.17980     -0.05463
 ```
 
 ```r
@@ -538,7 +538,7 @@ lm(f3) # f3 defined in a closure
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1344       0.2063
+##      0.1844       0.2960
 ```
 
 
@@ -576,7 +576,7 @@ lm(f2, data = d)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.2104      -0.1968
+##     -0.2794       0.5182
 ```
 
 Once you start passing formulae around in function calls, everything gets just a tad more complicated. Consider these two functions for building a linear model:
