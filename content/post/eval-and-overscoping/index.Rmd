@@ -5,13 +5,13 @@ categories: [“Non-standard evaluation”]
 tags: ["scoping-rules"]
 ---
 
-In my [previous post](https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/) I used the `lm` function for an example of scope rules, but I left a few details out. I didn't want to muddy the example with too many details, so I choice to lie a little.
+In my [previous post](https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/) I used the `lm` function for an example of scope rules, but I left a few details out. I didn't want to muddy the example with too many details, so I chose to lie a little.
 
 The drawing I used to explain the example was this:
 
 {{< figure src="lm2 details ok.png" >}}
 
-I explained how scope is implemented using environments that are chained through parent pointers, and how a function has an environment associated with it. This environment is the environment where you define the function.
+I explained how the scope is implemented using environments that are chained through parent pointers, and how a function has an environment associated with it. This environment is the environment where you define the function.
 
 When you call a function, it gets its own instance environment (for historical reasons more than anything else we call this the call frame, but it is really just a new environment). The parent of that frame is the environment associated with the function.
 
@@ -27,7 +27,7 @@ g <- f(2)
 g(3)
 ```
 
-The global environment will contain `f` and `g`. They are both variables in the global scope and they are both functions, but the environment associated with them are different. Because `f` was defined in the global scope, that is the environment associated with. On the other hand, `g` was defined inside a call to `f`. We didn't name it there, but what we name functions has nothing to do with where they are defined. The `g` function was defined inside the call to `f`.
+The global environment will contain `f` and `g`. They are both variables in the global scope, and they are both functions, but the environment associated with them are different. Because `f` was defined in the global scope, that is the environment associated with. On the other hand, `g` was defined inside a call to `f`. We didn't name it there, but what we name functions has nothing to do with where they are defined. The `g` function was defined inside the call to `f`.
 
 In the call to `f`, we created an environment for the call, and we put the parameter `x` into this. The parent of this environment is the one associated with `f`, which is the global environment.
 
@@ -58,56 +58,56 @@ The rules are the same as before, and the environments and how they are chained 
 
 {{< figure src="not nested.png" >}}
 
-All three functions are associated with the global environment, so when we call them, that will be the parent of their call environments. This means that when we call `h(5)` we get an environment that maps `z` to 5, but we find the `y` we use in the call to `g` from the global environment, where it is 1. The call environment for `g(y = 1)` contains the mapping for `y`, but we find the `x` for the call `f(x)` in the global environment, so we call `f(x = 1)`. That creates yet another call environment where we map `x` to one. When we evaluate `x + y + z` we find `x` in the call environment and we find `y` and `z` in its parent-environment—the global environment. That is why `x + y + z` evaluates to three.
+All three functions are associated with the global environment, so when we call them, that will be the parent of their call environments. This means that when we call `h(5)` we get an environment that maps `z` to 5, but we find the `y` we use in the call to `g` from the global environment, where it is 1. The call environment for `g(y = 1)` contains the mapping for `y`, but we find the `x` for the call `f(x)` in the global environment, so we call `f(x = 1)`. That creates yet another call environment where we map `x` to one. When we evaluate `x + y + z` we find `x` in the call-environment, and we find `y` and `z` in its parent-environment—the global environment. That is why `x + y + z` evaluates to three.
 
-I have shown the caller environments in blue-ish. For each function, it shows the environment where the function was called from. If R had so-called dynamic scope, the chain of blue environments is where it would look for the variables. But R implements lexical scope, so it follow the brown chains instead.
+I have shown the caller environments in blue-ish. For each function, it shows the environment where the function was called from. If R had so-called dynamic scope, the chain of blue environments is where it would look for the variables. But R implements lexical scope, so it follows the brown chains instead.
 
 ## Non-standard evaluation
 
 Now, we can explicitly tell R to use a different environment in which to evaluate an expression. We need to do two things: we have to replace expressions with quoted expressions and then evaluate them using the `eval` function with the alternative environment.
 
-We have to use quoted expressions, because otherwise we will evaluate the expressions where we call `eval` and not inside it, in the environment we tell `eval` to do the evaluation.^[How arguments are actually evaluated is more complicated than this; notice that I wrote that "we will evaluate the expressions where we call `eval`". I didn't say we would evaluate them *before* we call `eval`. We still evaluate the argument after we call `eval`, we just won't use the alternative environment. I have explained how lazy evaluation works in [a couple of books](https://mailund.dk/books/) and even how you can exploit it to implement lazy data structures in [*Functional Data-Structures in R*](https://amzn.to/2znwsW8). I won't repeat it here, but might in a later post. There is enough to cover in this post as it is.]
+We have to use quoted expressions because otherwise, we will evaluate the expressions where we call `eval` and not inside it, in the environment we tell `eval` to do the evaluation.^[How arguments are actually evaluated is more complicated than this; notice that I wrote that "we will evaluate the expressions where we call `eval`". I didn't say we would evaluate them *before* we call `eval`. We still evaluate the argument after we call `eval`, we just won't use the alternative environment. I have explained how lazy evaluation works in [a couple of books](https://mailund.dk/books/) and even how you can exploit it to implement lazy data structures in [*Functional Data-Structures in R*](https://amzn.to/2znwsW8). I won't repeat it here, but might in a later post. There is enough to cover in this post as it is.]
 
 We can do something like this:
 
 ```{r}
 f <- function(x)
-	eval(quote(x + y + z), rlang::caller_env())
+    eval(quote(x + y + z), rlang::caller_env())
 g <- function(y)
-	eval(quote(f(x)), rlang::caller_env())
+    eval(quote(f(x)), rlang::caller_env())
 h <- function(z) g(y)
 h(5)
 ```
 
-This tells `f` to evaluate the expression `x + y + z` in the caller's environment instead of its own. It tells `g` to evaluate the expression `f(x)` in *its* caller's environment. Finally, we tell `h` to just evaluate `g(y)`.
+This tells `f` to evaluate the expression `x + y + z` in the caller's environment instead of its own. It tells `g` to evaluate the expression `f(x)` in *its* caller's environment. Finally, we tell `h` just to evaluate `g(y)`.
 
 The chains of parents in this new setup is the same. Those are fixed once we have defined the functions.
 
-You might also expect that the chains of caller-environments are the same, but that is not exactly true. The `h` function is still called from the global environment and the  `g` function is still called from `h`, so this doesn't change. But inside the `g` call, we ask `eval` to pretend it is in the caller's frame when it evaluates `f(x)`, so the caller to `f` is `h(5)`'s environment.
+You might also expect that the chains of caller-environments are the same, but that is not really true. The `h` function is still called from the global environment, and the  `g` function is still called from `h`, so this doesn't change. But inside the `g` call, we ask `eval` to pretend it is in the caller's frame when it evaluates `f(x)`, so the caller to `f` is `h(5)`'s environment.
 
 To explicitly see the environments in place, we can out some output to the functions:
 
 ```{r}
 f <- function(x) {
-	print("f's caller env:")
-	print(rlang::caller_env())
-	print("f's environment:")
-	print(environment())
-	eval(quote(x + y + z), rlang::caller_env())
+    print("f's caller env:")
+    print(rlang::caller_env())
+    print("f's environment:")
+    print(environment())
+    eval(quote(x + y + z), rlang::caller_env())
 }
 g <- function(y) {
-	print("g's caller env:")
-	print(rlang::caller_env())
-	print("g's environment:")
-	print(environment())
-	eval(quote(f(x)), rlang::caller_env())
+    print("g's caller env:")
+    print(rlang::caller_env())
+    print("g's environment:")
+    print(environment())
+    eval(quote(f(x)), rlang::caller_env())
 }
 h <- function(z) {
-	print("h's caller env:")
-	print(rlang::caller_env())
-	print("h's environment:")
-	print(environment())
-	g(y)
+    print("h's caller env:")
+    print(rlang::caller_env())
+    print("h's environment:")
+    print(environment())
+    g(y)
 }
 ```
 
@@ -123,13 +123,13 @@ The same when we call `g`, but when we ask `eval` to evaluate `f(x)` in `g(y)`'s
 g(y)
 ```
 
-When we call `h(5)` we call it from the global environment but we evaluate the `g(y)` call in `h(5)`'s evaluation environment:
+When we call `h(5)` we call it from the global environment, but we evaluate the `g(y)` call in `h(5)`'s evaluation environment:
 
 ```{r}
 h(5)
 ```
 
-So in this version, `g` will evaluate `f(x)` in `h(5)`'s environment and `f` will evaluate `x + y + z` in the same environment. When `g` evaluates `x + y + z` it finds `z` in the call environment of `h(5)` and ti finds `x` and `y` in the global environment (because this is the parent of `h(5)`'s environment). The environments of `g(y)` and `f(x)` are never in play here; we skip them entirely.
+So in this version, `g` will evaluate `f(x)` in `h(5)`'s environment and `f` will evaluate `x + y + z` in the same environment. When `g` evaluates `x + y + z` it finds `z` in the call-environment of `h(5)`, and it finds `x` and `y` in the global environment (because this is the parent of `h(5)`'s environment). The environments of `g(y)` and `f(x)` are never in play here; we skip them entirely.
 
 {{< figure src="dyn scope 1.png" >}}
 
@@ -143,34 +143,34 @@ If you want dynamic scope you can set the parent of the local environments to th
 
 ```{r}
 f <- function(x) {
-	e <- environment() # the instance env.
-	parent.env(e) <- rlang::caller_env()
-	x + y + z
+    e <- environment() # the instance env.
+    parent.env(e) <- rlang::caller_env()
+    x + y + z
 }
 g <- function(y) {
-	e <- environment() # the instance env.
-	parent.env(e) <- rlang::caller_env()
-	f(x)
+    e <- environment() # the instance env.
+    parent.env(e) <- rlang::caller_env()
+    f(x)
 }
 k <- function(x, y, z) g(y)
 k(1, 2, 3)
 ```
 
-When we call `k(1, 2, 3)` we define values for `x`, `y`, and `z`. We then call `g(y)`, so we pass along the value of the local `y`. That value is stored in the variable `y` in the local environment of that call; it doesn't matter here because both `y` variables refer to the same value, but we could change it in `g` and the new value would be the one we see.
+When we call `k(1, 2, 3)` we define values for `x`, `y`, and `z`. We then call `g(y)`, so we pass along the value of the local `y`. That value is stored in the variable `y` in the local environment of that call; it doesn't matter here because both `y` variables refer to the same value, but we could change it in `g`, and the new value would be the one we see.
 
 ```{r}
 g <- function(y) {
-	y <- -3 # change the binding of `y`
-	e <- environment() # the instance env.
-	parent.env(e) <- rlang::caller_env()
-	f(x)
+    y <- -3 # change the binding of `y`
+    e <- environment() # the instance env.
+    parent.env(e) <- rlang::caller_env()
+    f(x)
 }
 k(1, 2, 3)
 ```
 
 When we evaluate `f(x)` we have also changed the parent environment, so while we can find `x` in the local environment we search for `y` and `z` in the caller's environment instead of our original parent's.
 
-Notice here that we no longer need to use `eval` for non-standard evaluation. When we change the parent of our environment, we can just evaluate expressions the usual way.
+Notice here that we no longer need to use `eval` for non-standard evaluation. When we change the parent of our environment, we can just evaluate expressions in the usual way.
 
 If you want to combine lexical and dynamic scope, you are in a bit of trouble. Your environments only have one parent, so you have to either use the caller's environment or the function's environment. 
 
@@ -178,10 +178,10 @@ You can mix the two by explicitly searching for variables in different environme
 
 ```{r}
 f <- function(x) {
-	function(y) {
-		z <- get("z", rlang::caller_env())
-		x + y + z
-	}
+    function(y) {
+        z <- get("z", rlang::caller_env())
+        x + y + z
+    }
 }
 g <- f(1)
 h <- f(2)
@@ -193,7 +193,7 @@ k(3) # 1(x) + 2(y) + 3(z)
 k(4) # 1(x) + 2(y) + 4(z)
 ```
 
-I wouldn't recommend doing stuff like that, though. Dynamic scope is terrible enough as it is, and people expect lexical scope. R has enough functions with non-standard evaluation, but they work in a fairly consistent way, so they do not cause much trouble.
+I wouldn't recommend doing stuff like that, though. Dynamic scope is terrible enough as it is, and people expect lexical scope. R has enough functions with non-standard evaluation, but they work in a reasonably consistent way, so they do not cause much trouble.
 
 If you get too inventive with environments, you are just setting yourself up for trouble.
 
@@ -253,7 +253,7 @@ If you want `eval` to look in the caller's environment of a function, rather tha
 
 ```{r}
 g <- function(x, y, expr, vars) 
-	eval(expr, vars, rlang::caller_env())
+    eval(expr, vars, rlang::caller_env())
 expr <- quote(x + y + z)
 x <- y <- 5
 g(1, 2, expr, list(z = 2))
@@ -263,13 +263,13 @@ g(1, 2, expr, list(z = 2))
 g(4, 5, expr, list(z = 5))
 ```
 
-In this version, the variables in `g`'s call environment are ignored; `eval` looks in the global environment—the callers environment—not the local one.
+In this version, the variables in `g`'s call environment are ignored; `eval` looks in the global environment—the caller's environment—not the local one.
 
 The `eval` function takes two environment-like arguments, `envir` and `enclos`. These are the over-scoping environment and the enclosing environment. It first looks in `envir` for variables, and if that fails, it looks in `enclos`. 
 
 If `envir` is an environment, it never looks in `enclos`—that parameter is only used as a substitute for the parent environment when `envir` doesn't have one, e.g. when it is a list or a data frame. The default value for `envir` is the caller's environment, i.e. the environment where you call `eval` from. If you use a list here, the default for `enclos` is the caller's environment.
 
-So that is how `eval` deals with over scoping. It doesn't combine dynamic and lexical scope, it just looks in a list before it search an environment.
+So that is how `eval` deals with over scoping. It doesn't combine dynamic and lexical scope, it just looks in a list before it searches an environment.
 
 The reason that `lm` is slightly more complicated than this is that `lm` wants a formula as its first argument. 
 
@@ -290,7 +290,7 @@ lm(f) # local x and y
 lm(f, data = d) # local x, data frame y
 ```
 
-However, formulae have their own environments and these can work as closures. If you define a formula in a function, it will be associated with that function call's environment.
+However, formulae have their own environments, and these can work as closures. If you define a formula in a function, it will be associated with that function call's environment.
 
 ```{r}
 environment(f) # f defined in the global env.
@@ -325,7 +325,7 @@ fit_model1 <- function(y) lm(x ~ y)
 fit_model2 <- function(y) lm(f)
 ```
 
-The first tries to build a model from the formula `x ~ y` created inside the function call. It fails, because we do not have any `x` variable in the function call's environment or in its parent, the global environment.
+The first try to build a model from the formula `x ~ y` created inside the function call. It fails because we do not have any `x` variable in the function call's environment or in its parent, the global environment.
 
 ```{r, error=TRUE}
 fit_model1(rnorm(5))
@@ -337,11 +337,11 @@ The second fails because we do not have the variable `y` in the formula's enviro
 fit_model2(rnorm(5))
 ```
 
-The `lm` function first looks in the data frame you give it, if any. If it doesn't find the variables it needs there, it looks in the formula's environment. It doesn't look in the calling environment.
+The `lm` function first looks in the data frame you give it if any. If it doesn't find the variables it needs there, it looks in the formula's environment. It doesn't look in the calling environment.
 
-In the example I started with it *did* look in the caller's environment, but that was because we created the formula there.
+In the example that I started with it *did* look in the caller's environment, but that was because we created the formula there.
 
-As I said in the previous post: the rules for finding variables in environments are not that hard to understand. It is how they combine that makes things complicated. If you didn't know that formulae have their own environments, then this could definitely be confusing. Now that you know they do, can figure out why things doesn't work as intended when that happens.
+As I said in the previous post: the rules for finding variables in environments are not that hard to understand. It is how they combine that makes things complicated. If you didn't know that formulae have their own environments, then this could definitely be confusing. Now that you know they do, you can figure out why things don't work as intended when that happens.
 
 Formulae and function calls are not the only objects that carry environments with them. Function arguments do as well. But that will have to be another post. If you cannot wait, then have a look at [*Functional Programming in R*](https://amzn.to/2QQTV8A), [*Metaprogramming in R*](https://amzn.to/2QHONDT), or [*Domain-Specific Languages in R*](https://amzn.to/2QHMNLL).
 
