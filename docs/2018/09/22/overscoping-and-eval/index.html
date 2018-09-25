@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.37.1" />
+  <meta name="generator" content="Hugo 0.40.2" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 <link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css">
 
  
        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
@@ -137,7 +138,7 @@ ga('send', 'pageview');
 
     
 
-<p>In my <a href="https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/">previous post</a> I used the <code>lm</code> function for an example of scope rules, but I left a few details out. I didn&rsquo;t want to muddy the example with too many details, so I choice to lie a little.</p>
+<p>In my <a href="https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/">previous post</a> I used the <code>lm</code> function for an example of scope rules, but I left a few details out. I didn&rsquo;t want to muddy the example with too many details, so I chose to lie a little.</p>
 
 <p>The drawing I used to explain the example was this:</p>
 
@@ -150,7 +151,7 @@ ga('send', 'pageview');
 </figure>
 
 
-<p>I explained how scope is implemented using environments that are chained through parent pointers, and how a function has an environment associated with it. This environment is the environment where you define the function.</p>
+<p>I explained how the scope is implemented using environments that are chained through parent pointers, and how a function has an environment associated with it. This environment is the environment where you define the function.</p>
 
 <p>When you call a function, it gets its own instance environment (for historical reasons more than anything else we call this the call frame, but it is really just a new environment). The parent of that frame is the environment associated with the function.</p>
 
@@ -165,7 +166,7 @@ g(<span style="color:#3677a9">3</span>)</code></pre></div>
 <pre><code>## [1] 5
 </code></pre>
 
-<p>The global environment will contain <code>f</code> and <code>g</code>. They are both variables in the global scope and they are both functions, but the environment associated with them are different. Because <code>f</code> was defined in the global scope, that is the environment associated with. On the other hand, <code>g</code> was defined inside a call to <code>f</code>. We didn&rsquo;t name it there, but what we name functions has nothing to do with where they are defined. The <code>g</code> function was defined inside the call to <code>f</code>.</p>
+<p>The global environment will contain <code>f</code> and <code>g</code>. They are both variables in the global scope, and they are both functions, but the environment associated with them are different. Because <code>f</code> was defined in the global scope, that is the environment associated with. On the other hand, <code>g</code> was defined inside a call to <code>f</code>. We didn&rsquo;t name it there, but what we name functions has nothing to do with where they are defined. The <code>g</code> function was defined inside the call to <code>f</code>.</p>
 
 <p>In the call to <code>f</code>, we created an environment for the call, and we put the parameter <code>x</code> into this. The parent of this environment is the one associated with <code>f</code>, which is the global environment.</p>
 
@@ -205,60 +206,60 @@ x &lt;- y &lt;- z &lt;- <span style="color:#3677a9">1</span></code></pre></div>
 </figure>
 
 
-<p>All three functions are associated with the global environment, so when we call them, that will be the parent of their call environments. This means that when we call <code>h(5)</code> we get an environment that maps <code>z</code> to 5, but we find the <code>y</code> we use in the call to <code>g</code> from the global environment, where it is 1. The call environment for <code>g(y = 1)</code> contains the mapping for <code>y</code>, but we find the <code>x</code> for the call <code>f(x)</code> in the global environment, so we call <code>f(x = 1)</code>. That creates yet another call environment where we map <code>x</code> to one. When we evaluate <code>x + y + z</code> we find <code>x</code> in the call environment and we find <code>y</code> and <code>z</code> in its parent-environment—the global environment. That is why <code>x + y + z</code> evaluates to three.</p>
+<p>All three functions are associated with the global environment, so when we call them, that will be the parent of their call environments. This means that when we call <code>h(5)</code> we get an environment that maps <code>z</code> to 5, but we find the <code>y</code> we use in the call to <code>g</code> from the global environment, where it is 1. The call environment for <code>g(y = 1)</code> contains the mapping for <code>y</code>, but we find the <code>x</code> for the call <code>f(x)</code> in the global environment, so we call <code>f(x = 1)</code>. That creates yet another call environment where we map <code>x</code> to one. When we evaluate <code>x + y + z</code> we find <code>x</code> in the call-environment, and we find <code>y</code> and <code>z</code> in its parent-environment—the global environment. That is why <code>x + y + z</code> evaluates to three.</p>
 
-<p>I have shown the caller environments in blue-ish. For each function, it shows the environment where the function was called from. If R had so-called dynamic scope, the chain of blue environments is where it would look for the variables. But R implements lexical scope, so it follow the brown chains instead.</p>
+<p>I have shown the caller environments in blue-ish. For each function, it shows the environment where the function was called from. If R had so-called dynamic scope, the chain of blue environments is where it would look for the variables. But R implements lexical scope, so it follows the brown chains instead.</p>
 
 <h2 id="non-standard-evaluation">Non-standard evaluation</h2>
 
 <p>Now, we can explicitly tell R to use a different environment in which to evaluate an expression. We need to do two things: we have to replace expressions with quoted expressions and then evaluate them using the <code>eval</code> function with the alternative environment.</p>
 
-<p>We have to use quoted expressions, because otherwise we will evaluate the expressions where we call <code>eval</code> and not inside it, in the environment we tell <code>eval</code> to do the evaluation.<sup class="footnote-ref" id="fnref:How-arguments-ar"><a href="#fn:How-arguments-ar">1</a></sup></p>
+<p>We have to use quoted expressions because otherwise, we will evaluate the expressions where we call <code>eval</code> and not inside it, in the environment we tell <code>eval</code> to do the evaluation.<sup class="footnote-ref" id="fnref:How-arguments-ar"><a href="#fn:How-arguments-ar">1</a></sup></p>
 
 <p>We can do something like this:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x)
-	<span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y + z), rlang::caller_env())
+    <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y + z), rlang::caller_env())
 g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y)
-	<span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(f(x)), rlang::caller_env())
+    <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(f(x)), rlang::caller_env())
 h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) g(y)
 h(<span style="color:#3677a9">5</span>)</code></pre></div>
 <pre><code>## [1] 7
 </code></pre>
 
-<p>This tells <code>f</code> to evaluate the expression <code>x + y + z</code> in the caller&rsquo;s environment instead of its own. It tells <code>g</code> to evaluate the expression <code>f(x)</code> in <em>its</em> caller&rsquo;s environment. Finally, we tell <code>h</code> to just evaluate <code>g(y)</code>.</p>
+<p>This tells <code>f</code> to evaluate the expression <code>x + y + z</code> in the caller&rsquo;s environment instead of its own. It tells <code>g</code> to evaluate the expression <code>f(x)</code> in <em>its</em> caller&rsquo;s environment. Finally, we tell <code>h</code> just to evaluate <code>g(y)</code>.</p>
 
 <p>The chains of parents in this new setup is the same. Those are fixed once we have defined the functions.</p>
 
-<p>You might also expect that the chains of caller-environments are the same, but that is not exactly true. The <code>h</code> function is still called from the global environment and the  <code>g</code> function is still called from <code>h</code>, so this doesn&rsquo;t change. But inside the <code>g</code> call, we ask <code>eval</code> to pretend it is in the caller&rsquo;s frame when it evaluates <code>f(x)</code>, so the caller to <code>f</code> is <code>h(5)</code>&rsquo;s environment.</p>
+<p>You might also expect that the chains of caller-environments are the same, but that is not really true. The <code>h</code> function is still called from the global environment, and the  <code>g</code> function is still called from <code>h</code>, so this doesn&rsquo;t change. But inside the <code>g</code> call, we ask <code>eval</code> to pretend it is in the caller&rsquo;s frame when it evaluates <code>f(x)</code>, so the caller to <code>f</code> is <code>h(5)</code>&rsquo;s environment.</p>
 
 <p>To explicitly see the environments in place, we can out some output to the functions:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;f&#39;s caller env:&#34;</span>)
-	<span style="color:#6ab825">print</span>(rlang::caller_env())
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;f&#39;s environment:&#34;</span>)
-	<span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
-	<span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y + z), rlang::caller_env())
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;f&#39;s caller env:&#34;</span>)
+    <span style="color:#6ab825">print</span>(rlang::caller_env())
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;f&#39;s environment:&#34;</span>)
+    <span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
+    <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(x + y + z), rlang::caller_env())
 }
 g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) {
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;g&#39;s caller env:&#34;</span>)
-	<span style="color:#6ab825">print</span>(rlang::caller_env())
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;g&#39;s environment:&#34;</span>)
-	<span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
-	<span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(f(x)), rlang::caller_env())
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;g&#39;s caller env:&#34;</span>)
+    <span style="color:#6ab825">print</span>(rlang::caller_env())
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;g&#39;s environment:&#34;</span>)
+    <span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
+    <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">quote</span>(f(x)), rlang::caller_env())
 }
 h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;h&#39;s caller env:&#34;</span>)
-	<span style="color:#6ab825">print</span>(rlang::caller_env())
-	<span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;h&#39;s environment:&#34;</span>)
-	<span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
-	g(y)
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;h&#39;s caller env:&#34;</span>)
+    <span style="color:#6ab825">print</span>(rlang::caller_env())
+    <span style="color:#6ab825">print</span>(<span style="color:#ed9d13">&#34;h&#39;s environment:&#34;</span>)
+    <span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
+    g(y)
 }</code></pre></div>
 <p>When we call <code>f</code> from the global environment it has its own evaluation environment and the global environment as its caller&rsquo;s environment:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f(x)</code></pre></div>
 <pre><code>## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7ff6a2c4fcd0&gt;
+## &lt;environment: 0x7fde174dea78&gt;
 </code></pre>
 
 <pre><code>## [1] 3
@@ -269,36 +270,36 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 <pre><code>## [1] &quot;g's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7ff6a36a0da8&gt;
+## &lt;environment: 0x7fde161f4738&gt;
 ## [1] &quot;f's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7ff6a36a7160&gt;
+## &lt;environment: 0x7fde165f8b60&gt;
 </code></pre>
 
 <pre><code>## [1] 3
 </code></pre>
 
-<p>When we call <code>h(5)</code> we call it from the global environment but we evaluate the <code>g(y)</code> call in <code>h(5)</code>&rsquo;s evaluation environment:</p>
+<p>When we call <code>h(5)</code> we call it from the global environment, but we evaluate the <code>g(y)</code> call in <code>h(5)</code>&rsquo;s evaluation environment:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">h(<span style="color:#3677a9">5</span>)</code></pre></div>
 <pre><code>## [1] &quot;h's caller env:&quot;
 ## &lt;environment: R_GlobalEnv&gt;
 ## [1] &quot;h's environment:&quot;
-## &lt;environment: 0x7ff6a50dd6e8&gt;
+## &lt;environment: 0x7fde17a13078&gt;
 ## [1] &quot;g's caller env:&quot;
-## &lt;environment: 0x7ff6a50dd6e8&gt;
+## &lt;environment: 0x7fde17a13078&gt;
 ## [1] &quot;g's environment:&quot;
-## &lt;environment: 0x7ff6a50e16b0&gt;
+## &lt;environment: 0x7fde17a17040&gt;
 ## [1] &quot;f's caller env:&quot;
-## &lt;environment: 0x7ff6a50dd6e8&gt;
+## &lt;environment: 0x7fde17a13078&gt;
 ## [1] &quot;f's environment:&quot;
-## &lt;environment: 0x7ff6a46b84f8&gt;
+## &lt;environment: 0x7fde1838c768&gt;
 </code></pre>
 
 <pre><code>## [1] 7
 </code></pre>
 
-<p>So in this version, <code>g</code> will evaluate <code>f(x)</code> in <code>h(5)</code>&rsquo;s environment and <code>f</code> will evaluate <code>x + y + z</code> in the same environment. When <code>g</code> evaluates <code>x + y + z</code> it finds <code>z</code> in the call environment of <code>h(5)</code> and ti finds <code>x</code> and <code>y</code> in the global environment (because this is the parent of <code>h(5)</code>&rsquo;s environment). The environments of <code>g(y)</code> and <code>f(x)</code> are never in play here; we skip them entirely.</p>
+<p>So in this version, <code>g</code> will evaluate <code>f(x)</code> in <code>h(5)</code>&rsquo;s environment and <code>f</code> will evaluate <code>x + y + z</code> in the same environment. When <code>g</code> evaluates <code>x + y + z</code> it finds <code>z</code> in the call-environment of <code>h(5)</code>, and it finds <code>x</code> and <code>y</code> in the global environment (because this is the parent of <code>h(5)</code>&rsquo;s environment). The environments of <code>g(y)</code> and <code>f(x)</code> are never in play here; we skip them entirely.</p>
 
 
 <figure>
@@ -317,26 +318,26 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 
 <p>If you want dynamic scope you can set the parent of the local environments to the caller environment like this:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
-	e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
-	<span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
-	x + y + z
+    e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
+    <span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
+    x + y + z
 }
 g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) {
-	e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
-	<span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
-	f(x)
+    e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
+    <span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
+    f(x)
 }
 k &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, y, z) g(y)
 k(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <span style="color:#3677a9">3</span>)</code></pre></div>
 <pre><code>## [1] 6
 </code></pre>
 
-<p>When we call <code>k(1, 2, 3)</code> we define values for <code>x</code>, <code>y</code>, and <code>z</code>. We then call <code>g(y)</code>, so we pass along the value of the local <code>y</code>. That value is stored in the variable <code>y</code> in the local environment of that call; it doesn&rsquo;t matter here because both <code>y</code> variables refer to the same value, but we could change it in <code>g</code> and the new value would be the one we see.</p>
+<p>When we call <code>k(1, 2, 3)</code> we define values for <code>x</code>, <code>y</code>, and <code>z</code>. We then call <code>g(y)</code>, so we pass along the value of the local <code>y</code>. That value is stored in the variable <code>y</code> in the local environment of that call; it doesn&rsquo;t matter here because both <code>y</code> variables refer to the same value, but we could change it in <code>g</code>, and the new value would be the one we see.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) {
-	y &lt;- <span style="color:#3677a9">-3</span> <span style="color:#999;font-style:italic"># change the binding of `y`</span>
-	e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
-	<span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
-	f(x)
+    y &lt;- <span style="color:#3677a9">-3</span> <span style="color:#999;font-style:italic"># change the binding of `y`</span>
+    e &lt;- <span style="color:#6ab825">environment</span>() <span style="color:#999;font-style:italic"># the instance env.</span>
+    <span style="color:#6ab825">parent.env</span>(e) &lt;- rlang::caller_env()
+    f(x)
 }
 k(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <span style="color:#3677a9">3</span>)</code></pre></div>
 <pre><code>## [1] 1
@@ -344,16 +345,16 @@ k(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, <s
 
 <p>When we evaluate <code>f(x)</code> we have also changed the parent environment, so while we can find <code>x</code> in the local environment we search for <code>y</code> and <code>z</code> in the caller&rsquo;s environment instead of our original parent&rsquo;s.</p>
 
-<p>Notice here that we no longer need to use <code>eval</code> for non-standard evaluation. When we change the parent of our environment, we can just evaluate expressions the usual way.</p>
+<p>Notice here that we no longer need to use <code>eval</code> for non-standard evaluation. When we change the parent of our environment, we can just evaluate expressions in the usual way.</p>
 
 <p>If you want to combine lexical and dynamic scope, you are in a bit of trouble. Your environments only have one parent, so you have to either use the caller&rsquo;s environment or the function&rsquo;s environment.</p>
 
 <p>You can mix the two by explicitly searching for variables in different environments, you can use the <code>get</code> function for this:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) {
-	<span style="color:#6ab825;font-weight:bold">function</span>(y) {
-		z &lt;- <span style="color:#6ab825">get</span>(<span style="color:#ed9d13">&#34;z&#34;</span>, rlang::caller_env())
-		x + y + z
-	}
+    <span style="color:#6ab825;font-weight:bold">function</span>(y) {
+        z &lt;- <span style="color:#6ab825">get</span>(<span style="color:#ed9d13">&#34;z&#34;</span>, rlang::caller_env())
+        x + y + z
+    }
 }
 g &lt;- f(<span style="color:#3677a9">1</span>)
 h &lt;- f(<span style="color:#3677a9">2</span>)
@@ -372,7 +373,7 @@ k(<span style="color:#3677a9">3</span>) <span style="color:#999;font-style:itali
 <pre><code>## [1] 7
 </code></pre>
 
-<p>I wouldn&rsquo;t recommend doing stuff like that, though. Dynamic scope is terrible enough as it is, and people expect lexical scope. R has enough functions with non-standard evaluation, but they work in a fairly consistent way, so they do not cause much trouble.</p>
+<p>I wouldn&rsquo;t recommend doing stuff like that, though. Dynamic scope is terrible enough as it is, and people expect lexical scope. R has enough functions with non-standard evaluation, but they work in a reasonably consistent way, so they do not cause much trouble.</p>
 
 <p>If you get too inventive with environments, you are just setting yourself up for trouble.</p>
 
@@ -432,7 +433,7 @@ f(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, ex
 
 <p>If you want <code>eval</code> to look in the caller&rsquo;s environment of a function, rather than the function call&rsquo;s own environment, you give it a third argument:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, y, expr, vars) 
-	<span style="color:#6ab825">eval</span>(expr, vars, rlang::caller_env())
+    <span style="color:#6ab825">eval</span>(expr, vars, rlang::caller_env())
 expr &lt;- <span style="color:#6ab825">quote</span>(x + y + z)
 x &lt;- y &lt;- <span style="color:#3677a9">5</span>
 g(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, expr, <span style="color:#6ab825;font-weight:bold">list</span>(z = <span style="color:#3677a9">2</span>))</code></pre></div>
@@ -449,13 +450,13 @@ g(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>, ex
 <pre><code>## [1] 7
 </code></pre>
 
-<p>In this version, the variables in <code>g</code>&rsquo;s call environment are ignored; <code>eval</code> looks in the global environment—the callers environment—not the local one.</p>
+<p>In this version, the variables in <code>g</code>&rsquo;s call environment are ignored; <code>eval</code> looks in the global environment—the caller&rsquo;s environment—not the local one.</p>
 
 <p>The <code>eval</code> function takes two environment-like arguments, <code>envir</code> and <code>enclos</code>. These are the over-scoping environment and the enclosing environment. It first looks in <code>envir</code> for variables, and if that fails, it looks in <code>enclos</code>.</p>
 
 <p>If <code>envir</code> is an environment, it never looks in <code>enclos</code>—that parameter is only used as a substitute for the parent environment when <code>envir</code> doesn&rsquo;t have one, e.g. when it is a list or a data frame. The default value for <code>envir</code> is the caller&rsquo;s environment, i.e. the environment where you call <code>eval</code> from. If you use a list here, the default for <code>enclos</code> is the caller&rsquo;s environment.</p>
 
-<p>So that is how <code>eval</code> deals with over scoping. It doesn&rsquo;t combine dynamic and lexical scope, it just looks in a list before it search an environment.</p>
+<p>So that is how <code>eval</code> deals with over scoping. It doesn&rsquo;t combine dynamic and lexical scope, it just looks in a list before it searches an environment.</p>
 
 <p>The reason that <code>lm</code> is slightly more complicated than this is that <code>lm</code> wants a formula as its first argument.</p>
 
@@ -469,7 +470,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1443       0.1429
+##     0.07468     -0.36076
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(y ~ x, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -478,7 +479,7 @@ lm(y ~ x) <span style="color:#999;font-style:italic"># local x and y</span></cod
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.03016     -0.72617
+##    -0.02754     -0.04762
 </code></pre>
 
 <p>We can also assign a formula to a variable and use that the same way:</p>
@@ -490,7 +491,7 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1443       0.1429
+##     0.07468     -0.36076
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f, data = d) <span style="color:#999;font-style:italic"># local x, data frame y</span></code></pre></div>
 <pre><code>## 
@@ -499,10 +500,10 @@ lm(f) <span style="color:#999;font-style:italic"># local x and y</span></code></
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.03016     -0.72617
+##    -0.02754     -0.04762
 </code></pre>
 
-<p>However, formulae have their own environments and these can work as closures. If you define a formula in a function, it will be associated with that function call&rsquo;s environment.</p>
+<p>However, formulae have their own environments, and these can work as closures. If you define a formula in a function, it will be associated with that function call&rsquo;s environment.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">environment</span>(f) <span style="color:#999;font-style:italic"># f defined in the global env.</span></code></pre></div>
 <pre><code>## &lt;environment: R_GlobalEnv&gt;
 </code></pre>
@@ -516,7 +517,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.2684       0.5214
+##     -1.1222      -0.9481
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f3) <span style="color:#999;font-style:italic"># f3 defined in a closure</span></code></pre></div>
 <pre><code>## 
@@ -525,7 +526,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.5758      -1.1077
+##     -0.4337      -0.4003
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">rm</span>(x, y) <span style="color:#999;font-style:italic"># no global variables</span>
 <span style="color:#6ab825">ls</span>(<span style="color:#6ab825">environment</span>(f2)) <span style="color:#999;font-style:italic"># f2 still remember&#39;s an x</span></code></pre></div>
@@ -534,7 +535,7 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 
 <p>If we try to fit a linear model to <code>f2</code> we get an error—there is no <code>y</code> variable anywhere.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lm(f2)</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): object 'y' not found
+<pre><code>## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
 </code></pre>
 
 <p>We can still get it from the data frame, though</p>
@@ -545,27 +546,27 @@ lm(f2) <span style="color:#999;font-style:italic"># f2 defined in a closure</spa
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.2143      -0.5398
+##      0.1328       0.1928
 </code></pre>
 
 <p>Once you start passing formulae around in function calls, everything gets just a tad more complicated. Consider these two functions for building a linear model:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit_model1 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) lm(x ~ y)
 fit_model2 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(y) lm(f)</code></pre></div>
-<p>The first tries to build a model from the formula <code>x ~ y</code> created inside the function call. It fails, because we do not have any <code>x</code> variable in the function call&rsquo;s environment or in its parent, the global environment.</p>
+<p>The first try to build a model from the formula <code>x ~ y</code> created inside the function call. It fails because we do not have any <code>x</code> variable in the function call&rsquo;s environment or in its parent, the global environment.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit_model1(rnorm(<span style="color:#3677a9">5</span>))</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): object 'x' not found
+<pre><code>## Error in eval(predvars, data, env): objekt 'x' blev ikke fundet
 </code></pre>
 
 <p>The second fails because we do not have the variable <code>y</code> in the formula&rsquo;s environment—we have one in the function call&rsquo;s environment, but the formula isn&rsquo;t defined there, it was created in the earlier closure.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit_model2(rnorm(<span style="color:#3677a9">5</span>))</code></pre></div>
-<pre><code>## Error in eval(predvars, data, env): object 'y' not found
+<pre><code>## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
 </code></pre>
 
-<p>The <code>lm</code> function first looks in the data frame you give it, if any. If it doesn&rsquo;t find the variables it needs there, it looks in the formula&rsquo;s environment. It doesn&rsquo;t look in the calling environment.</p>
+<p>The <code>lm</code> function first looks in the data frame you give it if any. If it doesn&rsquo;t find the variables it needs there, it looks in the formula&rsquo;s environment. It doesn&rsquo;t look in the calling environment.</p>
 
-<p>In the example I started with it <em>did</em> look in the caller&rsquo;s environment, but that was because we created the formula there.</p>
+<p>In the example that I started with it <em>did</em> look in the caller&rsquo;s environment, but that was because we created the formula there.</p>
 
-<p>As I said in the previous post: the rules for finding variables in environments are not that hard to understand. It is how they combine that makes things complicated. If you didn&rsquo;t know that formulae have their own environments, then this could definitely be confusing. Now that you know they do, can figure out why things doesn&rsquo;t work as intended when that happens.</p>
+<p>As I said in the previous post: the rules for finding variables in environments are not that hard to understand. It is how they combine that makes things complicated. If you didn&rsquo;t know that formulae have their own environments, then this could definitely be confusing. Now that you know they do, you can figure out why things don&rsquo;t work as intended when that happens.</p>
 
 <p>Formulae and function calls are not the only objects that carry environments with them. Function arguments do as well. But that will have to be another post. If you cannot wait, then have a look at <a href="https://amzn.to/2QQTV8A"><em>Functional Programming in R</em></a>, <a href="https://amzn.to/2QHONDT"><em>Metaprogramming in R</em></a>, or <a href="https://amzn.to/2QHMNLL"><em>Domain-Specific Languages in R</em></a>.</p>
 
