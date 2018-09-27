@@ -1,4 +1,6 @@
 
+[*Advance Object-Oriented Programming in R*](https://amzn.to/2OlcV0A)
+
 [*Metaprogramming in R*](https://amzn.to/2QHONDT)
 
 [*Domain-Specific Languages in R*](https://amzn.to/2QHMNLL)
