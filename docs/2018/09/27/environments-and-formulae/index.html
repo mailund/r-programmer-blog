@@ -1,0 +1,590 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css">
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Environments and formulae</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-09-27T04:41:19&#43;02:00">Sep 27, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/scope-rules/">#scope-rules</a>
+                
+            </em>
+        </li>
+        
+
+        <li>13 min read</li>
+    </ul>
+</aside>
+    
+
+    
+
+<p>In my two previous posts on non-standard evaluation, <a href="https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/"><em>Scoping rules and NSE</em></a> and <a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/"><em>Overscoping and eval</em></a>, I explained:</p>
+
+<ul>
+<li>How R finds the bindings of variables by looking through chains of environments.</li>
+<li>How you can manipulate these environments to evaluate expressions in a non-standard way.</li>
+<li>How you can evaluate expressions where lists or data-frames overscope variables that would otherwise be found in environments.</li>
+</ul>
+
+<p>I finished the last post with a model-fitting example, where the <code>lm</code> function fits data to a formula, by saying that <em>this</em> particular example had more going on than you might expect. When we write something like</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"> lm(y ~ x, data = df)</code></pre></div>
+<p>it looks as if the <code>lm</code> function uses over-scoping to search for <code>x</code> and <code>y</code> in the <code>df</code> data frame first, and if that fails, it looks in the calling scope. This is something we might implement using <code>eval</code> and <code>parent.frame</code> (or the more aptly named <code>rlang::caller_env</code>). This is, in fact, not what is happening. It almost is, yes, but not quite. The <code>lm</code> function does use overscoping to put <code>df</code> in front of environments, but it does not look in the calling environment; it looks in the <em>formulas</em> environment.<sup class="footnote-ref" id="fnref:If-you-look-at-t"><a href="#fn:If-you-look-at-t">1</a></sup></p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"> x &lt;- rnorm(<span style="color:#3677a9">5</span>); y &lt;- rnorm(<span style="color:#3677a9">5</span>)
+ lm(y ~ x)</code></pre></div>
+<pre><code> ## 
+ ## Call:
+ ## lm(formula = y ~ x)
+ ## 
+ ## Coefficients:
+ ## (Intercept)            x  
+ ##      0.2791       0.2614
+</code></pre>
+
+<p>We will use this function to contrast an environment from a closure with one we create at the global scope:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">closure_formula &lt;- <span style="color:#6ab825;font-weight:bold">function</span>() {
+    x &lt;- rnorm(<span style="color:#3677a9">5</span>); y &lt;- rnorm(<span style="color:#3677a9">5</span>)
+    y ~ x
+}</code></pre></div>
+<p>The graph of environments looks like this:</p>
+
+<p><img src="global-formula.png" alt="" /></p>
+
+<p>Functions and formulae have associated environments. They do not have their own environments the way that function <em>calls</em> have, like the one that exists when we call <code>lm(y ~ x)</code>, they are just references to other environments. The environment associated with a function is the one that will be the parent of the environment in a function call. It will be the one the function is defined in (unless you change it, which you can). The environment associated with a formula is also the one where the formula is created (unless you change it), but it is just used to find variables that are not over-scoped.</p>
+
+<p>When we call <code>lm(y ~ x)</code> we create the formula <code>y ~ x</code>. Its environment is the global environment. When we call <code>lm</code> it puts the formula in its argument, <code>formula</code>, and then it fits a linear model to this formula, based on variables in <code>formula</code>&rsquo;s environment. Not its own and not its caller&rsquo;s environment. Well, it is its caller&rsquo;s environment since it is called from the global environment, but that is a coincidence. It doesn&rsquo;t use the caller&rsquo;s environment to look up variables.</p>
+
+<p>The formula does not store the variables it contains. If we changed <code>x</code> or <code>y</code> between creating the formula and fitting the model, we would use the new values of the variables. We only use the formula environment to get a starting point for the search for variables.</p>
+
+<p>Now, contrast it with this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f &lt;- closure_formula()
+lm(f)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = f)
+## 
+## Coefficients:
+## (Intercept)            x  
+##      0.2621      -0.7383
+</code></pre>
+
+<p>The graph for this call looks like this, and I apologise that it is very busy. But there really is all this going on (and I haven&rsquo;t even included edges for caller environments).</p>
+
+<p><img src="closure-formula.png" alt="" /></p>
+
+<p>In the call to <code>closure_formula</code>, we create a formula; the environment associated with this formula is the one we create in the function call. When we call <code>lm(f)</code> the situation is similar to before. In <code>lm</code> we will get variables from <code>formula</code>. This time that will be the formula created in the function-call scope.</p>
+
+<p>If we tried fitting the model in a function that has local variables <code>x</code> and <code>y</code>, we would see that these do not overrule the ones associated with the formula:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">nested_fit &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(f) {
+    x &lt;- rnorm(<span style="color:#3677a9">5</span>); y &lt;- rnorm(<span style="color:#3677a9">5</span>)
+    lm(f)
+}
+nested_fit(y ~ x)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = f)
+## 
+## Coefficients:
+## (Intercept)            x  
+##      0.2791       0.2614
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">nested_fit(f)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = f)
+## 
+## Coefficients:
+## (Intercept)            x  
+##      0.2621      -0.7383
+</code></pre>
+
+<p>If we take a formula defined in the global scope, and one defined in the closure</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">outer_f &lt;- y ~ x
+closure_f &lt;- closure_formula()</code></pre></div>
+<p>we can see that the environment of the first is the global environment</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">environment</span>(outer_f)</code></pre></div>
+<pre><code>## &lt;environment: R_GlobalEnv&gt;
+</code></pre>
+
+<p>and the other is different. It is the environment of the function call, trust me.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">environment</span>(closure_f)</code></pre></div>
+<pre><code>## &lt;environment: 0x7f9f3dc6f590&gt;
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">ls</span>(<span style="color:#6ab825">environment</span>(closure_f))</code></pre></div>
+<pre><code>## [1] &quot;x&quot; &quot;y&quot;
+</code></pre>
+
+<p>This environment contains the variables <code>x</code> and <code>y</code> because we define them inside the function call.</p>
+
+<p>If you don&rsquo;t believe that the environment for the formula is the one from the function call—maybe you think that I am a liar—then we can check that explicitly by printing the environment inside the formula-generating function.</p>
+
+<p>That would be a boring example compared to what we have already done, so I will add a twist to it. I will create the formula inside the function call but using a non-standard evaluation.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">closure_formula_nse &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(f) {
+    a &lt;- rnorm(<span style="color:#3677a9">5</span>); b &lt;- rnorm(<span style="color:#3677a9">5</span>)
+    <span style="color:#6ab825">print</span>(<span style="color:#6ab825">environment</span>())
+    <span style="color:#6ab825">eval</span>(<span style="color:#6ab825">substitute</span>(f))
+}</code></pre></div>
+<p>The <code>eval(substitute(f))</code> makes the argument <code>f</code> into a quoted expression and then evaluates it. We lose the environment associated with the arguent<sup class="footnote-ref" id="fnref:Yes-arguments-ha"><a href="#fn:Yes-arguments-ha">2</a></sup> but create a formula based on it inside the function call scope.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">closure_f &lt;- closure_formula_nse(y ~ x)</code></pre></div>
+<pre><code>## &lt;environment: 0x7f9f40634588&gt;
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">environment</span>(closure_f)</code></pre></div>
+<pre><code>## &lt;environment: 0x7f9f40634588&gt;
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">ls</span>(<span style="color:#6ab825">environment</span>(closure_f))</code></pre></div>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;f&quot;
+</code></pre>
+
+<h2 id="exploiting-the-closure-ness-of-formulae">Exploiting the closure-ness of formulae</h2>
+
+<p>You can exploit that formulae carry environments with them. They capture the closure where they are defined in the same way that functions do, and you can get that environment using the <code>environment</code> function.<sup class="footnote-ref" id="fnref:You-can-also-cre"><a href="#fn:You-can-also-cre">3</a></sup></p>
+
+<p>The <code>rlang</code> package exploits this to implement quasi-quotations for tidyeval.</p>
+
+<p>You can exploit the formula+environment combination in other ways. For example, <code>purrr</code> uses formulas to make lambda expressions. This functionality involves translating a formula with an associated environment, into a function plus that environment  (i.e. a closure).</p>
+
+<p>For example, take the formula <code>~ .x + .y + z</code>. If you are familiar with <code>purrr</code>, you know that this can be a lambda expression that takes two arguments, <code>.x</code> and <code>.y</code>, and it expects the variable <code>z</code> to either be overscoped from a data frame or found in the caller environment. While <code>purrr</code> handles how this works, you can go a level below that and make your own closure with this behaviour like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">g &lt;- rlang::as_closure(~ <span style="color:#3677a9">.</span>x + <span style="color:#3677a9">.</span>y + z)
+z &lt;- <span style="color:#3677a9">3</span>
+g(<span style="color:#3677a9">1</span>, <span style="color:#3677a9">2</span>)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>Violá.</p>
+
+<p>It is when you combine creating functions in this way by non-standard evaluation with quosures you can do brilliant stuff. I don&rsquo;t have time to write about that here, but my <a href="https://amzn.to/2QHMNLL"><em>Domain-Specific Languages in R</em></a> book has some examples.</p>
+
+<p>I do not know if you can do all that <code>rlang</code> does with formulae in pure R. The <code>rlang</code> package does call into C several places. I haven&rsquo;t played enough with this in base R to know how it would be done if it can. I use the <code>rlang</code> package, and if you do that, it is relatively easy to manipulate formulae.</p>
+
+<h2 id="fitting-models">Fitting models</h2>
+
+<p>It is one thing to exploit that formulas have scope to do all kinds of craziness, but what about using them for what they are designed for? Building statistical models. When we build a model with <code>lm(y ~ x)</code> the formula specifies what the response variable is and what the explanatory variables are. With most models, you have a <em>model matrix</em> under the hood, and formulas are just ways of specifying how that model should look like.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model.matrix(y ~ x - <span style="color:#3677a9">1</span>)</code></pre></div>
+<pre><code>##            x
+## 1 -0.1716845
+## 2 -0.2635496
+## 3 -0.3580057
+## 4  1.1788116
+## 5 -1.2989013
+## attr(,&quot;assign&quot;)
+## [1] 1
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model.matrix(y ~ x)</code></pre></div>
+<pre><code>##   (Intercept)          x
+## 1           1 -0.1716845
+## 2           1 -0.2635496
+## 3           1 -0.3580057
+## 4           1  1.1788116
+## 5           1 -1.2989013
+## attr(,&quot;assign&quot;)
+## [1] 0 1
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model.matrix(y ~ <span style="color:#6ab825">I</span>(x^<span style="color:#3677a9">2</span>) + x)</code></pre></div>
+<pre><code>##   (Intercept)     I(x^2)          x
+## 1           1 0.02947556 -0.1716845
+## 2           1 0.06945840 -0.2635496
+## 3           1 0.12816806 -0.3580057
+## 4           1 1.38959677  1.1788116
+## 5           1 1.68714467 -1.2989013
+## attr(,&quot;assign&quot;)
+## [1] 0 1 2
+</code></pre>
+
+<p>Different statistical models do different things with this model (or feature) matrix, but as long as you have a formula and some associated data, you can get it.</p>
+
+<p>There are related functions that give you the data for the variables in a formula; not all the features, just the raw variables used:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">get_all_vars(y ~ <span style="color:#6ab825">I</span>(x^<span style="color:#3677a9">2</span>) + x)</code></pre></div>
+<pre><code>##            y          x
+## 1 -0.4266105 -0.1716845
+## 2 -1.4139657 -0.2635496
+## 3  0.4878617 -0.3580057
+## 4  1.4517492  1.1788116
+## 5  1.0577282 -1.2989013
+</code></pre>
+
+<p>Or that includes the response variable, but otherwise looks like the model matrix:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model.frame(y ~ <span style="color:#6ab825">I</span>(x^<span style="color:#3677a9">2</span>) + x)</code></pre></div>
+<pre><code>##            y       I(x^2)          x
+## 1 -0.4266105 0.029475.... -0.1716845
+## 2 -1.4139657 0.069458.... -0.2635496
+## 3  0.4878617 0.128168.... -0.3580057
+## 4  1.4517492 1.389596....  1.1788116
+## 5  1.0577282 1.687144.... -1.2989013
+</code></pre>
+
+<p>The model frame is a more complex object than the model frame, but we use it to capture the full data in a formula.</p>
+
+<p>To see how these functions work with scopes of formula, we can make some data in the global scope and in a closure and build corresponding formulae:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">n &lt;- <span style="color:#3677a9">5</span>
+x &lt;- rnorm(n) ; y &lt;- rnorm(n)
+make_closure_model &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, y) y ~ <span style="color:#6ab825">I</span>(x^<span style="color:#3677a9">2</span>) + x
+global_model &lt;- y ~ <span style="color:#6ab825">I</span>(x^<span style="color:#3677a9">2</span>) + x
+closure_model &lt;- make_closure_model(rnorm(n), rnorm(n))</code></pre></div>
+<p>We can see that the variables in the two formulas are different (the <code>x</code> and <code>y</code> variables are from different scope):</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">get_all_vars(global_model)</code></pre></div>
+<pre><code>##             y          x
+## 1 -0.06023024 -0.4438439
+## 2  1.71683148 -0.9133148
+## 3 -0.55538683  0.5194221
+## 4  1.03774602  0.3141842
+## 5 -0.67897927  2.9846080
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">get_all_vars(closure_model)</code></pre></div>
+<pre><code>##             y          x
+## 1  0.37669580 -2.2014804
+## 2  0.09373048  1.4216218
+## 3  0.30818092 -0.4767920
+## 4 -0.85408128 -0.1594740
+## 5 -1.19739503  0.2522737
+</code></pre>
+
+<p>If we build a data frame</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">alpha &lt;- <span style="color:#3677a9">5</span> ; beta &lt;- <span style="color:#3677a9">0.5</span> ; gamma &lt;- <span style="color:#3677a9">2</span>
+d &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(y = alpha * x^<span style="color:#3677a9">2</span> + beta * x + gamma + rnorm(n, sd = <span style="color:#3677a9">0.1</span>), 
+                x = x)
+d</code></pre></div>
+<pre><code>##           y          x
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
+</code></pre>
+
+<p>we can overscope with that.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">get_all_vars(global_model, data = d)</code></pre></div>
+<pre><code>##           y          x
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">get_all_vars(closure_model, data = d)</code></pre></div>
+<pre><code>##           y          x
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
+</code></pre>
+
+<p>Here, the <code>x</code> variable is the global <code>x</code> (that is how we constructed <code>d</code>), but the <code>y</code> column is the one we created for <code>d</code>.</p>
+
+<p>You can use these functions to create models from a formula. That way, the user can specify how the model matrix is constructed and then your model-code is more general. I have a more extended example in <a href="https://amzn.to/2OlcV0A"><em>Advance Object-Oriented Programming in R</em></a>, but here I will merely build a simple version of <code>lm</code>.</p>
+
+<p>When we fit a linear model, we construct the model matrix $X$, and then we fit it to the response variable $y$ using the expression <code>solve(t(X) %*% X, t(X) %*% y</code>. I will refer you to a statistics textbook if you want to know why. We take the formula we get as an argument, construct the model frame to get the response variable and the model matrix for the model fit. When we have the fitted parameters, we wrap them up in an object that carries the information we might want to access later.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">linmo &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(form, data = <span style="color:#6ab825;font-weight:bold">NULL</span>)  {
+    mf &lt;- model.frame(form, data)
+    y &lt;- model.response(mf, <span style="color:#ed9d13">&#34;numeric&#34;</span>)
+    X &lt;- model.matrix(form, data)
+    weights &lt;- <span style="color:#6ab825">solve</span>(<span style="color:#6ab825">t</span>(X) %*% X, <span style="color:#6ab825">t</span>(X) %*% y)
+    <span style="color:#6ab825">structure</span>(<span style="color:#6ab825;font-weight:bold">list</span>(weights = weights, 
+                   formula = form, 
+                   data = data),
+              class = <span style="color:#ed9d13">&#34;linear_model&#34;</span>)
+}</code></pre></div>
+<p>I have given my fitted objects the class <code>&quot;linear_model&quot;</code>, so I can write a print function for them like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">print.linear_model &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x, <span style="color:#6ab825;font-weight:bold">...</span>) {
+    <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;linear model formula: &#34;</span>, <span style="color:#6ab825">deparse</span>(x$formula), <span style="color:#ed9d13">&#34;\n\n&#34;</span>)
+    <span style="color:#6ab825">print</span>(x$weights)
+    <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;\n&#34;</span>)
+}</code></pre></div>
+<p>I will make a little more data for the models to work with. I kept the vectors short above so I could print them; I won&rsquo;t do that now, but I will make them long enough to be interesting.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># Give the model a bit to work with...</span>
+n &lt;- <span style="color:#3677a9">100</span> ; x &lt;- rnorm(n) ; y &lt;- rnorm(n)</code></pre></div>
+<p>There is no relationship between <code>x</code> and <code>y</code>, so we expect the weights in the model to be around zero, which they are:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">m1 &lt;- linmo(global_model)
+m1</code></pre></div>
+<pre><code>## linear model formula:  y ~ I(x^2) + x 
+## 
+##                    [,1]
+## (Intercept) -0.14018596
+## I(x^2)       0.13248999
+## x           -0.02285167
+</code></pre>
+
+<p>I had to use the <code>global_model</code> formula here. If I had used the <code>closure_model</code> formula, I would still use the vectors from the closure and not the new ones I just made.</p>
+
+<p>We can try and put some structured data into a data frame and fit to that:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">alpha &lt;- <span style="color:#3677a9">5</span> ; beta &lt;- <span style="color:#3677a9">0.5</span> ; gamma &lt;- <span style="color:#3677a9">2</span>
+d2 &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(y = alpha * x^<span style="color:#3677a9">2</span> + beta * x + gamma + rnorm(n, sd = <span style="color:#3677a9">0.1</span>),
+                 x = x)
+
+m2 &lt;- linmo(closure_model, data = d2)
+m2</code></pre></div>
+<pre><code>## linear model formula:  y ~ I(x^2) + x 
+## 
+##                  [,1]
+## (Intercept) 1.9943900
+## I(x^2)      5.0037470
+## x           0.5143645
+</code></pre>
+
+<p>The correct intercept is 2, the linear component is 0.5, and the squared component is 5. Our estimated parameters are not far off.  When we fitted this model, it doesn&rsquo;t matter if we used the closure or the global formula. The <code>data</code> parameter overscopes them anyway.</p>
+
+<p>If we want to predict the response variable on new data, we need to make a new model matrix from the new data. R does <em>not</em> enjoy making a model matrix from data that doesn&rsquo;t have all the variables we have in the formula. Not even if is just the response variable, which we don&rsquo;t need for the model matrix anyway. So we need to remove the response variable from the formula first. Other than that, getting the model matrix from new data is simple and so is using the fitted weights to predict new targets.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">predict.linear_model &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(object, data, <span style="color:#6ab825;font-weight:bold">...</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">missing</span>(data)) {
+        data &lt;- object$data
+    }
+    <span style="color:#999;font-style:italic"># This is just some magic needed to get an updated</span>
+    <span style="color:#999;font-style:italic"># formula that does not include the response.</span>
+    <span style="color:#999;font-style:italic"># If we do include the response, we also need it in the new data.</span>
+    updated_terms &lt;- delete.response(terms(object$formula))
+    X &lt;- model.matrix(updated_terms, data)
+    X %*% object$weights
+}</code></pre></div>
+<p>If we call <code>predict</code> without new data, we get predictions from the data we fitted the model to:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">plot(y, predict(m1), xlab=<span style="color:#ed9d13">&#34;Target&#34;</span>, ylab=<span style="color:#ed9d13">&#34;Prediction&#34;</span>)</code></pre></div>
+<p><img src="figure/unnamed-chunk-25-1.png" alt="plot of chunk unnamed-chunk-25" /></p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">plot(d2$y, predict(m2), xlab=<span style="color:#ed9d13">&#34;Target&#34;</span>, ylab=<span style="color:#ed9d13">&#34;Prediction&#34;</span>)</code></pre></div>
+<p><img src="figure/unnamed-chunk-25-2.png" alt="plot of chunk unnamed-chunk-25" /></p>
+
+<p>When we provide new data, we get the predictions from that.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">new_data &lt;- <span style="color:#6ab825;font-weight:bold">data.frame</span>(x = rnorm(<span style="color:#3677a9">10</span>))
+new_target &lt;- <span style="color:#6ab825">with</span>(new_data, alpha * x^<span style="color:#3677a9">2</span> + beta * x + <span style="color:#6ab825">gamma</span>)
+new_data</code></pre></div>
+<pre><code>##              x
+## 1   0.05232838
+## 2  -0.35736623
+## 3  -0.65235756
+## 4  -0.15527569
+## 5  -0.26683393
+## 6   0.21692039
+## 7   2.21927106
+## 8  -0.73158219
+## 9   0.59464670
+## 10  1.26469203
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">new_target</code></pre></div>
+<pre><code>##  [1]  2.039855  2.459870  3.801673  2.042915  2.222585  2.343732 27.735456
+##  [8]  4.310271  4.065347 10.629576
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">new_prediction &lt;- predict(m2, data = new_data)
+
+plot(new_target, new_prediction, xlab=<span style="color:#ed9d13">&#34;Target&#34;</span>, ylab=<span style="color:#ed9d13">&#34;Prediction&#34;</span>)</code></pre></div>
+<p><img src="figure/unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26" /></p>
+
+<p>Neat, right?</p>
+
+<hr/>
+
+<p><small>If you liked what you read, and want more like it, consider supporting me at <a href="https://www.patreon.com/mailund">Patreon</a>.</small>
+<hr/></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:If-you-look-at-t">If you look at the code for <code>lm</code> you will see that it <em>does</em> evaluate am expression in the calling environment. This is to get a function to build a model frame. This is a detail and is not essential for the discussion here. I briefly discuss model matrices and model frames at the end of the post. Here, you will see that we can fit models just fine without ever looking in the caller environment. <a class="footnote-return" href="#fnref:If-you-look-at-t"><sup>[return]</sup></a></li>
+<li id="fn:Yes-arguments-ha">Yes, arguments have a scope. I will return to that in a different post. <a class="footnote-return" href="#fnref:Yes-arguments-ha"><sup>[return]</sup></a></li>
+<li id="fn:You-can-also-cre">You can also create formulae where you get to pick the environment if you use the <code>as.formula</code> function. It allows you to provide an environment as an argument. <a class="footnote-return" href="#fnref:You-can-also-cre"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/"><i class="fa fa-chevron-circle-left"></i> Overscoping and eval</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>

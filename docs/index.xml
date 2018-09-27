@@ -21,6 +21,16 @@
     </item>
     
     <item>
+      <title>Environments and formulae</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/</link>
+      <pubDate>Thu, 27 Sep 2018 04:41:19 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/</guid>
+      <description>In my two previous posts on non-standard evaluation, Scoping rules and NSE and Overscoping and eval, I explained:
+ How R finds the bindings of variables by looking through chains of environments.</description>
+    </item>
+    
+    <item>
       <title>Overscoping and eval</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</link>
       <pubDate>Sat, 22 Sep 2018 12:23:09 +0200</pubDate>

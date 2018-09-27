@@ -1,8 +1,8 @@
 ---
 title: "Environments and formulae"
 date: '2018-09-27T04:41:19+02:00'
-tags = ["scope-rules"]
-categories = ["Non-standard evaluation"]
+tags: ["scope-rules"]
+categories: ["Non-standard evaluation"]
 ---
 
 In my two previous posts on non-standard evaluation, [*Scoping rules and NSE*](https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/) and [*Overscoping and eval*](https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/), I explained:

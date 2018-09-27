@@ -1,8 +1,8 @@
 ---
 title: "Environments and formulae"
 date: '2018-09-27T04:41:19+02:00'
-tags = ["scope-rules"]
-categories = ["Non-standard evaluation"]
+tags: ["scope-rules"]
+categories: ["Non-standard evaluation"]
 ---
 
 In my two previous posts on non-standard evaluation, [*Scoping rules and NSE*](https://mailund.github.io/r-programmer-blog/2018/09/20/scoping-rules-and-nse/) and [*Overscoping and eval*](https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/), I explained:
@@ -32,7 +32,7 @@ it looks as if the `lm` function uses over-scoping to search for `x` and `y` in 
  ## 
  ## Coefficients:
  ## (Intercept)            x  
- ##    -0.13680     -0.08782
+ ##      0.2791       0.2614
  ```
 We will use this function to contrast an environment from a closure with one we create at the global scope:
 
@@ -69,7 +69,7 @@ lm(f)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      1.3686       0.3229
+##      0.2621      -0.7383
 ```
 
 The graph for this call looks like this, and I apologise that it is very busy. But there really is all this going on (and I haven't even included edges for caller environments).
@@ -96,7 +96,7 @@ nested_fit(y ~ x)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.13680     -0.08782
+##      0.2791       0.2614
 ```
 
 
@@ -111,7 +111,7 @@ nested_fit(f)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      1.3686       0.3229
+##      0.2621      -0.7383
 ```
 
 If we take a formula defined in the global scope, and one defined in the closure
@@ -141,7 +141,7 @@ environment(closure_f)
 ```
 
 ```
-## <environment: 0x7fc2bd194790>
+## <environment: 0x7f9f3dc6f590>
 ```
 
 ```r
@@ -175,7 +175,7 @@ closure_f <- closure_formula_nse(y ~ x)
 ```
 
 ```
-## <environment: 0x7fc2bc9f7d88>
+## <environment: 0x7f9f40634588>
 ```
 
 ```r
@@ -183,7 +183,7 @@ environment(closure_f)
 ```
 
 ```
-## <environment: 0x7fc2bc9f7d88>
+## <environment: 0x7f9f40634588>
 ```
 
 ```r
@@ -233,11 +233,11 @@ model.matrix(y ~ x - 1)
 
 ```
 ##            x
-## 1 -0.2047045
-## 2  0.0566914
-## 3  0.1862848
-## 4 -0.1471272
-## 5  0.4278993
+## 1 -0.1716845
+## 2 -0.2635496
+## 3 -0.3580057
+## 4  1.1788116
+## 5 -1.2989013
 ## attr(,"assign")
 ## [1] 1
 ```
@@ -248,11 +248,11 @@ model.matrix(y ~ x)
 
 ```
 ##   (Intercept)          x
-## 1           1 -0.2047045
-## 2           1  0.0566914
-## 3           1  0.1862848
-## 4           1 -0.1471272
-## 5           1  0.4278993
+## 1           1 -0.1716845
+## 2           1 -0.2635496
+## 3           1 -0.3580057
+## 4           1  1.1788116
+## 5           1 -1.2989013
 ## attr(,"assign")
 ## [1] 0 1
 ```
@@ -262,12 +262,12 @@ model.matrix(y ~ I(x^2) + x)
 ```
 
 ```
-##   (Intercept)      I(x^2)          x
-## 1           1 0.041903922 -0.2047045
-## 2           1 0.003213915  0.0566914
-## 3           1 0.034702036  0.1862848
-## 4           1 0.021646423 -0.1471272
-## 5           1 0.183097788  0.4278993
+##   (Intercept)     I(x^2)          x
+## 1           1 0.02947556 -0.1716845
+## 2           1 0.06945840 -0.2635496
+## 3           1 0.12816806 -0.3580057
+## 4           1 1.38959677  1.1788116
+## 5           1 1.68714467 -1.2989013
 ## attr(,"assign")
 ## [1] 0 1 2
 ```
@@ -282,12 +282,12 @@ get_all_vars(y ~ I(x^2) + x)
 ```
 
 ```
-##             y          x
-## 1 -0.38900955 -0.2047045
-## 2  1.36111725  0.0566914
-## 3 -2.27543149  0.1862848
-## 4  0.09490058 -0.1471272
-## 5  0.49640378  0.4278993
+##            y          x
+## 1 -0.4266105 -0.1716845
+## 2 -1.4139657 -0.2635496
+## 3  0.4878617 -0.3580057
+## 4  1.4517492  1.1788116
+## 5  1.0577282 -1.2989013
 ```
 
 Or that includes the response variable, but otherwise looks like the model matrix:
@@ -298,12 +298,12 @@ model.frame(y ~ I(x^2) + x)
 ```
 
 ```
-##             y       I(x^2)          x
-## 1 -0.38900955 0.041903.... -0.2047045
-## 2  1.36111725 0.003213....  0.0566914
-## 3 -2.27543149 0.034702....  0.1862848
-## 4  0.09490058 0.021646.... -0.1471272
-## 5  0.49640378 0.183097....  0.4278993
+##            y       I(x^2)          x
+## 1 -0.4266105 0.029475.... -0.1716845
+## 2 -1.4139657 0.069458.... -0.2635496
+## 3  0.4878617 0.128168.... -0.3580057
+## 4  1.4517492 1.389596....  1.1788116
+## 5  1.0577282 1.687144.... -1.2989013
 ```
 
 The model frame is a more complex object than the model frame, but we use it to capture the full data in a formula.
@@ -327,12 +327,12 @@ get_all_vars(global_model)
 ```
 
 ```
-##            y          x
-## 1 -1.4095051 -1.2572290
-## 2 -0.3174899  0.3522242
-## 3  0.1791528 -1.6031479
-## 4  0.3234290  1.5139162
-## 5  0.2852868 -0.8435976
+##             y          x
+## 1 -0.06023024 -0.4438439
+## 2  1.71683148 -0.9133148
+## 3 -0.55538683  0.5194221
+## 4  1.03774602  0.3141842
+## 5 -0.67897927  2.9846080
 ```
 
 ```r
@@ -340,12 +340,12 @@ get_all_vars(closure_model)
 ```
 
 ```
-##            y          x
-## 1 -0.7646146  0.4988307
-## 2  2.0346795 -0.1361734
-## 3 -0.5914979  0.4099995
-## 4 -0.8849065 -0.3981159
-## 5  0.4118874 -0.1264574
+##             y          x
+## 1  0.37669580 -2.2014804
+## 2  0.09373048  1.4216218
+## 3  0.30818092 -0.4767920
+## 4 -0.85408128 -0.1594740
+## 5 -1.19739503  0.2522737
 ```
 
 If we build a data frame
@@ -360,11 +360,11 @@ d
 
 ```
 ##           y          x
-## 1  9.246589 -1.2572290
-## 2  2.899301  0.3522242
-## 3 13.934177 -1.6031479
-## 4 14.043457  1.5139162
-## 5  5.224500 -0.8435976
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
 ```
 
 we can overscope with that.
@@ -376,11 +376,11 @@ get_all_vars(global_model, data = d)
 
 ```
 ##           y          x
-## 1  9.246589 -1.2572290
-## 2  2.899301  0.3522242
-## 3 13.934177 -1.6031479
-## 4 14.043457  1.5139162
-## 5  5.224500 -0.8435976
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
 ```
 
 ```r
@@ -389,11 +389,11 @@ get_all_vars(closure_model, data = d)
 
 ```
 ##           y          x
-## 1  9.246589 -1.2572290
-## 2  2.899301  0.3522242
-## 3 13.934177 -1.6031479
-## 4 14.043457  1.5139162
-## 5  5.224500 -0.8435976
+## 1  2.773563 -0.4438439
+## 2  5.727659 -0.9133148
+## 3  3.726645  0.5194221
+## 4  2.699850  0.3141842
+## 5 48.122075  2.9846080
 ```
 
 Here, the `x` variable is the global `x` (that is how we constructed `d`), but the `y` column is the one we created for `d`.
@@ -447,10 +447,10 @@ m1
 ```
 ## linear model formula:  y ~ I(x^2) + x 
 ## 
-##                   [,1]
-## (Intercept) -0.1843764
-## I(x^2)       0.3363974
-## x            0.3231768
+##                    [,1]
+## (Intercept) -0.14018596
+## I(x^2)       0.13248999
+## x           -0.02285167
 ```
 
 I had to use the `global_model` formula here. If I had used the `closure_model` formula, I would still use the vectors from the closure and not the new ones I just made.
@@ -471,9 +471,9 @@ m2
 ## linear model formula:  y ~ I(x^2) + x 
 ## 
 ##                  [,1]
-## (Intercept) 2.0110942
-## I(x^2)      5.0080745
-## x           0.5122127
+## (Intercept) 1.9943900
+## I(x^2)      5.0037470
+## x           0.5143645
 ```
 
 The correct intercept is 2, the linear component is 0.5, and the squared component is 5. Our estimated parameters are not far off.  When we fitted this model, it doesn't matter if we used the closure or the global formula. The `data` parameter overscopes them anyway.
@@ -520,17 +520,17 @@ new_data
 ```
 
 ```
-##             x
-## 1   0.7079682
-## 2  -0.8642594
-## 3   0.6606445
-## 4  -1.0631450
-## 5  -0.6339607
-## 6  -1.2982706
-## 7  -0.1308594
-## 8   1.2127627
-## 9   0.4787222
-## 10  0.4167332
+##              x
+## 1   0.05232838
+## 2  -0.35736623
+## 3  -0.65235756
+## 4  -0.15527569
+## 5  -0.26683393
+## 6   0.21692039
+## 7   2.21927106
+## 8  -0.73158219
+## 9   0.59464670
+## 10  1.26469203
 ```
 
 ```r
@@ -538,8 +538,8 @@ new_target
 ```
 
 ```
-##  [1] 4.860079 5.302592 4.512578 7.119814 3.692550 9.778398 2.020191
-##  [8] 9.960348 3.385236 3.076700
+##  [1]  2.039855  2.459870  3.801673  2.042915  2.222585  2.343732 27.735456
+##  [8]  4.310271  4.065347 10.629576
 ```
 
 ```r
