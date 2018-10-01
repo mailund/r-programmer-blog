@@ -1,7 +1,7 @@
 ---
 title: "Overscoping and eval"
 date: 2018-09-22T12:23:09+02:00
-categories: [“Non-standard evaluation”]
+categories: [Non-standard evaluation]
 tags: ["scoping-rules"]
 ---
 
@@ -139,7 +139,7 @@ f(x)
 ## [1] "f's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "f's environment:"
-## <environment: 0x7fde174dea78>
+## <environment: 0x7fbe64329698>
 ```
 
 ```
@@ -157,11 +157,11 @@ g(y)
 ## [1] "g's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "g's environment:"
-## <environment: 0x7fde161f4738>
+## <environment: 0x7fbe6540f3e0>
 ## [1] "f's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "f's environment:"
-## <environment: 0x7fde165f8b60>
+## <environment: 0x7fbe65415d98>
 ```
 
 ```
@@ -179,15 +179,15 @@ h(5)
 ## [1] "h's caller env:"
 ## <environment: R_GlobalEnv>
 ## [1] "h's environment:"
-## <environment: 0x7fde17a13078>
+## <environment: 0x7fbe65b33120>
 ## [1] "g's caller env:"
-## <environment: 0x7fde17a13078>
+## <environment: 0x7fbe65b33120>
 ## [1] "g's environment:"
-## <environment: 0x7fde17a17040>
+## <environment: 0x7fbe65b370e8>
 ## [1] "f's caller env:"
-## <environment: 0x7fde17a13078>
+## <environment: 0x7fbe65b33120>
 ## [1] "f's environment:"
-## <environment: 0x7fde1838c768>
+## <environment: 0x7fbe65e29168>
 ```
 
 ```
@@ -450,7 +450,7 @@ lm(y ~ x) # local x and y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     0.07468     -0.36076
+##     -0.5451       0.6438
 ```
 
 ```r
@@ -464,7 +464,7 @@ lm(y ~ x, data = d) # local x, data frame y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.02754     -0.04762
+##     -0.2303       0.1089
 ```
 
 We can also assign a formula to a variable and use that the same way:
@@ -482,7 +482,7 @@ lm(f) # local x and y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     0.07468     -0.36076
+##     -0.5451       0.6438
 ```
 
 ```r
@@ -496,7 +496,7 @@ lm(f, data = d) # local x, data frame y
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##    -0.02754     -0.04762
+##     -0.2303       0.1089
 ```
 
 However, formulae have their own environments, and these can work as closures. If you define a formula in a function, it will be associated with that function call's environment.
@@ -524,7 +524,7 @@ lm(f2) # f2 defined in a closure
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -1.1222      -0.9481
+##     -0.3044       0.3571
 ```
 
 ```r
@@ -538,7 +538,7 @@ lm(f3) # f3 defined in a closure
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##     -0.4337      -0.4003
+##    -0.24855      0.05978
 ```
 
 
@@ -559,7 +559,7 @@ lm(f2)
 ```
 
 ```
-## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
+## Error in eval(predvars, data, env): object 'y' not found
 ```
 
 We can still get it from the data frame, though
@@ -576,7 +576,7 @@ lm(f2, data = d)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      0.1328       0.1928
+##     -0.2295       0.2595
 ```
 
 Once you start passing formulae around in function calls, everything gets just a tad more complicated. Consider these two functions for building a linear model:
@@ -595,7 +595,7 @@ fit_model1(rnorm(5))
 ```
 
 ```
-## Error in eval(predvars, data, env): objekt 'x' blev ikke fundet
+## Error in eval(predvars, data, env): object 'x' not found
 ```
 
 The second fails because we do not have the variable `y` in the formula's environment—we have one in the function call's environment, but the formula isn't defined there, it was created in the earlier closure.
@@ -606,7 +606,7 @@ fit_model2(rnorm(5))
 ```
 
 ```
-## Error in eval(predvars, data, env): objekt 'y' blev ikke fundet
+## Error in eval(predvars, data, env): object 'y' not found
 ```
 
 The `lm` function first looks in the data frame you give it if any. If it doesn't find the variables it needs there, it looks in the formula's environment. It doesn't look in the calling environment.

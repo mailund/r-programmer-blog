@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Lists and functional queues</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/01/lists-and-functional-queues/</link>
+      <pubDate>Mon, 01 Oct 2018 07:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/01/lists-and-functional-queues/</guid>
+      <description>I wanted to write something about function parameters, how these are passed as so-called &amp;ldquo;promises&amp;rdquo;, how these have associated scopes (and the consequences of that), and how they give us lazy evaluation.</description>
+    </item>
+    
+    <item>
       <title>Environments and formulae</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/</link>
       <pubDate>Thu, 27 Sep 2018 04:41:19 +0200</pubDate>
