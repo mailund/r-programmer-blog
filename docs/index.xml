@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Lazy lists</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/03/lazy-lists/</link>
+      <pubDate>Wed, 03 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/03/lazy-lists/</guid>
+      <description>I wanted to write about lazy lists and lazy queues today, but I spent most of the day struggling with getting lazy evaluation to work. Finally, I convinced myself that something was broken in R, and I was justified in thinking that; upgrading to the most recent version resolved the issue.</description>
+    </item>
+    
+    <item>
       <title>Promises, their environments, and how we evaluate them</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/10/02/promises-their-environments-and-how-we-evaluate-them/</link>
       <pubDate>Tue, 02 Oct 2018 09:13:01 +0200</pubDate>
