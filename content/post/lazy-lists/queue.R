@@ -1,100 +1,5 @@
 
-library(pmatch)
-
-linked_list := NIL | CONS(car, cdr : linked_list)
-car <- function(llist)
-  cases(llist, CONS(car, cdr) -> car)
-cdr <- function(llist)
-  cases(llist, CONS(car, cdr) -> cdr)
-
-llist <- purrr::reduce_right(1:6, ~ CONS(.y,.x), .init = NIL)
-llist
-
-toString.linked_list <- function(llist)
-  cases(llist, NIL -> "[]",
-        CONS(car, cdr) -> paste(car, "::", toString(cdr)))
-print.linked_list <- function(llist)
-  cat(toString(llist), "\n")
-
-llist
-
-concat <- function(l1, l2)
-  cases(l1,
-        NIL -> l2,
-        CONS(car, cdr) -> CONS(car, concat(cdr, l2)))
-concat(llist, llist)
-
-reverse <- function(llist, acc = NIL)
-  cases(llist,
-        NIL -> acc,
-        CONS(car, cdr) -> reverse(cdr, CONS(car, acc)))
-reverse(llist)
-
-queue := QUEUE(front : linked_list, back : linked_list)
-print.queue <- function(queue) {
-  cat("Front:\t")
-  print(queue$front)
-  cat("Back:\t")
-  print(queue$back)
-}
-
-new_queue <- function() QUEUE(NIL, NIL)
-enqueue <- function(queue, x)
-  cases(queue, QUEUE(front, back) -> QUEUE(front, CONS(x, back)))
-
-queue <- purrr::reduce(1:8, enqueue, .init = new_queue())
-queue
-
-pair := PAIR(first, second)
-print.pair <- function(pair) {
-  cat("First\n")
-  print(pair$first)
-  cat("Second:\n")
-  print(pair$second)
-}
-
-move_front_to_back <- function(queue)
-  cases(queue, QUEUE(front, back) -> QUEUE(NIL, concat(back, reverse(front))))
-move_back_to_front <- function(queue)
-  cases(queue, QUEUE(front, back) -> QUEUE(concat(front, reverse(back)), NIL))
-
-queue2 <- move_back_to_front(queue)
-queue2
-move_front_to_back(queue2)
-
-front <- function(queue)
-  cases(queue,
-        QUEUE(NIL, NIL)        -> stop("Empty queue"),
-        QUEUE(NIL, .)          -> front(move_back_to_front(queue)),
-        QUEUE(CONS(car, cdr), back) -> PAIR(car, QUEUE(cdr, back)))
-
-bind[PAIR(first, queue)] <- front(queue)
-first
-queue
-
-back <- function(queue)
-  cases(queue,
-        QUEUE(NIL, NIL)        -> stop("Empty queue"),
-        QUEUE(., NIL)          -> back(move_front_to_back(queue)),
-        QUEUE(front, CONS(car, cdr)) -> PAIR(car, QUEUE(front, cdr)))
-
-bind[PAIR(first, queue)] <- back(queue)
-first
-queue
-
-queue_to_llist <- function(queue)
-  cases(queue,
-        QUEUE(NIL, NIL) -> NIL,
-        otherwise ->
-          cases(front(queue),
-                PAIR(x, q) -> CONS(x, queue_to_llist(q))))
-queue_to_llist(queue)
-
-
 queue := QUEUE(front_len, front, back_len, back)
-# I need to redefine this since the construct :=
-# defines a default that overwrites the one
-# we defined above
 print.queue <- function(queue) {
   cat("Front length:\t", queue$front_len, "\n")
   cat("Back length:\t", queue$back_len, "\n")
@@ -107,6 +12,7 @@ print.queue <- function(queue) {
 new_queue <- function() QUEUE(0, NIL, 0, NIL)
 enqueue <- function(queue, x)
   cases(queue,
+        QUEUE(0, NIL, 0, NIL) -> QUEUE(1, )
         QUEUE(front_len, front, back_len, back) ->
           QUEUE(front_len, front, back_len + 1, CONS(x, back)))
 
