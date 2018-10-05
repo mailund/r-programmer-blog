@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Lazy queues</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/04/lazy-queues/</link>
+      <pubDate>Thu, 04 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/04/lazy-queues/</guid>
+      <description>The purpose of the lazy lists I implemented in my previous post was to build lazy queues. Lazy lists give you constant time concatenation, which can be useful in itself, but I needed it to implement persistent functional queues.</description>
+    </item>
+    
+    <item>
       <title>Lazy lists</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/10/03/lazy-lists/</link>
       <pubDate>Wed, 03 Oct 2018 09:13:01 +0200</pubDate>
