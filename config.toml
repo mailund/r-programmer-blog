@@ -1,9 +1,11 @@
 baseurl = "https://mailund.github.io/r-programmer-blog/"
 title = "The Working R Programmer"
 copyright = "Copyright &copy; 2018 - Thomas Mailund"
-canonifyurls = true
 theme = "hugo-kiera"
+
 publishDir = "docs"
+
+canonifyurls = true
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 googleAnalytics = "UA-126024558-1"
@@ -13,7 +15,6 @@ paginate = 20
 summaryLength = 30
 pygmentsCodeFences = true
 pygmentsStyle = "native"
-
 
 
 [author]
@@ -30,7 +31,7 @@ pygmentsStyle = "native"
 
 [params]
     tagline = "Tips and tricks for serious software development in R"
-    
+
     googlefonts = ["Droid Sans", "Fira Code"]
     fontbody = 'Droid Sans'
     fontcode = 'Fira Code'
