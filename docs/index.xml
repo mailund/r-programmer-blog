@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Thunks and Trampolines</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/</link>
+      <pubDate>Wed, 10 Oct 2018 15:38:25 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/</guid>
+      <description>Have you ever written a recursive function that you couldn&amp;rsquo;t use because you ran out of stack space when you applied it to large data sizes? Then thunks and trampolines might be for you.</description>
+    </item>
+    
+    <item>
       <title>Lazy queues</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/10/04/lazy-queues/</link>
       <pubDate>Thu, 04 Oct 2018 09:13:01 +0200</pubDate>
@@ -294,6 +303,15 @@ It&amp;rsquo;s a fair question, and I am not creating a new blog just to make yo
       
       <guid>https://mailund.github.io/r-programmer-blog/1/01/01/</guid>
       <description>“Optional” types using pmatch /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */ !function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://mailund.github.io/r-programmer-blog/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/1/01/01/</guid>
+      <description>Thunks and Trampolines /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */ !function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?window:this,function(a,b){var c=[],d=c.</description>
     </item>
     
   </channel>
