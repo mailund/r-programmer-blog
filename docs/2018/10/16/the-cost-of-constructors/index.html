@@ -141,11 +141,11 @@ ga('send', 'pageview');
 
     
 
-<p>So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time. If you work with vectors, whenever possible you want to allocated them to the size you are going to need. You cannot always do this, and if you find yourself having to add one element at a time by concatenation, you have a quadratic time performance on your hands.</p>
+<p>So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time. If you work with vectors, whenever possible you want to allocate them to the size you are going to need. You cannot always do this, and if you find yourself having to add one element at a time by concatenation, you have a quadratic time performance on your hands.</p>
 
-<p>In some cases there are ways around this by being clever about allocation and reallocation, and that will give you a linear time algorithm. Using a linked list is simpler. You can add elements to the front of a list in constant time, so building a sequence using linked lists already takes linear time.</p>
+<p>In some cases, there are ways around this by being clever about allocation and reallocation, and that will give you a linear time algorithm. Using a linked list is more straightforward. You can add elements to the front of a list in constant time, so building a sequence using linked lists already takes linear time.</p>
 
-<p>Programming a linked list in R, though, will not give you the performance that vectors have, since operations on those are written in C. The performance gain you get from C implementations over R implementations will make vectors much faster for short sequences, but the better algorithm using linked list should soon outperform vectors.</p>
+<p>Programming a linked list in R, though, will not give you the performance that vectors have since operations on those are written in C. The performance gain you get from C implementations over R implementations will make vectors much faster for short sequences, but the better algorithm using linked list should soon outperform vectors.</p>
 
 <p>I wanted to get a feeling for where the two lines, the vector and the linked list performance, would cross.</p>
 
@@ -189,7 +189,7 @@ structure_manual_llist &lt;- <span style="color:#6ab825;font-weight:bold">functi
         i &lt;- i + <span style="color:#3677a9">1</span>
     }
 }</code></pre></div>
-<p>When I compare their performance, it looks absolutely horrible.</p>
+<p>When I compare their performance, it looks horrible.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(microbenchmark)
 measures &lt;- microbenchmark(
     structure_vector(<span style="color:#3677a9">100</span>),
@@ -198,20 +198,20 @@ measures &lt;- microbenchmark(
 )
 measures</code></pre></div>
 <pre><code>## Unit: microseconds
-##                         expr      min        lq       mean   median
-##        structure_vector(100)   35.425   39.1990   85.39673   42.496
-##  structure_pmatch_llist(100) 5100.786 5279.6000 6156.29756 5452.979
-##  structure_manual_llist(100)   61.368   64.6755  248.87403   66.778
-##         uq      max neval
-##    49.0075  3901.22   100
-##  5761.5150 20631.25   100
-##    72.4025 18024.37   100
+##                         expr      min        lq      mean    median
+##        structure_vector(100)   35.589   39.5215   79.4795   43.3035
+##  structure_pmatch_llist(100) 5138.207 5311.5115 6141.8516 5433.3730
+##  structure_manual_llist(100)   62.804   68.8670  306.2231   73.5315
+##         uq       max neval
+##    49.3005  3446.187   100
+##  5708.5820 19428.017   100
+##    77.6330 18371.577   100
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(ggplot2)
 autoplot(measures)</code></pre></div>
 <p><img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3" /></p>
 
-<p>The <code>pmatch</code> implementation is orders of maginitude slower than the other two. The other linked list implementation is also slower than the vector implementation here, but that is because sequences of length 100 are too short for the linear time algorithm to outcompite the optimised implementation.</p>
+<p>The <code>pmatch</code> implementation is orders of magnitude slower than the other two. The other linked list implementation is also slower than the vector implementation here, but that is because sequences of length 100 are too short for the linear time algorithm to outcompete the optimised implementation.</p>
 
 <p>With the running time I get out of the <code>pmatch</code> implementation, I cannot move to much longer lists when benchmarking, so although I know that this implementation will eventually be faster than the vector solution, it would be for very large lists.</p>
 
@@ -252,9 +252,9 @@ app_llist2_times &lt;- tibble::tibble(
 
 <p>I take the mean of 100 time measures to reduce the variance in the timing results. As you can see, even for the averaged times, there is a large variability in the time measures.</p>
 
-<p>You can clearly see that the linear time solution quickly outperforms the quadratic time solution, but what happens with the <code>pmatch</code> solution.</p>
+<p>You can see that the linear time solution quickly outperforms the quadratic time solution, but what happens with the <code>pmatch</code> solution.</p>
 
-<p>There is some overhead in using <code>NIL</code> instead of <code>NULL</code>. I am not sure why. Of coures, <code>NULL</code> is one of the simplest objects in R and <code>NIL</code> holds some attributes, but if they are just moved around and not copied, I was expecting little if any additional cost to using <code>NIL</code>.</p>
+<p>There is some overhead in using <code>NIL</code> instead of <code>NULL</code>. I am not sure why. Of course, <code>NULL</code> is one of the simplest objects in R and <code>NIL</code> holds some attributes, but if they are just moved around and not copied, I was expecting little if any additional cost to using <code>NIL</code>.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">autoplot(microbenchmark(NIL, <span style="color:#6ab825;font-weight:bold">NULL</span>))</code></pre></div>
 <p><img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" /></p>
 
@@ -263,14 +263,14 @@ app_llist2_times &lt;- tibble::tibble(
 autoplot(microbenchmark(NIL, <span style="color:#6ab825;font-weight:bold">NULL</span>, x))</code></pre></div>
 <p><img src="figure/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5" /></p>
 
-<p>I do need a variable. Otherwise I cannot recognize when a constant is part of a pattern and I cannot distinguish between two zero-arguments constructors.</p>
+<p>I do need a variable. Otherwise, I cannot recognise when a constant is part of a pattern, and I cannot distinguish between two zero-arguments constructors.</p>
 
 <p>In any case, where the running time is spent is in the constructor.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">microbenchmark(CONS(<span style="color:#3677a9">1</span>, NIL), cons(<span style="color:#3677a9">1</span>, <span style="color:#6ab825;font-weight:bold">NULL</span>))</code></pre></div>
 <pre><code>## Unit: nanoseconds
-##           expr   min    lq     mean  median      uq    max neval
-##   CONS(1, NIL) 47054 47664 49132.91 48007.0 48586.0 116890   100
-##  cons(1, NULL)   421   453   596.12   628.5   705.5   1279   100
+##           expr   min      lq     mean median      uq    max neval
+##   CONS(1, NIL) 47090 47492.0 49183.05  47766 48176.5 134922   100
+##  cons(1, NULL)   438   466.5   590.12    619   677.5   1466   100
 </code></pre>
 
 <p>The <code>CONS</code> constructor is orders of magnitude slower than <code>cons</code>. That is where the runtime penalty is coming from.</p>
@@ -291,8 +291,8 @@ autoplot(microbenchmark(NIL, <span style="color:#6ab825;font-weight:bold">NULL</
 ##     }
 ##     structure(args, constructor = constructor_name, class = data_type_name)
 ## }
-## &lt;bytecode: 0x7fbf57becc40&gt;
-## &lt;environment: 0x7fbf5a6939f8&gt;
+## &lt;bytecode: 0x7ff91c18c240&gt;
+## &lt;environment: 0x7ff91aba4ff8&gt;
 ## attr(,&quot;class&quot;)
 ## [1] &quot;constructor&quot; &quot;function&quot;
 </code></pre>
@@ -301,7 +301,7 @@ autoplot(microbenchmark(NIL, <span style="color:#6ab825;font-weight:bold">NULL</
 
 <h2 id="building-a-new-constructor">Building a new constructor</h2>
 
-<p>Now I&rsquo;m thinking I should be able to just take a constructor and build a function exactly for that. I will attempt to do that below.  There are some utility functions in <code>pmatch</code> that I won&rsquo;t repeat here, but <code>process_arguments</code> takes the arguments from the constructor. For a constructor such as <code>CONS(car, cdr : llist)</code> those would be <code>car</code> and <code>cdr</code>. The <code>cdr</code> argument has a type specification, and <code>process_arguments</code> will give me that as well. With this <code>CONS</code> contructor, I will get this tibble:</p>
+<p>Now I think I should be able to take a constructor and build a function exactly for that. I will attempt to do that below.  There are some utility functions in <code>pmatch</code> that I won&rsquo;t repeat here, but <code>process_arguments</code> takes the arguments from the constructor. For a constructor such as <code>CONS(car, cdr : llist)</code> those would be <code>car</code> and <code>cdr</code>. The <code>cdr</code> argument has a type specification, and <code>process_arguments</code> will give me that as well. With this <code>CONS</code> contructor, I will get this tibble:</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#999;font-style:italic"># A tibble: 2 x 2</span>
   arg   type  
   &lt;chr&gt; &lt;chr&gt; 
@@ -317,13 +317,13 @@ autoplot(microbenchmark(NIL, <span style="color:#6ab825;font-weight:bold">NULL</
 constructor_exp &lt;- rlang::expr(CONS2(car, cdr : llist))</code></pre></div><div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_constructor_function(constructor_exp, type_exp, <span style="color:#6ab825">environment</span>())</code></pre></div>
 <p>You do not need to assign the result of the function call to anything. The constructor is added to the environment provided, as does a function for printing the data type.</p>
 
-<p>In the new function I create a constructor, but now I use meta programming to put the value creation inside the function instead of analysing the structure at runtime. I also replaced a call to <code>structure</code> with code for explicitly setting the class and the attribute I need for pattern matching. Because that turned out to be much faster.</p>
+<p>In the new function I create a constructor, but now I use metaprogramming to put the value creation inside the function instead of analysing the structure at runtime. I also replaced a call to <code>structure</code> with code for explicitly setting the class and the attribute I need for pattern matching. Because that turned out to be much faster.</p>
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Ok, I was surprised that the time penalty for creating a class was so high in <a href="https://twitter.com/hashtag/Rstats?src=hash&amp;ref_src=twsrc%5Etfw">#Rstats</a> <br><br>Also surprised that using `structure` was so expensive. <a href="https://t.co/NOEuKq1QVr">pic.twitter.com/NOEuKq1QVr</a></p>&mdash; Thomas Mailund (@ThomasMailund) <a href="https://twitter.com/ThomasMailund/status/1052103930338050048?ref_src=twsrc%5Etfw">October 16, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<p>There is still a lot of code in the function, but with this version it is run when the constructor is created and not when it is called.</p>
+<p>There is still a lot of code in the function, but with this version, it is run when the constructor is created and not when it is called.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">make_constructor_function &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(constructor, data_type_name, env) {
     constructor_name &lt;- rlang::quo_name(constructor[[<span style="color:#3677a9">1</span>]])
     constructor_arguments &lt;- process_arguments(constructor[<span style="color:#3677a9">-1</span>])
@@ -443,7 +443,7 @@ structure_pmatch_llist3 &lt;- <span style="color:#6ab825;font-weight:bold">funct
 autoplot(measures)</code></pre></div>
 <p><img src="figure/unnamed-chunk-13-1.png" alt="plot of chunk unnamed-chunk-13" /></p>
 
-<p>Manually creating the list structure is still faster, but not frightningly so.</p>
+<p>Manually creating the list structure is still faster, but not frighteningly so.</p>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">measures &lt;- microbenchmark(
     structure_pmatch_llist3(<span style="color:#3677a9">100</span>),
     structure_pmatch_llist2(<span style="color:#3677a9">100</span>),
@@ -460,7 +460,7 @@ autoplot(measures)</code></pre></div>
 <hr />
 
 <ol>
-<li id="fn:I-really-should">I really should have thought about it, since obviously it is for algorithmic programming it is most useful to have such a syntax. <a class="footnote-return" href="#fnref:I-really-should"><sup>[return]</sup></a></li>
+<li id="fn:I-really-should">I really should have thought about it, since obviously, it is for algorithmic programming it is most useful to have such a syntax. <a class="footnote-return" href="#fnref:I-really-should"><sup>[return]</sup></a></li>
 </ol>
 </div>
 

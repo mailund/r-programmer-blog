@@ -8,11 +8,11 @@ categories:
   - Functional-programming
 ---
 
-So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time. If you work with vectors, whenever possible you want to allocated them to the size you are going to need. You cannot always do this, and if you find yourself having to add one element at a time by concatenation, you have a quadratic time performance on your hands.
+So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time. If you work with vectors, whenever possible you want to allocate them to the size you are going to need. You cannot always do this, and if you find yourself having to add one element at a time by concatenation, you have a quadratic time performance on your hands.
 
-In some cases there are ways around this by being clever about allocation and reallocation, and that will give you a linear time algorithm. Using a linked list is simpler. You can add elements to the front of a list in constant time, so building a sequence using linked lists already takes linear time.
+In some cases, there are ways around this by being clever about allocation and reallocation, and that will give you a linear time algorithm. Using a linked list is more straightforward. You can add elements to the front of a list in constant time, so building a sequence using linked lists already takes linear time.
 
-Programming a linked list in R, though, will not give you the performance that vectors have, since operations on those are written in C. The performance gain you get from C implementations over R implementations will make vectors much faster for short sequences, but the better algorithm using linked list should soon outperform vectors.
+Programming a linked list in R, though, will not give you the performance that vectors have since operations on those are written in C. The performance gain you get from C implementations over R implementations will make vectors much faster for short sequences, but the better algorithm using linked list should soon outperform vectors.
 
 I wanted to get a feeling for where the two lines, the vector and the linked list performance, would cross.
 
@@ -61,7 +61,7 @@ structure_manual_llist <- function(n) {
 }
 ```
 
-When I compare their performance, it looks absolutely horrible.
+When I compare their performance, it looks horrible.
 
 
 ```r
@@ -76,14 +76,14 @@ measures
 
 ```
 ## Unit: microseconds
-##                         expr      min        lq       mean   median
-##        structure_vector(100)   35.425   39.1990   85.39673   42.496
-##  structure_pmatch_llist(100) 5100.786 5279.6000 6156.29756 5452.979
-##  structure_manual_llist(100)   61.368   64.6755  248.87403   66.778
-##         uq      max neval
-##    49.0075  3901.22   100
-##  5761.5150 20631.25   100
-##    72.4025 18024.37   100
+##                         expr      min        lq      mean    median
+##        structure_vector(100)   35.589   39.5215   79.4795   43.3035
+##  structure_pmatch_llist(100) 5138.207 5311.5115 6141.8516 5433.3730
+##  structure_manual_llist(100)   62.804   68.8670  306.2231   73.5315
+##         uq       max neval
+##    49.3005  3446.187   100
+##  5708.5820 19428.017   100
+##    77.6330 18371.577   100
 ```
 
 
@@ -94,7 +94,7 @@ autoplot(measures)
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
-The `pmatch` implementation is orders of maginitude slower than the other two. The other linked list implementation is also slower than the vector implementation here, but that is because sequences of length 100 are too short for the linear time algorithm to outcompite the optimised implementation.
+The `pmatch` implementation is orders of magnitude slower than the other two. The other linked list implementation is also slower than the vector implementation here, but that is because sequences of length 100 are too short for the linear time algorithm to outcompete the optimised implementation.
 
 With the running time I get out of the `pmatch` implementation, I cannot move to much longer lists when benchmarking, so although I know that this implementation will eventually be faster than the vector solution, it would be for very large lists.
 
@@ -140,9 +140,9 @@ rbind(app_vector_times, app_llist2_times) %>%
 
 I take the mean of 100 time measures to reduce the variance in the timing results. As you can see, even for the averaged times, there is a large variability in the time measures.
 
-You can clearly see that the linear time solution quickly outperforms the quadratic time solution, but what happens with the `pmatch` solution.
+You can see that the linear time solution quickly outperforms the quadratic time solution, but what happens with the `pmatch` solution.
 
-There is some overhead in using `NIL` instead of `NULL`. I am not sure why. Of coures, `NULL` is one of the simplest objects in R and `NIL` holds some attributes, but if they are just moved around and not copied, I was expecting little if any additional cost to using `NIL`.
+There is some overhead in using `NIL` instead of `NULL`. I am not sure why. Of course, `NULL` is one of the simplest objects in R and `NIL` holds some attributes, but if they are just moved around and not copied, I was expecting little if any additional cost to using `NIL`.
 
 
 ```r
@@ -161,7 +161,7 @@ autoplot(microbenchmark(NIL, NULL, x))
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
 
-I do need a variable. Otherwise I cannot recognize when a constant is part of a pattern and I cannot distinguish between two zero-arguments constructors.
+I do need a variable. Otherwise, I cannot recognise when a constant is part of a pattern, and I cannot distinguish between two zero-arguments constructors.
 
 In any case, where the running time is spent is in the constructor.
 
@@ -172,9 +172,9 @@ microbenchmark(CONS(1, NIL), cons(1, NULL))
 
 ```
 ## Unit: nanoseconds
-##           expr   min    lq     mean  median      uq    max neval
-##   CONS(1, NIL) 47054 47664 49132.91 48007.0 48586.0 116890   100
-##  cons(1, NULL)   421   453   596.12   628.5   705.5   1279   100
+##           expr   min      lq     mean median      uq    max neval
+##   CONS(1, NIL) 47090 47492.0 49183.05  47766 48176.5 134922   100
+##  cons(1, NULL)   438   466.5   590.12    619   677.5   1466   100
 ```
 
 The `CONS` constructor is orders of magnitude slower than `cons`. That is where the runtime penalty is coming from.
@@ -201,17 +201,17 @@ CONS
 ##     }
 ##     structure(args, constructor = constructor_name, class = data_type_name)
 ## }
-## <bytecode: 0x7fbf57becc40>
-## <environment: 0x7fbf5a6939f8>
+## <bytecode: 0x7ff91c18c240>
+## <environment: 0x7ff91aba4ff8>
 ## attr(,"class")
 ## [1] "constructor" "function"
 ```
 
-I wasn't thinking enough about performance when I wrote `pmatch`,^[I really should have thought about it, since obviously it is for algorithmic programming it is most useful to have such a syntax.] so I just constructed a generic function that would work with all constructors instead of creating a function for a specific constructor.
+I wasn't thinking enough about performance when I wrote `pmatch`,^[I really should have thought about it, since obviously, it is for algorithmic programming it is most useful to have such a syntax.] so I just constructed a generic function that would work with all constructors instead of creating a function for a specific constructor.
 
 ## Building a new constructor
 
-Now I'm thinking I should be able to just take a constructor and build a function exactly for that. I will attempt to do that below.  There are some utility functions in `pmatch` that I won't repeat here, but `process_arguments` takes the arguments from the constructor. For a constructor such as `CONS(car, cdr : llist)` those would be `car` and `cdr`. The `cdr` argument has a type specification, and `process_arguments` will give me that as well. With this `CONS` contructor, I will get this tibble:
+Now I think I should be able to take a constructor and build a function exactly for that. I will attempt to do that below.  There are some utility functions in `pmatch` that I won't repeat here, but `process_arguments` takes the arguments from the constructor. For a constructor such as `CONS(car, cdr : llist)` those would be `car` and `cdr`. The `cdr` argument has a type specification, and `process_arguments` will give me that as well. With this `CONS` contructor, I will get this tibble:
 
 ```r
 # A tibble: 2 x 2
@@ -242,11 +242,11 @@ make_constructor_function(constructor_exp, type_exp, environment())
 
 You do not need to assign the result of the function call to anything. The constructor is added to the environment provided, as does a function for printing the data type.
 
-In the new function I create a constructor, but now I use meta programming to put the value creation inside the function instead of analysing the structure at runtime. I also replaced a call to `structure` with code for explicitly setting the class and the attribute I need for pattern matching. Because that turned out to be much faster.
+In the new function I create a constructor, but now I use metaprogramming to put the value creation inside the function instead of analysing the structure at runtime. I also replaced a call to `structure` with code for explicitly setting the class and the attribute I need for pattern matching. Because that turned out to be much faster.
 
 {{< tweet 1052103930338050048 >}}
 
-There is still a lot of code in the function, but with this version it is run when the constructor is created and not when it is called.
+There is still a lot of code in the function, but with this version, it is run when the constructor is created and not when it is called.
 
 
 ```r
@@ -392,7 +392,7 @@ autoplot(measures)
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png)
 
-Manually creating the list structure is still faster, but not frightningly so. 
+Manually creating the list structure is still faster, but not frighteningly so. 
 
 
 ```r
