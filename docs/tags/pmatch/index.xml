@@ -6,10 +6,19 @@
     <description>Recent content in Pmatch on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Thu, 04 Oct 2018 09:13:01 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 16 Oct 2018 18:09:55 +0200</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/pmatch/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The Cost of Constructors</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/16/the-cost-of-constructors/</link>
+      <pubDate>Tue, 16 Oct 2018 18:09:55 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/16/the-cost-of-constructors/</guid>
+      <description>So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time.</description>
+    </item>
     
     <item>
       <title>Lazy queues</title>
