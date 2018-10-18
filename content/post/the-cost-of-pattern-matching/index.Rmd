@@ -285,7 +285,6 @@ Another function, one for computing the length of a list, will look like this.
 llength <- case_func(
     acc = 0,
     NIL -> acc,
-    CONS(car, CONS(8, .)) -> car,
     CONS(., cdr) -> llength(cdr, acc + 1)
 )
 llength
