@@ -21,6 +21,16 @@
     </item>
     
     <item>
+      <title>The Cost of Pattern Matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/18/the-cost-of-pattern-matching/</link>
+      <pubDate>Thu, 18 Oct 2018 16:38:41 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/18/the-cost-of-pattern-matching/</guid>
+      <description>Following up on my previous post, where I figured out to improve the speed of constructors, I will have a look at pattern matching in this post.
+I haven&amp;rsquo;t added any of this to pmatch yet.</description>
+    </item>
+    
+    <item>
       <title>The Cost of Constructors</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/10/16/the-cost-of-constructors/</link>
       <pubDate>Tue, 16 Oct 2018 18:09:55 +0200</pubDate>
