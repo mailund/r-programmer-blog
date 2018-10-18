@@ -178,12 +178,12 @@ manual_contains_rec &lt;- <span style="color:#6ab825;font-weight:bold">function<
 )
 <span style="color:#6ab825">print</span>(measures, order = <span style="color:#ed9d13">&#34;mean&#34;</span>, unit = <span style="color:#ed9d13">&#34;relative&#34;</span>)</code></pre></div>
 <pre><code>## Unit: relative
-##                                expr      min       lq      mean   median
-##  manual_contains_rec(llist1, &quot;qux&quot;) 1.825701 1.804216 0.8158746 1.794676
-##      manual_contains(llist1, &quot;qux&quot;) 1.000000 1.000000 1.0000000 1.000000
+##                                expr      min       lq     mean   median
+##      manual_contains(llist1, &quot;qux&quot;) 1.000000 1.000000 1.000000 1.000000
+##  manual_contains_rec(llist1, &quot;qux&quot;) 1.827843 1.811431 1.051072 1.810764
 ##        uq       max neval
-##  1.775447 0.6646054   100
 ##  1.000000 1.0000000   100
+##  1.787733 0.9150948   100
 </code></pre>
 
 <p>For the <code>pmatch</code> defined lists I need to use recursion, and the version you can define with the current <code>pmatch</code> package will look like this.</p>
@@ -279,22 +279,12 @@ manual_contains_rec &lt;- <span style="color:#6ab825;font-weight:bold">function<
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength &lt;- case_func(
     acc = <span style="color:#3677a9">0</span>,
     NIL -&gt; acc,
-    CONS(car, CONS(<span style="color:#3677a9">8</span>, <span style="color:#3677a9">.</span>)) -&gt; car,
     CONS(<span style="color:#3677a9">.</span>, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>)
 )
 llength</code></pre></div>
 <pre><code>## function (.match_expr, acc = 0) 
 ## if (is.na(.match_expr) &amp;&amp; attr(.match_expr, &quot;constructor&quot;) == 
 ##     &quot;NIL&quot;) acc else if (all(&quot;CONS&quot; == attr(.match_expr, &quot;constructor&quot;), 
-##     {
-##         car &lt;- .match_expr$car
-##         TRUE
-##     }, all(&quot;CONS&quot; == attr(.match_expr$cdr, &quot;constructor&quot;), {
-##         8 == .match_expr$cdr$car
-##     }, {
-##         . &lt;- .match_expr$cdr$cdr
-##         TRUE
-##     }))) car else if (all(&quot;CONS&quot; == attr(.match_expr, &quot;constructor&quot;), 
 ##     {
 ##         . &lt;- .match_expr$car
 ##         TRUE
@@ -306,7 +296,7 @@ llength</code></pre></div>
 ## }
 </code></pre>
 <div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength(llist2)</code></pre></div>
-<pre><code>## [1] 9
+<pre><code>## [1] 10
 </code></pre>
 
 <p>Getting back to the performance experiments, we can define the function for checking if a list contains a given key like this.</p>

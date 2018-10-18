@@ -69,12 +69,12 @@ print(measures, order = "mean", unit = "relative")
 
 ```
 ## Unit: relative
-##                                expr      min       lq      mean   median
-##  manual_contains_rec(llist1, "qux") 1.825701 1.804216 0.8158746 1.794676
-##      manual_contains(llist1, "qux") 1.000000 1.000000 1.0000000 1.000000
+##                                expr      min       lq     mean   median
+##      manual_contains(llist1, "qux") 1.000000 1.000000 1.000000 1.000000
+##  manual_contains_rec(llist1, "qux") 1.827843 1.811431 1.051072 1.810764
 ##        uq       max neval
-##  1.775447 0.6646054   100
 ##  1.000000 1.0000000   100
+##  1.787733 0.9150948   100
 ```
 
 For the `pmatch` defined lists I need to use recursion, and the version you can define with the current `pmatch` package will look like this.
@@ -214,7 +214,6 @@ Another function, one for computing the length of a list, will look like this.
 llength <- case_func(
     acc = 0,
     NIL -> acc,
-    CONS(car, CONS(8, .)) -> car,
     CONS(., cdr) -> llength(cdr, acc + 1)
 )
 llength
@@ -224,15 +223,6 @@ llength
 ## function (.match_expr, acc = 0) 
 ## if (is.na(.match_expr) && attr(.match_expr, "constructor") == 
 ##     "NIL") acc else if (all("CONS" == attr(.match_expr, "constructor"), 
-##     {
-##         car <- .match_expr$car
-##         TRUE
-##     }, all("CONS" == attr(.match_expr$cdr, "constructor"), {
-##         8 == .match_expr$cdr$car
-##     }, {
-##         . <- .match_expr$cdr$cdr
-##         TRUE
-##     }))) car else if (all("CONS" == attr(.match_expr, "constructor"), 
 ##     {
 ##         . <- .match_expr$car
 ##         TRUE
@@ -249,7 +239,7 @@ llength(llist2)
 ```
 
 ```
-## [1] 9
+## [1] 10
 ```
 
 Getting back to the performance experiments, we can define the function for checking if a list contains a given key like this.
