@@ -1,6 +1,4 @@
 
-[*Functional Programming in R*](https://amzn.to/2IQEtWM)
-
 [*Advance Object-Oriented Programming in R*](https://amzn.to/2OlcV0A)
 
 [*Metaprogramming in R*](https://amzn.to/2QHONDT)
@@ -11,5 +9,4 @@
 
 [*The Joys of Hashing*](https://amzn.to/2pngZQ0)
 
-
-[*Functional Data Structures in R*](https://amzn.to/2QIDJWk)
+[*Functional Data-Structures in R*](https://amzn.to/2QjSs9J)
