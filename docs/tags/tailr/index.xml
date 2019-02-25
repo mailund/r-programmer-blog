@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tailr on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/tailr/</link>
+    <description>Recent content in Tailr on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Fri, 27 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/tailr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>New Package Releases: foolbox and tailr</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</link>
+      <pubDate>Fri, 27 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</guid>
+      <description>I have just released version 0.1.0 of foolbox and version 0.1.2 of tailr. I haven&amp;rsquo;t actually done much on the packages the last three weeks, and they have been very close to these releases for a while, but now I had the spare time and energy to actually send them off.</description>
+    </item>
+    
+    <item>
+      <title>tailr v0.1.1</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</link>
+      <pubDate>Sat, 17 Mar 2018 12:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/17/tailr-v0.1.1/</guid>
+      <description>As I wrote about here and here, I had a problem in tailr with higher-order functions. In the transformation for tail-recursion optimisation, I need to know which actual functions each name refer to, in order to apply user-defined transformations, but with higher-order functions, those are not known until runtime.</description>
+    </item>
+    
+    <item>
+      <title>Linked lists in matchbox</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/11/linked-lists-in-matchbox/</guid>
+      <description>I have started playing with data structures in matchbox and the first structure I implement had to be linked lists. That is the most versatile data structure I use and it is missing from R.</description>
+    </item>
+    
+    <item>
+      <title>Problems With Higher Order Functions in tailr</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</link>
+      <pubDate>Fri, 09 Mar 2018 18:38:52 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/</guid>
+      <description>Ok, there is a problem with higher-order functions in my tailr package that I ran into while writing linked list functions for my matchbox package.1
+If you write a tail-recursive function that uses a parameter-function, the tailr package will complain that it doesn&amp;rsquo;t see that function in scope.</description>
+    </item>
+    
+    <item>
+      <title>tailr — Tail Recursion Optimisation</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</link>
+      <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</guid>
+      <description>Believe it or not, all the bother with setting up this blog was such that I could write this post easier than I could on Wordpress. So now, let us get to some actual R programming!</description>
+    </item>
+    
+  </channel>
+</rss>

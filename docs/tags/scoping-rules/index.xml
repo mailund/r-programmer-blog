@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scoping Rules on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/scoping-rules/</link>
+    <description>Recent content in Scoping Rules on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Sat, 22 Sep 2018 12:23:09 +0200</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/scoping-rules/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Overscoping and eval</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</link>
+      <pubDate>Sat, 22 Sep 2018 12:23:09 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/</guid>
+      <description>In my previous post I used the lm function for an example of scope rules, but I left a few details out. I didn&amp;rsquo;t want to muddy the example with too many details, so I chose to lie a little.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Functional Programming on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/functional-programming/</link>
+    <description>Recent content in Functional Programming on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Fri, 19 Oct 2018 16:35:54 +0200</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>More Linked List Performance</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/19/more-linked-list-performance/</link>
+      <pubDate>Fri, 19 Oct 2018 16:35:54 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/19/more-linked-list-performance/</guid>
+      <description>I&amp;rsquo;m still working on improving the speed of my pattern matching DSL. I have improved the speed of constructors and pattern matching, so now I wanted to get back to comparing vectors and linked lists.</description>
+    </item>
+    
+    <item>
+      <title>The Cost of Pattern Matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/18/the-cost-of-pattern-matching/</link>
+      <pubDate>Thu, 18 Oct 2018 16:38:41 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/18/the-cost-of-pattern-matching/</guid>
+      <description>Following up on my previous post, where I figured out to improve the speed of constructors, I will have a look at pattern matching in this post.
+I haven&amp;rsquo;t added any of this to pmatch yet.</description>
+    </item>
+    
+    <item>
+      <title>The Cost of Constructors</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/16/the-cost-of-constructors/</link>
+      <pubDate>Tue, 16 Oct 2018 18:09:55 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/16/the-cost-of-constructors/</guid>
+      <description>So, err, I wanted to compare the performance of linked lists versus R vectors on a case where the former is expected to perform better than the second: building a sequence one element at a time.</description>
+    </item>
+    
+    <item>
+      <title>Thunks and Trampolines</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/</link>
+      <pubDate>Wed, 10 Oct 2018 15:38:25 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/</guid>
+      <description>Have you ever written a recursive function that you couldn&amp;rsquo;t use because you ran out of stack space when you applied it to large data sizes? Then thunks and trampolines might be for you.</description>
+    </item>
+    
+    <item>
+      <title>Lazy queues</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/04/lazy-queues/</link>
+      <pubDate>Thu, 04 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/04/lazy-queues/</guid>
+      <description>The purpose of the lazy lists I implemented in my previous post was to build lazy queues. Lazy lists give you constant time concatenation, which can be useful in itself, but I needed it to implement persistent functional queues.</description>
+    </item>
+    
+    <item>
+      <title>Lazy lists</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/03/lazy-lists/</link>
+      <pubDate>Wed, 03 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/03/lazy-lists/</guid>
+      <description>I wanted to write about lazy lists and lazy queues today, but I spent most of the day struggling with getting lazy evaluation to work. Finally, I convinced myself that something was broken in R, and I was justified in thinking that; upgrading to the most recent version resolved the issue.</description>
+    </item>
+    
+    <item>
+      <title>Lists and functional queues</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/10/01/lists-and-functional-queues/</link>
+      <pubDate>Mon, 01 Oct 2018 07:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/10/01/lists-and-functional-queues/</guid>
+      <description>I wanted to write something about function parameters, how these are passed as so-called &amp;ldquo;promises&amp;rdquo;, how these have associated scopes (and the consequences of that), and how they give us lazy evaluation.</description>
+    </item>
+    
+  </channel>
+</rss>

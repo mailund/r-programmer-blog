@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/categories/</link>
+    <description>Recent content in Categories on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Sun, 04 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Blog</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/blog/</link>
+      <pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Structures</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/data-structures/</link>
+      <pubDate>Thu, 04 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/data-structures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dsl</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/dsl/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/dsl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Functional Programming</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/functional-programming/</link>
+      <pubDate>Fri, 19 Oct 2018 16:35:54 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Graphics</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/graphics/</link>
+      <pubDate>Sat, 03 Mar 2018 18:00:00 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/graphics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Metaprogramming</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</link>
+      <pubDate>Fri, 27 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/metaprogramming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Non Standard Evaluation</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/</link>
+      <pubDate>Tue, 02 Oct 2018 09:13:01 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Package Development</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/package-development/</link>
+      <pubDate>Sat, 17 Mar 2018 14:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/package-development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pattern Matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/categories/pattern-matching/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/categories/pattern-matching/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

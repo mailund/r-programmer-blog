@@ -1,0 +1,659 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css">
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Lists and functional queues</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-10-01T07:13:01&#43;02:00">Oct 1, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/functional-programming/">#functional-programming</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+            </em>
+        </li>
+        
+
+        <li>18 min read</li>
+    </ul>
+</aside>
+    
+
+    
+
+<p>I wanted to write something about function parameters, how these are passed as so-called &ldquo;promises&rdquo;, how these have associated scopes (and the consequences of that), and how they give us lazy evaluation.</p>
+
+<p>It looks simple when you call a function, but a lot is going on.</p>
+
+<p>While I was thinking about lazy evaluation, though, I tried to come up with an example where we could do something interesting with it, which made me think of lazy lists and lazy queues.</p>
+
+<p>I wrote about those in <a href="https://amzn.to/2QjSs9J"><em>Functional Data-Structures in R</em></a>, and I am not going to repeat all of it here, but I cannot resist using them as examples.</p>
+
+<p>But I got sidetracked. When I wrote Functional Data-Structures, I hadn&rsquo;t thought about Haskell-like pattern matching in R. That kind of pattern matching makes it <em>a lot</em> easier to manipulate data structures. Without them, the code I wrote for Functional Data-Structures got a little hard to read.</p>
+
+<p>Well, I implemented a pattern matching DSL in <a href="https://amzn.to/2QHMNLL"><em>Domain-Specific Languages in R</em></a>. You can get the code <a href="https://mailund.github.io/pmatch/">here</a>. With this DSL, you can define data structures and then pattern match against them when you define functions.</p>
+
+<p>I will include that library for this post:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825;font-weight:bold">library</span>(<span style="color:#6ab825">pmatch</span>)</code></pre></div>
+<p>I will use patterns to define <em>linked lists</em>. Linked lists are more common in functional programming languages than the type of lists we have in R because most functional programming languages do not allow data to be modified. It is easy to build new linked lists from other lists efficiently, but there is not a lot you can do with vector-like lists if you cannot modify them.</p>
+
+<p>R is a strange case when it comes to modifying data. All data is immutable, but you can modify environments, and sometimes that makes it look like you can modify data. That is an illusion. If you think this function will modify its input, you will be sadly disappointed.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">set_one &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(x) x[<span style="color:#3677a9">1</span>] &lt;- <span style="color:#3677a9">1</span></code></pre></div>
+<p>Inside the function body, we make a copy of <code>x</code> and assign to it. We never modify the original data.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">x &lt;- rnorm(<span style="color:#3677a9">5</span>)
+x</code></pre></div>
+<pre><code>## [1]  0.461919747  0.112770832  0.632319549 -1.240685729  0.008760227
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">set_one(x)
+x</code></pre></div>
+<pre><code>## [1]  0.461919747  0.112770832  0.632319549 -1.240685729  0.008760227
+</code></pre>
+
+<p>Because data is immutable in R, you need data structures that you can update without modifying them. Those are called <em>functional data structures</em>.<sup class="footnote-ref" id="fnref:A-caveat-here-R"><a href="#fn:A-caveat-here-R">1</a></sup></p>
+
+<h2 id="linked-lists">Linked lists</h2>
+
+<p>A linked list is a recursive data structure. A list is either empty or consists of an element followed by a list. By tradition—something we inherit from the Lisp language—we call the empty list <code>nil</code>, and for a non-empty list, we call the head <code>car</code> and the tail <code>cdr</code>.</p>
+
+<p>Using my pattern DSL, we can define linked lists this way:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">linked_list := NIL | CONS(car, cdr)</code></pre></div>
+<p>We define the data type <code>linked_list</code> as the result of the <em>constructors</em> <code>NIL</code> and <code>CONS</code>. The constructor for the empty list, <code>NIL</code> doesn&rsquo;t take any arguments but the constructor <code>CONS</code> takes two.</p>
+
+<p>After we have defined the data structure, we can create lists using the constructors:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llist &lt;- CONS(<span style="color:#3677a9">1</span>, CONS(<span style="color:#3677a9">2</span>, CONS(<span style="color:#3677a9">3</span>, NIL)))
+llist</code></pre></div>
+<pre><code>## CONS(car = 1, cdr = CONS(car = 2, cdr = CONS(car = 3, cdr = NIL)))
+</code></pre>
+
+<p>You can think of the list data structure as a head element, <code>car</code>, and then a pointer to a list, <code>cdr</code>.</p>
+
+<p><img src="list.png" alt="" /></p>
+
+<p>That is how it is usually implemented, but since R doesn’t have pointers, the structure that <code>pmatch</code> makes is (an R) <code>list</code> with elements <code>car</code> and <code>cdr</code>. It behaves the same way, although less efficiently, of course.</p>
+
+<p>There is a default print method defined for all types you construct using <code>pmatch</code>, but I want a specialised one for lists to make them easier to read:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">toString.linked_list &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist)
+  cases(llist, NIL -&gt; <span style="color:#ed9d13">&#34;[]&#34;</span>,
+        CONS(car, cdr) -&gt; <span style="color:#6ab825">paste</span>(car, <span style="color:#ed9d13">&#34;::&#34;</span>, <span style="color:#6ab825">toString</span>(cdr)))
+print.linked_list &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist)
+  <span style="color:#6ab825">cat</span>(<span style="color:#6ab825">toString</span>(llist), <span style="color:#ed9d13">&#34;\n&#34;</span>)
+
+llist</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: []
+</code></pre>
+
+<p>This makes it a lot easier to read, especially long lists.</p>
+
+<p>You can use <code>purrr</code> to construct longer lists if you want to. The constructors work just like functions. The <code>CONS</code> constructor takes its arguments in the wrong order for <code>reduce</code>, though, but a lambda expression fixes that:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llist &lt;- purrr::reduce_right(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">6</span>, ~ CONS(<span style="color:#3677a9">.</span>y,<span style="color:#3677a9">.</span>x), <span style="color:#3677a9">.i</span>nit = NIL)
+llist</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: []
+</code></pre>
+
+<p>A distinguishing property of linked lists is that we have constant time prepending. Adding a new head to a list doesn&rsquo;t modify the old list and in effect puts a pointer from a new head to an existing list. Unlike R <code>list</code>s, where changing a list often means making a complete copy—a linear time operation—prepending is always a constant time operation. The drawback is that most other operations take linear time. We don&rsquo;t have random access to a list&rsquo;s elements.</p>
+
+<p>Creating constructors for data structures is not the only thing that <code>pmatch</code> lets us do. Much more importantly, it lets us match values against structures in a <code>switch</code>-like way.</p>
+
+<p>You do this using the <code>cases</code> function. The syntax for testing different patterns against an object, <code>x</code>, is this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cases(x, patter1 -&gt; result1, pattern2 -&gt; result2, …)</code></pre></div>
+<p>The function takes a value made from data structure constructors as its first argument and then a sequence of pattern-result pairs. The patterns look like calls to constructors but test if <code>x</code> matches the structure in the pattern. If the pattern matches the structure, then the result of <code>cases</code> is what we get from result-expression. We can bind variables in the matching pattern and use that in the result expression.</p>
+
+<p>If you suspect that there is a lot of non-standard evaluation going on here, you are not wrong.</p>
+
+<p>A simple example, reversing a list:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">reverse &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist, acc = NIL)
+  cases(llist,
+        NIL -&gt; acc,
+        CONS(car, cdr) -&gt; reverse(cdr, CONS(car, acc)))</code></pre></div>
+<p>This function recursively reverses a list. We use an accumulator, <code>acc</code> to do this. We go through each element in the input, prepending it to <code>acc</code>. When we reach the end of the list, <code>acc</code> will contain the input in reversed order.</p>
+
+<p>In the <code>reverse</code> function, we match the input, <code>llist</code>, against two patterns. The pattern <code>NIL</code> will match empty strings, and the pattern <code>CONS(car, cdr)</code> will match non-empty lists (and assign the head and tail of those to the variables <code>car</code> and <code>cdr</code>).</p>
+
+<p>When we see the empty list, we return <code>acc</code>—it should now contain the reversed list—and otherwise, we update <code>acc</code> and continue recursively.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">reverse(llist)</code></pre></div>
+<pre><code>## 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+
+<p>We can illustrate the function this way:</p>
+
+<p><img src="reverse-full.png#mid" alt="" /></p>
+
+<p>Notice that the input list is not modified. We cannot do that. Instead, the parameter, <code>llist</code>, moves along it while we construct <code>acc</code>. If there is another reference to the original list, then the list it refers to isn’t changed; if there is not, the elements we scan past will be garbage-collected.</p>
+
+<p>I won’t show the parts of structures that are not pointed to by variables in the figures below. I will use notation similar to this:</p>
+
+<p><img src="reverse-notation.png#mid" alt="" /></p>
+
+<p>Another example could be concatenating two lists.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">concat &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(l1, l2)
+  cases(l1,
+        NIL -&gt; l2,
+        CONS(car, cdr) -&gt; CONS(car, concat(cdr, l2)))
+concat(llist, llist)</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: []
+</code></pre>
+
+<p>In this function, we also match against a list; in this case the first list, <code>l1</code>. We handle empty lists, and non-empty lists separate cases. For non-empty lists we, the match assigns the head and tail to variables <code>car</code> and <code>cdr</code> and construct a new list that consists of the head of <code>l1</code> and the result of concatenating <code>cdr</code> with <code>l2</code>.</p>
+
+<p>We can draw the concatenation of <code>CONS(1, CONS(2, NIL))</code> and <code>CONS(3, CONS(4, CONS(5, NIL)))</code> like this:</p>
+
+<p><img src="concat.png#mid" alt="" /></p>
+
+<p>We scan through <code>l1</code> as we move down the recursion and construct the new list as we return from it.</p>
+
+<h2 id="queues">Queues</h2>
+
+<p>If you want to implement queues, i.e. “first-in-first-out” structures, you cannot use the same structure as linked lists. You cannot extend lists from both ends.</p>
+
+<p>If you use R lists, you are not better off. You still cannot modify them in functions, and you need to copy them every time you fake it, so they are of little help.</p>
+
+<p>One trick that does work is to implement queues using two lists. You use two lists to represent the front and the back of the queue, respectively. When you enqueue an item, you prepend it to the back-list.</p>
+
+<p>You have to prepend to make it a constant time operation, but we will remember to reverse the list before we dequeue elements. This means that we have to keep the front-list in the right order and the back-list in reverse order at all time.</p>
+
+<p>We enqueue by adding an element to the head of the back-list, and we dequeue by taking the element at the head of the front-list. If the front-list is empty, we replace it with the reverse of the back queue.</p>
+
+<p><img src="enqueue-dequeue.png" alt="" /></p>
+
+<p>We can define the queue structure as pairs of lists like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue := QUEUE(front, back)</code></pre></div>
+<p>and add a nicer print function, just as we did for lists:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">print.queue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue) {
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Front:\t&#34;</span>)
+  <span style="color:#6ab825">print</span>(queue$front)
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Back:\t&#34;</span>)
+  <span style="color:#6ab825">print</span>(queue$back)
+}</code></pre></div>
+<p>I will use a convenience function for creating a new list and implement <code>enqueue</code> as I described above:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">new_queue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>() QUEUE(NIL, NIL)
+enqueue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue, x)
+  cases(queue, QUEUE(front, back) -&gt; QUEUE(front, CONS(x, back)))</code></pre></div>
+<p>The <code>enqueue</code> function can be used directly in a call to <code>purrr::reduce</code>, so we can construct a new queue this way:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue, <span style="color:#3677a9">.i</span>nit = new_queue())
+queue</code></pre></div>
+<pre><code>## Front:	[] 
+## Back:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+
+<p>Moving the back-list to the front involves the list functions <code>reverse</code> and <code>concat</code> that we implemented above. We will use pattern matching to extract the two lists from a queue object, but otherwise, the movement is trivial to implement:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">move_back_to_front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue, QUEUE(front, back) -&gt; QUEUE(concat(front, reverse(back)), NIL))
+
+move_back_to_front(queue)</code></pre></div>
+<pre><code>## Front:	1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: [] 
+## Back:	[]
+</code></pre>
+
+<p>We invoke this function if we need to dequeue an element and the front-list is empty.</p>
+
+<p><img src="move-to-front.png" alt="" /></p>
+
+<p>Now we can implement the <code>dequeue</code> function based on this. Usually, we would write a function for getting the element at the front of a queue and another for removing it; that is often the best design. That way, the first function would return an element from the queue and the second an updated queue.</p>
+
+<p>However, if we take that approach, we would have to move elements from the back-list to the front-list twice to get the front element and update the list. The first function would have to update the lists before it can get the front element, and then it would throw away the updated lists. The second function would update the lists, throw away the front element and return the new queue.</p>
+
+<p>It is better to combine the two operations in a single function that returns a pair—the front element and the updated queue. So, we define a type for pairs that we can use:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pair := PAIR(first, second)
+print.pair &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(pair) {
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;First\n&#34;</span>)
+  <span style="color:#6ab825">print</span>(pair$first)
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Second:\n&#34;</span>)
+  <span style="color:#6ab825">print</span>(pair$second)
+}</code></pre></div>
+<p>Now, the <code>dequeue</code> function can be implemented like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">dequeue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(NIL, NIL)        -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;Empty queue&#34;</span>),
+        QUEUE(NIL, <span style="color:#3677a9">.</span>)          -&gt; dequeue(move_back_to_front(queue)),
+        QUEUE(CONS(car, cdr), back) -&gt; PAIR(car, QUEUE(cdr, back)))</code></pre></div>
+<p>We match the <code>queue</code> argument against three possibilities. The first is when it contains two empty lists. Then the queue is empty, and we shouldn’t try to dequeue any elements. If the front-list is empty, we construct a new queue from moving the back-list to the front-list, and then we call <code>dequeue</code> on the new lists.<sup class="footnote-ref" id="fnref:The-in-patterns"><a href="#fn:The-in-patterns">2</a></sup> Otherwise, we have a head and a tail of the front-list, we return the pair that contains the head and the queue where the head is removed.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">dequeue(queue)</code></pre></div>
+<pre><code>## First
+## [1] 1
+## Second:
+## Front:	2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: [] 
+## Back:	[]
+</code></pre>
+
+<p>To test the <code>queue</code> implementation, we can implement a function that builds a list from a queue. You can imagine a use for queues where you queue a number of elements to it and then want to iterate through them in the order you queued them but as a list. The function looks like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue_to_llist &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(NIL, NIL) -&gt; NIL,
+        otherwise -&gt;
+          cases(dequeue(queue),
+                PAIR(x, <span style="color:#6ab825">q</span>) -&gt; CONS(x, queue_to_llist(<span style="color:#6ab825">q</span>))))</code></pre></div>
+<p>The function is simple, once you get used to pattern matching and recursion. We match against an empty queue. When we see that, we return the empty list. Otherwise, we get the pair that is the result of dequeuing the first element. We construct a list that contains this front element at the head and with a tail that is a recursive call on the updated queue.</p>
+
+<p>Evaluating it on the <code>queue</code> we defined earlier gives us this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue_to_llist(queue)</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: []
+</code></pre>
+
+<p>If you have no other use for queues, they give you a data structure where you can append elements in constant time.</p>
+
+<p>Now, you might object that appending in constant time comes at a cost when you get the front of the queue. That requires copying elements from the back of the queue to the front. This is correct, but you get <em>amortised</em> constant time operations. If you imagine that each time you do a constant time operation, you also put one operation in the bank. Then, when the back-list is <code>n</code> long, you also have <code>n</code> operations in the bank, which can pay for its reversal.</p>
+
+<h2 id="deques">Deques</h2>
+
+<p>Double-ended queues, or <code>deques</code>, lets us add and take elements from both ends of the queue.<sup class="footnote-ref" id="fnref:For-deques-pleas"><a href="#fn:For-deques-pleas">3</a></sup></p>
+
+<p>Adding elements to the front instead of the back is trivial to implement. We just prepend to the <code>front</code> list instead of the <code>back</code> list:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">enqueue_front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue, x)
+  cases(queue, QUEUE(front, back) -&gt; QUEUE(CONS(x, front), back))</code></pre></div>
+<p>We can use this function exactly as the <code>enqueue</code> function from above.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue, <span style="color:#3677a9">.i</span>nit = new_queue())
+queue</code></pre></div>
+<pre><code>## Front:	[] 
+## Back:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue_front, <span style="color:#3677a9">.i</span>nit = new_queue())
+queue</code></pre></div>
+<pre><code>## Front:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: [] 
+## Back:	[]
+</code></pre>
+
+<p>We can use the <code>dequeue</code> function from above to get the front element. I will rename it to <code>front</code>, though, to distinguish it from getting the last element; I will the function for that <code>back</code>.</p>
+
+<p>We rename <code>dequeue</code> but otherwise nothing changes:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(NIL, NIL)        -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;Empty queue&#34;</span>),
+        QUEUE(NIL, <span style="color:#3677a9">.</span>)          -&gt; front(move_back_to_front(queue)),
+        QUEUE(CONS(car, cdr), back) -&gt; PAIR(car, QUEUE(cdr, back)))</code></pre></div>
+<p>For the <code>back</code> function we need the reverse of <code>move_back_to_front</code>:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">move_front_to_back &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue, QUEUE(front, back) -&gt; QUEUE(NIL, concat(back, reverse(front))))
+
+queue</code></pre></div>
+<pre><code>## Front:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: [] 
+## Back:	[]
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">move_front_to_back(queue)</code></pre></div>
+<pre><code>## Front:	[] 
+## Back:	1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">back &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(NIL, NIL)        -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;Empty queue&#34;</span>),
+        QUEUE(<span style="color:#3677a9">.</span>, NIL)          -&gt; back(move_front_to_back(queue)),
+        QUEUE(front, CONS(car, cdr)) -&gt; PAIR(car, QUEUE(front, cdr)))</code></pre></div>
+<p>We can write a function that translates a <code>deque</code> into a list in the opposite direction:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">reverse_queue_to_llist &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(NIL, NIL) -&gt; NIL,
+        otherwise -&gt;
+          cases(back(queue),
+                PAIR(x, <span style="color:#6ab825">q</span>) -&gt; CONS(x, reverse_queue_to_llist(<span style="color:#6ab825">q</span>))))</code></pre></div>
+<p>The <code>queue_to_llist</code> is the same as before.</p>
+
+<p>One problem with this implementation is that the amortisation argument for the efficiency doesn&rsquo;t work. If you switch between calling <code>front</code> and <code>back</code>, you can end up moving elements between the two lists in each function call. Now the running time will be linear for each operation.</p>
+
+<p>To fix this problem, we can move half the list that needs to be moved instead of the whole list. That way we avoid moving elements back and forth.</p>
+
+<p>We need to know the length of the lists to make that work, and the easiest way to ensure this is store the lengths with the lists. We can update the definition of queues to this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue := QUEUE(front_len, front, back_len, back)
+<span style="color:#999;font-style:italic"># I need to redefine this since the construct :=</span>
+<span style="color:#999;font-style:italic"># defines a default that overwrites the one</span>
+<span style="color:#999;font-style:italic"># we defined above</span>
+print.queue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue) {
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Front length:\t&#34;</span>, queue$front_len, <span style="color:#ed9d13">&#34;\n&#34;</span>)
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Back length:\t&#34;</span>, queue$back_len, <span style="color:#ed9d13">&#34;\n&#34;</span>)
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Front:\t&#34;</span>)
+  <span style="color:#6ab825">print</span>(queue$front)
+  <span style="color:#6ab825">cat</span>(<span style="color:#ed9d13">&#34;Back:\t&#34;</span>)
+  <span style="color:#6ab825">print</span>(queue$back)
+}</code></pre></div><div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">new_queue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>() QUEUE(<span style="color:#3677a9">0</span>, NIL, <span style="color:#3677a9">0</span>, NIL)
+enqueue &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue, x)
+  cases(queue,
+        QUEUE(front_len, front, back_len, back) -&gt;
+          QUEUE(front_len, front, back_len + <span style="color:#3677a9">1</span>, CONS(x, back)))
+
+enqueue_front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue, x)
+  cases(queue,
+        QUEUE(front_len, front, back_len, back) -&gt;
+          QUEUE(front_len + <span style="color:#3677a9">1</span>, CONS(x, front), back_len, back))
+
+queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue, <span style="color:#3677a9">.i</span>nit = new_queue())
+queue</code></pre></div>
+<pre><code>## Front length:	 0 
+## Back length:	 8 
+## Front:	[] 
+## Back:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+
+<p>We can mostly use the <code>front</code> and <code>back</code> functions as they are, but not queue. The pattern for <code>QUEUE</code> objects now include the lengths, so we must take that into account. The changes are trivial, though, so I won&rsquo;t say more about them.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(<span style="color:#3677a9">.</span>, NIL, <span style="color:#3677a9">.</span>, NIL)        -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;Empty queue&#34;</span>),
+        QUEUE(<span style="color:#3677a9">.</span>, NIL, <span style="color:#3677a9">.</span>, <span style="color:#3677a9">.</span>)          -&gt; front(move_back_to_front(queue)),
+        QUEUE(front_len, CONS(car, cdr), back_len, back) -&gt;
+          PAIR(car, QUEUE(front_len - <span style="color:#3677a9">1</span>, cdr, back_len, back)))
+
+back &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(<span style="color:#3677a9">.</span>, NIL, <span style="color:#3677a9">.</span>, NIL)        -&gt; <span style="color:#6ab825">stop</span>(<span style="color:#ed9d13">&#34;Empty queue&#34;</span>),
+        QUEUE(<span style="color:#3677a9">.</span>, <span style="color:#3677a9">.</span>, <span style="color:#3677a9">.</span>, NIL)          -&gt; back(move_front_to_back(queue)),
+        QUEUE(front_len, front, back_len, CONS(car, cdr)) -&gt;
+          PAIR(car, QUEUE(front_len, front, back_len - <span style="color:#3677a9">1</span>, cdr)))</code></pre></div>
+<p>The real work in these functions is done in <code>move_front_to_back</code> and <code>move_back_to_front</code>. They need to only move <em>half</em> of the respective list. To split a list in two, we use this function:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">split_list &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, n, acc = NIL)
+  cases(<span style="color:#3677a9">..</span>(n, lst),
+        <span style="color:#3677a9">..</span>(<span style="color:#3677a9">0</span>, lst) -&gt; PAIR(reverse(acc), lst),
+        <span style="color:#3677a9">..</span>(n, CONS(car, cdr)) -&gt; split_list(cdr, n - <span style="color:#3677a9">1</span>, CONS(car, acc)))
+
+llist</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">split_list(llist, <span style="color:#3677a9">3</span>)</code></pre></div>
+<pre><code>## First
+## 1 :: 2 :: 3 :: [] 
+## Second:
+## 4 :: 5 :: 6 :: []
+</code></pre>
+
+<p>We haven&rsquo;t seen the <code>..</code> notation before, but it is part of the <code>pmatch</code> DSL. It allows us to match two patterns at the same time. Here, we want to match both the number at which to split, <code>n</code>, and the list. The function runs down the list, collecting the first part in an accumulator until we reach <code>n == 0</code>. Then we reverse the accumulator and return the pair.</p>
+
+<p>We can modify the two movement functions to use it:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">move_front_to_back &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(front_len, front, <span style="color:#3677a9">0</span>, NIL) -&gt; {
+          n &lt;- <span style="color:#6ab825">floor</span>(front_len / <span style="color:#3677a9">2</span>)
+          cases(split_list(front, n),
+                PAIR(first, second) -&gt;
+                  QUEUE(n,
+                        first,
+                        front_len - n,
+                        reverse(second)))
+          })
+
+move_back_to_front &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(<span style="color:#3677a9">0</span>, NIL, back_len, back) -&gt; {
+          n &lt;- <span style="color:#6ab825">floor</span>(back_len / <span style="color:#3677a9">2</span>)
+          cases(split_list(back, n),
+                PAIR(first, second) -&gt;
+                  QUEUE(back_len - n, reverse(second), n, first))
+        })</code></pre></div>
+<p>They are more complicated now, but mostly this is because we need to unpack the pairs we get from <code>split_list</code>. Otherwise, there is nothing complex in them.</p>
+
+<p>If we want to make lists out of queues, we need to update the pattern match for the empty queue, but otherwise, there are no changes.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue_to_llist &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(<span style="color:#3677a9">0</span>, NIL, <span style="color:#3677a9">0</span>, NIL) -&gt; NIL,
+        otherwise -&gt;
+          cases(front(queue),
+                PAIR(x, <span style="color:#6ab825">q</span>) -&gt; CONS(x, queue_to_llist(<span style="color:#6ab825">q</span>))))
+
+reverse_queue_to_llist &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(queue)
+  cases(queue,
+        QUEUE(<span style="color:#3677a9">0</span>, NIL, <span style="color:#3677a9">0</span>, NIL) -&gt; NIL,
+        otherwise -&gt;
+          cases(back(queue),
+                PAIR(x, <span style="color:#6ab825">q</span>) -&gt; CONS(x, reverse_queue_to_llist(<span style="color:#6ab825">q</span>))))</code></pre></div>
+<p>Check the code out in action:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue, <span style="color:#3677a9">.i</span>nit = new_queue())
+queue</code></pre></div>
+<pre><code>## Front length:	 0 
+## Back length:	 8 
+## Front:	[] 
+## Back:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">rev_queue &lt;- purrr::reduce(<span style="color:#3677a9">1</span>:<span style="color:#3677a9">8</span>, enqueue_front, <span style="color:#3677a9">.i</span>nit = new_queue())
+rev_queue</code></pre></div>
+<pre><code>## Front length:	 8 
+## Back length:	 0 
+## Front:	8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: [] 
+## Back:	[]
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue_to_llist(queue)</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">queue_to_llist(rev_queue)</code></pre></div>
+<pre><code>## 8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">reverse_queue_to_llist(queue)</code></pre></div>
+<pre><code>## 8 :: 7 :: 6 :: 5 :: 4 :: 3 :: 2 :: 1 :: []
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">reverse_queue_to_llist(rev_queue)</code></pre></div>
+<pre><code>## 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: []
+</code></pre>
+
+<p>The time analysis is similar to that of queues. You do not just pay for reversing a list this time, but also for splitting it. The cost of the split and reversal of a list of length <code>n</code>, however, is less than <code>2 n</code>:</p>
+
+<p><img src="split-cost.png" alt="" /></p>
+
+<p>We use a potential function that is <code>|f-b|</code> (the absolute difference in the length of the front- and the back-list). If every time we increase the potential, we put two operations in the bank, then we can pay for the split and reversal.</p>
+
+<h1 id="persistent-and-ephemeral-data-structures">Persistent and ephemeral data structures</h1>
+
+<p>In algorithmics, there is a distinction between <em>persistent</em> and <em>ephemeral</em> data structures. The first category consists of data structures that you can update, by which I mean make new copies of, without changing the input. Ephemeral are those where update operations have to change the original data structure.</p>
+
+<p>The queue and deque we have just implemented are persistent. This means that we can keep copies of them when we update them. If we keep a copy around in a state just before an expensive operation, we risk executing that operation more than once. The first time, we have operations in the bank to pay for it. The subsequent times we do not. That breaks the amortised running time.</p>
+
+<p>You can get around this if you have lazy evaluation. Function arguments are evaluating lazily, and we can exploit that. But that is the topic of my next post.</p>
+
+<hr/>
+
+<p><small>If you liked what you read, and want more like it, consider supporting me at <a href="https://www.patreon.com/mailund">Patreon</a>.</small>
+<hr/></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:A-caveat-here-R">A caveat here. R is not a fast language, and there is overhead in the kind of functional programming I do in this post. There is overhead in using recursion instead of loops, and the pattern matching is not cheap either. If you need speed, you can do better than this. In pure R, you still need functional data structures, but if you have a need for speed, then maybe you should consider <code>Rcpp</code>. <a class="footnote-return" href="#fnref:A-caveat-here-R"><sup>[return]</sup></a></li>
+<li id="fn:The-in-patterns">The <code>.</code> in patterns are used to match arbitrary expressions that we do not want to assign to variables. <a class="footnote-return" href="#fnref:The-in-patterns"><sup>[return]</sup></a></li>
+<li id="fn:For-deques-pleas">For deques, please do <em>not</em> consult Functional Data-Structures in R. There are errors in that section. They cancelled out to give the right results, so my tests didn’t catch them, but the code does not have the right runtime complexity. I will make an errata for the book soon. <a class="footnote-return" href="#fnref:For-deques-pleas"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/"><i class="fa fa-chevron-circle-left"></i> Environments and formulae</a>
+        </li>
+        
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/10/02/promises-their-environments-and-how-we-evaluate-them/">Promises, their environments, and how we evaluate them <i class="fa fa-chevron-circle-right"></i> </a>
+        </li>
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>

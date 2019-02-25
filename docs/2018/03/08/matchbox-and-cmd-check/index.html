@@ -1,0 +1,283 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.37.1" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css">
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Matchbox and CMD CHECK</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2018-03-08T06:59:09&#43;01:00">Mar 8, 2018</time>
+        </li>
+        
+        
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/package-development/">Package-development</a>
+                
+            </em>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/roxygen/">#roxygen</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
+                
+            </em>
+        </li>
+        
+
+        <li>2 min read</li>
+    </ul>
+</aside>
+    
+
+    <p>Ok, first, the <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/">package I wrote about yesterday</a> will be called <code>matchbox</code>, following Dmytro Perepolkin&rsquo;s suggestion (thanks!). You can get it at <a href="https://github.com/mailund/matchbox">GitHub</a>.</p>
+
+<p>There isn&rsquo;t much to it yet since I haven&rsquo;t really started implementing the data structures I want to put in it. I plan to implement most of the structures from <a href="http://amzn.to/2G3Tkvk">Function Data Structures in R</a> but using pattern matching and tail-recursion optimisation, and I will write about it here.</p>
+
+<p>I have implemented some linked-lists functions, but a <code>CMD CHECK</code> of the package fails.</p>
+
+<p>If I run the functions through <code>tailr</code>, I get this interesting Note:</p>
+
+<pre><code>Error in attr(e, &quot;srcref&quot;)[[i]] : subscript out of bounds
+Calls: &lt;Anonymous&gt; ... &lt;Anonymous&gt; -&gt; collectUsage -&gt; collectUsageFun -&gt; walkCode -&gt; h
+Execution halted
+llength: Error while checking: subscript out of bounds
+llrev: Error while checking: subscript out of bounds
+</code></pre>
+
+<p>I have no idea what is happening here.</p>
+
+<p>If I disable the tail-recursion optimisation, I get this Note:</p>
+
+<pre><code>llength: no visible global function definition for ‘llength&lt;-’
+llength: no visible binding for global variable ‘car’
+llrev: no visible global function definition for ‘llrev&lt;-’
+llrev: no visible binding for global variable ‘car’
+Undefined global functions or variables:
+  car llength&lt;- llrev&lt;-
+</code></pre>
+
+<p>This, I am pretty sure, is because of the pattern matching DSL in <code>pmatch</code>. The <code>llength</code> function, for example, is define like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist, acc = <span style="color:#3677a9">0</span>) {
+    <span style="color:#6ab825">pmatch</span>::cases(
+        llist,
+        NIL -&gt; acc,
+        CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>)
+    )
+}</code></pre></div>
+<p>and the <code>cases</code> syntax uses the assignment operator. Therefore, the check thinks we are using the replacement operator <code>length&lt;-</code>. The</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>)</code></pre></div>
+<p>expression is translated into</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength(cdr, acc + <span style="color:#3677a9">1</span>) &lt;- CONS(car, cdr)</code></pre></div>
+<p>by the parser, and a function call on the left-hand side of an assignment is interpreted as a replacement operator. So here, at least, I think I understand the problem. I just don&rsquo;t know how to tell the package check that I know what I am doing and it shouldn&rsquo;t worry about it.</p>
+
+<p>Help!?</p>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/"><i class="fa fa-chevron-circle-left"></i> Help Me Choose a Package Name</a>
+        </li>
+        
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/">Problems With Higher Order Functions in tailr <i class="fa fa-chevron-circle-right"></i> </a>
+        </li>
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>

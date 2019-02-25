@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Disqus on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/disqus/</link>
+    <description>Recent content in Disqus on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Sun, 04 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/disqus/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Comments</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/04/comments/</link>
+      <pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/04/comments/</guid>
+      <description>Ok, if this is working, it should now be possible to comment on posts here.
+I was a bit slow in trying this out, because I had a hellish time setting up the blog in the first place, and I expected adding comments support with Disqus would be just as hard, but if this is working, it was a simple matter of adding</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Foolbox on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/tags/foolbox/</link>
+    <description>Recent content in Foolbox on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Fri, 27 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/foolbox/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>New Package Releases: foolbox and tailr</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</link>
+      <pubDate>Fri, 27 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/04/27/new-package-releases-foolbox-and-tailr/</guid>
+      <description>I have just released version 0.1.0 of foolbox and version 0.1.2 of tailr. I haven&amp;rsquo;t actually done much on the packages the last three weeks, and they have been very close to these releases for a while, but now I had the spare time and energy to actually send them off.</description>
+    </item>
+    
+    <item>
+      <title>Lots of Function Transformations</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</link>
+      <pubDate>Tue, 27 Mar 2018 19:34:39 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/27/transforming-functions-with-cases-calls/</guid>
+      <description>The last couple of days I&amp;rsquo;ve been doing a lot of experimenting with a package for function rewriting: foolbox. I am doing some function transformations in both pmatch and tailr and they look very much alike, so I figured I should collect the shared functionality in a separate package.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dsl on The Working R Programmer</title>
+    <link>https://mailund.github.io/r-programmer-blog/categories/dsl/</link>
+    <description>Recent content in Dsl on The Working R Programmer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
+    <lastBuildDate>Fri, 30 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mailund.github.io/r-programmer-blog/categories/dsl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>“Optional” types using pmatch</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</link>
+      <pubDate>Fri, 30 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/30/optional-types-using-pmatch/</guid>
+      <description>Some programming languages, e.g. Swift, have special &amp;ldquo;optional&amp;rdquo; types. These are types the represent elements that either contain a value of some other type or contain nothing at all. It is a way of computing with the possibility that some operations cannot be done and then propagating that along in the computations.</description>
+    </item>
+    
+    <item>
+      <title>Building a package that uses pattern matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</link>
+      <pubDate>Sat, 17 Mar 2018 14:35:16 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/17/building-a-package-that-uses-pattern-matching/</guid>
+      <description>After a week spend programming string algorithms in C—for teaching purposes, I am not working on a new read-mapper—it is nice to get back to programming in R. I made a new release of tailr today, so that is good, but what I really wanted to work on was matchbox.</description>
+    </item>
+    
+    <item>
+      <title>Variable bindings with pattern matching</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</link>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/06/variable-bindings-with-pattern-matching/</guid>
+      <description>I just added a new feature to my pmatch package. You will need the development version to get it, until I make a new release, and I have a few more features planned before that.</description>
+    </item>
+    
+    <item>
+      <title>Another approach to evaluating dynprog expressions</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/05/another-approach-to-evaluating-dynprog-expressions/</link>
+      <pubDate>Mon, 05 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/05/another-approach-to-evaluating-dynprog-expressions/</guid>
+      <description>In the approach to evaluating dynamic-programming expressions, that I wrote about yesterday, I used ranges- and recursion-specifications to build a loop for updating a table and then evaluated that loop inside an environment where local variables would over-scope the quosure environment from the specifications.</description>
+    </item>
+    
+    <item>
+      <title>Evaluating dynprog expressions</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/04/evaluating-dynprog-expressions/</link>
+      <pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/04/evaluating-dynprog-expressions/</guid>
+      <description>I think I now have a complete implementation of the dynamic programming DSL I wrote about the other day. You can install it from the GitHub repository if you want to experiment with it.</description>
+    </item>
+    
+    <item>
+      <title>Designing a DSL for dynamic programming</title>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</link>
+      <pubDate>Sat, 03 Mar 2018 10:00:00 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/03/designing-a-dsl-for-dynamic-programming/</guid>
+      <description>I&amp;rsquo;m working on an example for one of the chapters of Domain Specific Languages in R that will appear in the printed version but weren&amp;rsquo;t included in the earlier e-book. The plan is to have one to three extra example chapters, depending on how much I can do before my deadline on April 1st.</description>
+    </item>
+    
+  </channel>
+</rss>
