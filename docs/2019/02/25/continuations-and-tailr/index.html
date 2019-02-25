@@ -1,0 +1,494 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <title>The Working R Programmer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The HTML5 Herald" />
+  <meta name="author" content="Thomas Mailund" />
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" type="text/css" href="https://mailund.github.io/r-programmer-blog/css/styles.css" />
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css">
+
+ 
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid Sans" type="text/css" media="all" />
+     
+       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira Code" type="text/css" media="all" />
+     
+
+ <style>
+ body {
+     font-family: 'Droid Sans';
+ }
+ code {
+    font-family: 'Fira Code'; 
+ }
+ </style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-126024558-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="https://mailund.github.io/r-programmer-blog/">The Working R Programmer</a>
+            </h1>
+
+      <ul id="social-media">
+        
+        <li><a href="https://twitter.com/ThomasMailund"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.linkedin.com/in/thomas-mailund-94153b1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://github.com/mailund"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://www.facebook.com/mailund"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+          
+        <li><a href="https://patreon.com/mailund"><i class="fab fa-patreon fa-lg" aria-hidden="true"></i></a></li>
+         
+        <li><a href="https://www.goodreads.com/author/show/15484380.Thomas_Mailund"><i class="fab fa-goodreads fa-lg" aria-hidden="true"></i></a></li>
+        
+      </ul>
+      
+      <p><em>Tips and tricks for serious software development in R</em></p>
+      
+
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/post/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="https://mailund.github.io/r-programmer-blog/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Continuations and `tailr`</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2019-02-25T15:41:36&#43;01:00">Feb 25, 2019</time>
+        </li>
+        
+        
+
+        
+
+        <li>11 min read</li>
+    </ul>
+</aside>
+    
+
+    
+
+<p>Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.e., you do not do anything to the value you get from a recursive call except returning it, then you can directly update your local variables and loop. You do not need a recursive call at all.</p>
+
+<p>Consider this implementation of a linked list:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">cons &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(car, cdr) <span style="color:#6ab825;font-weight:bold">list</span>(car = car, cdr = cdr)</code></pre></div>
+<p>If we have a list of numbers and want to add them together, then we can write a recursive function.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lst &lt;- cons(<span style="color:#3677a9">1</span>, cons(<span style="color:#3677a9">2</span>, cons(<span style="color:#3677a9">3</span>, <span style="color:#6ab825;font-weight:bold">NULL</span>)))
+list_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(lst)) <span style="color:#3677a9">0</span>
+    <span style="color:#6ab825;font-weight:bold">else</span> lst$car + list_sum(lst$cdr)
+}
+list_sum(lst)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>It solves the problem, but it is not tail-recursive. We add a number to the result of a recursive call.</p>
+
+<p>It is easy to transform it into a tail-recursive function, though. We can add an accumulator to the function. When we call recursively, we update the accumulator, and when we hit the base case, we return it.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">list_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, acc = <span style="color:#3677a9">0</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(lst)) acc
+    <span style="color:#6ab825;font-weight:bold">else</span> list_sum(lst$cdr, lst$car + acc)
+}
+list_sum(lst)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>The first version calls itself recursively all the way to a base case and then it computes the result while going back up the call-stack. Using the accumulator, we do the computation going down the stack, and when we hit the base case, we already know the result. We don’t need to move back up the stack again to return the result, but we have to because we have used function calls.<sup class="footnote-ref" id="fnref:The-callCC-funct"><a href="#fn:The-callCC-funct">1</a></sup></p>
+
+<p>Because we only compute going down the stack and don’t do anything when we return up the stack, we can translate tail-recursive functions into a loop, and in many cases, we can translate a recursive function into a tail-recursive function by adding an accumulator.</p>
+
+<p>Unfortunately, R does not implement this optimisation. There are good reasons for this, but it means that all recursive calls <em>are</em> function calls, even if they are tail-recursive.</p>
+
+<p>This is not a major problem in R. You can always implement algorithms iteratively. But, often it is easier to solve a problem recursively. If you do implement a solution to a problem using recursive functions, you can easily exceed the call stack.</p>
+
+<p>Not to worry, you can translate a tail-recursive function into a looping-function yourself, or you can use a package that I wrote a little while back: <a href="https://mailund.github.io/tailr/"><code>tailr</code></a>. The package doesn’t handle all tail-recursive R functions. It is not <em>possible</em> to translate all tail-recursive functions into loops in R because you can access the call stack if you do a non-standard evaluation. But with <code>tailr</code> you can handle most simple recursive functions.<sup class="footnote-ref" id="fnref:And-if-you-have"><a href="#fn:And-if-you-have">2</a></sup></p>
+
+<p>You translate a function using <code>tailr::loop_transform()</code>:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">list_sum_tr &lt;- tailr::loop_transform(
+    list_sum
+)
+list_sum_tr(lst)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>The transformed function isn’t pretty, but you are not supposed to look at it, and I have put the original source in the <code>srcref</code> attribute, so you generally won’t see the transformation.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">list_sum_tr</code></pre></div>
+<pre><code>## function(lst, acc = 0) {
+##     if (is.null(lst)) acc
+##     else list_sum(lst$cdr, lst$car + acc)
+## }
+## &lt;bytecode: 0x7fdce665c598&gt;
+</code></pre>
+
+<p>For this post, however, you do need to see it. It looks like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">body</span>(list_sum_tr)</code></pre></div>
+<pre><code>## .Primitive(&quot;{&quot;)(.tailr_lst &lt;- lst, .tailr_acc &lt;- acc, callCC(function(escape) {
+##     repeat {
+##         .Primitive(&quot;{&quot;)(lst &lt;- .tailr_lst, acc &lt;- .tailr_acc, 
+##             {
+##                 if (is.null(lst)) 
+##                   escape(acc)
+##                 else {
+##                   .tailr_lst &lt;&lt;- lst$cdr
+##                   .tailr_acc &lt;&lt;- lst$car + acc
+##                 }
+##             }, next)
+##     }
+## }))
+</code></pre>
+
+<p>You can see the <code>repeat</code> loop in there and how I update the local variables instead of calling recursively. (There are prettier ways to updating parameters in an environment, but my benchmarking showed me that this was the fastest of the alternatives I considered).</p>
+
+<p>When I wrote the package, I had hoped that I would get a performance boost from the transformation, but there is a lot of overhead in the looping version, so there isn’t really any gain. For simple functions, a looping version you write yourself will always be faster than the functions that <code>tailr</code> creates. They are not slower than recursive functions, so if you <em>do</em> use a recursive function, the package is worth considering. Even if you do not get any performance, the transformed functions will not run out of stack space. When you call them, you only put one call frame on the stack.</p>
+
+<h2 id="continuations">Continuations</h2>
+
+<p>As long as we only have one recursion, we can add an accumulator and get a tail-recursive function. If you need more than one recursive call, at least one of them cannot be immediately returned. Consider a tree instead of a list:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(left, val, right) {
+    <span style="color:#6ab825;font-weight:bold">list</span>(left = left, val = val, right = right)
+}
+leaf    &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(val) tree(<span style="color:#6ab825;font-weight:bold">NULL</span>, val, <span style="color:#6ab825;font-weight:bold">NULL</span>)
+node    &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(left, right) tree(left, <span style="color:#6ab825;font-weight:bold">NULL</span>, right)
+is_leaf &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree) <span style="color:#6ab825">is.null</span>(tree$left)
+val     &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree) tree$val</code></pre></div>
+<p>If we want to sum the values in the leaves of a tree, we can use</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (is_leaf(tree)) val(tree)
+    <span style="color:#6ab825;font-weight:bold">else</span> tree_sum(tree$left) + tree_sum(tree$right)
+}
+tree_sum(leaf(<span style="color:#3677a9">42</span>))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum(node(leaf(<span style="color:#3677a9">21</span>),leaf(<span style="color:#3677a9">21</span>)))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum(node(node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>)),
+              node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>))))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+
+<p>The function is not tail-recursive, and you cannot make it tail-recursive by adding an accumulator.</p>
+
+<p>What you can do, is use a <em>continuation</em>.<sup class="footnote-ref" id="fnref:You-can-read-mor"><a href="#fn:You-can-read-mor">3</a></sup></p>
+
+<p>In the context of recursion, a continuation takes the role of the accumulator. You can think of it as an active accumulator. With an accumulator, we do something to it when we call recursively, but with a continuation, we ask it to continue our computation when we have a value for it.</p>
+
+<p>Consider this version of the list sum:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">list_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(lst, cont = <span style="color:#6ab825">identity</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(lst)) cont(<span style="color:#3677a9">0</span>)
+    <span style="color:#6ab825;font-weight:bold">else</span> list_sum(lst$cdr, <span style="color:#6ab825;font-weight:bold">function</span>(val) cont(val + lst$car))
+}
+list_sum(lst)</code></pre></div>
+<pre><code>## [1] 6
+</code></pre>
+
+<p>Here, I use a function, called <code>cont()</code> and with default argument the <code>identity()</code> function (<code>function(x) x</code>). It shows up the places where the accumulator did before, but it is a function instead of a number. And the code is a bit more complex. To be honest, it can be a bit hard to grok how continuations work, but I will try to walk you through it.</p>
+
+<p>In the original, not tail-recursive, version of <code>list_sum()</code> we went down the recursion until we hit a base case. There, we returned 0. We then added the numbers in the list when we returned from the recursive calls. With the accumulator, we updated the result value when we went down the call stack and were done when we hit the base case. The continuation version does both, but tail-recursive. You can think of the continuation as what you want to do when you return from a recursion. It will do what you did when you got the result of the recursive call in the original function. There, you used</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#6ab825;font-weight:bold">else</span> lst$car + list_sum(lst$cdr)</code></pre></div>
+<p>to add the return value to <code>lst$car</code>. The function <code>function(val) cont(val + lst$car)</code> in</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#6ab825;font-weight:bold">else</span> list_sum(lst$cdr, <span style="color:#6ab825;font-weight:bold">function</span>(val) cont(val + lst$car))</code></pre></div>
+<p>does the same thing. The <code>val</code> parameter is the result of the recursive call. We want to return <code>val + lst$car</code>, but we then want the evaluation to continue the way it did when we moved up the stack earlier. Therefore, we call our continuation so it will do that remaining computation.</p>
+
+<p>In the base case, the original function returned zero. We need to tell the continuation that its value is zero. So, we replace</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(lst)) <span style="color:#3677a9">0</span></code></pre></div>
+<p>with</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">    <span style="color:#6ab825;font-weight:bold">if</span> (<span style="color:#6ab825">is.null</span>(lst)) cont(<span style="color:#3677a9">0</span>)</code></pre></div>
+<p>So, in short, when you go down the recursion, you update the continuation so it does what you would initially do with the value you got from a recursive call. Your continuation will be called with the result of the recursive call, so you just put the original expression in the body of the continuation. To return a value, you need to call the continuation. If you don&rsquo;t the final result of the computation is the last value you return. The continuation is what ties together your recursion and what you should return.</p>
+
+<p>It is because we put the computations we would do when returning from recursions into the continuation that the function is tail-recursive.</p>
+
+<p>We can rewrite the <code>tree_sum()</code> function so it uses continuations:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, cont = <span style="color:#6ab825">identity</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (is_leaf(tree)) {
+        cont(val(tree))
+    } <span style="color:#6ab825;font-weight:bold">else</span> {
+        tree_sum(
+            tree$left,
+            <span style="color:#6ab825;font-weight:bold">function</span>(left_val) {
+                tree_sum(tree$right, <span style="color:#6ab825;font-weight:bold">function</span>(right_val) {
+                    cont(left_val + right_val)
+                })
+            }
+        )
+    }
+}</code></pre></div>
+<p>We can then check that it computes the same values as before:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum(leaf(<span style="color:#3677a9">42</span>))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum(node(leaf(<span style="color:#3677a9">21</span>),leaf(<span style="color:#3677a9">21</span>)))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum(node(node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>)),
+              node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>))))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+
+<p>This function is a little harder to unpack, but you will see that we first have a recursive call on the left tree:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">        tree_sum(
+            tree$left,
+            <span style="color:#6ab825;font-weight:bold">function</span>(left_val)<span style="color:#6ab825;font-weight:bold">...</span>
+        )</code></pre></div>
+<p>The continuation we pass along with the call will get the result of the recursion so it will get the value we get when traversing the left tree.</p>
+
+<p>This continuation needs to make the second recursive call, on the right tree:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">            <span style="color:#6ab825;font-weight:bold">function</span>(left_val) {
+                tree_sum(
+                    tree$right,
+                    <span style="color:#6ab825;font-weight:bold">function</span>(right_val) <span style="color:#6ab825;font-weight:bold">...</span>
+                )
+            }</code></pre></div>
+<p>The continuation we pass along here will get the result from the traversal of the right tree.</p>
+
+<p>What we want to return from the function is the left value plus the right value. We return the result by calling the first continuation:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">        cont(left_val + right_val)</code></pre></div>
+<p>Now, I wanted to check if <code>tailr</code> would play well with continuations (and suspected it would not). For the rest of this post, you need the latest development version of <code>tailr</code> if you want to try the code. I should make a new release soon, but before that, I need to make a new version of <code>pmatch</code>, and I have a bug there I haven’t had time to look at yet.</p>
+
+<p>Straight ahead we can try to transform the function.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum_tr &lt;- tailr::loop_transform(tree_sum)
+tree_sum_tr(leaf(<span style="color:#3677a9">42</span>))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+
+<p>Looking good! It works on one example, so it is probably fine.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum_tr(node(leaf(<span style="color:#3677a9">21</span>),leaf(<span style="color:#3677a9">21</span>)))</code></pre></div>
+<pre><code>## Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
+</code></pre>
+
+<p>Well, that&rsquo;s not good.</p>
+
+<p>To see what is wrong we can look at the transformed function&rsquo;s code:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#6ab825">body</span>(tree_sum_tr)</code></pre></div>
+<pre><code>## .Primitive(&quot;{&quot;)(.tailr_tree &lt;- tree, .tailr_cont &lt;- cont, callCC(function(escape) {
+##     repeat {
+##         .Primitive(&quot;{&quot;)(tree &lt;- .tailr_tree, cont &lt;- .tailr_cont, 
+##             {
+##                 if (is_leaf(tree)) {
+##                   escape(cont(val(tree)))
+##                 }
+##                 else {
+##                   {
+##                     .tailr_tree &lt;&lt;- tree$left
+##                     .tailr_cont &lt;&lt;- function(left_val) {
+##                       tree_sum(tree$right, function(right_val) {
+##                         cont(left_val + right_val)
+##                       })
+##                     }
+##                   }
+##                 }
+##             }, next)
+##     }
+## }))
+</code></pre>
+
+<p>It might not be apparent right away, but if you stare at it long enough you will notice that we override the <code>cont</code> variable in each loop, so when we call it from one of the continuations we create, we will call the wrong function. This is one of those dangers you run into when you allow assignments to variables&hellip;</p>
+
+<p>We need to capture the closure of a function when we create it as a continuation. This function does exactly that:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">capture &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(<span style="color:#3677a9">.</span>func) {
+    captured_env &lt;- rlang::env_clone(rlang::caller_env())
+    <span style="color:#6ab825">environment</span>(<span style="color:#3677a9">.</span>func) &lt;- captured_env
+    <span style="color:#3677a9">.</span>func
+}</code></pre></div>
+<p>It makes a copy of the caller&rsquo;s environment and makes that the environment for the function. This isn&rsquo;t a cheap operation, so expect some runtime penalty, but it makes sure that the variable bindings we have at the time we create a continuation will not be overridden in the loop.</p>
+
+<p>With the <code>capture()</code> function, it all works.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, cont = <span style="color:#6ab825">identity</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (is_leaf(tree)) {
+        cont(val(tree))
+    } <span style="color:#6ab825;font-weight:bold">else</span> {
+        tree_sum(
+            tree$left,
+            capture(<span style="color:#6ab825;font-weight:bold">function</span>(left_val) {
+                tree_sum(tree$right, <span style="color:#6ab825;font-weight:bold">function</span>(right_val) {
+                    cont(left_val + right_val)
+                })
+            })
+        )
+    }
+}
+tree_sum_tr &lt;- tailr::loop_transform(tree_sum)
+
+tree_sum_tr(leaf(<span style="color:#3677a9">42</span>))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum_tr(node(leaf(<span style="color:#3677a9">21</span>),leaf(<span style="color:#3677a9">21</span>)))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum_tr(node(node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>)),
+                 node(leaf(<span style="color:#3677a9">10.5</span>),leaf(<span style="color:#3677a9">10.5</span>))))</code></pre></div>
+<pre><code>## [1] 42
+</code></pre>
+
+<p>If you do not use the most recent version of <code>tailr</code>, you cannot transform the function. The earlier transformation code would not accept a recursive call nested in another function. Not that this would ever be a problem, but I didn&rsquo;t handle the case. I do now.</p>
+
+<p>Since we do not need to worry about the closure once we have captured it, we can also name our continuations and make the code a bit more readable.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">tree_sum &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(tree, cont = <span style="color:#6ab825">identity</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> (is_leaf(tree)) {
+        cont(val(tree))
+    } <span style="color:#6ab825;font-weight:bold">else</span> {
+        left_cont &lt;- capture(
+            <span style="color:#6ab825;font-weight:bold">function</span>(left_val) {
+                right_cont &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(right_val) {
+                    cont(left_val + right_val)
+                }
+                tree_sum(tree$right, right_cont)
+            }
+        )
+        tree_sum(tree$left, left_cont)
+    }
+}</code></pre></div>
+<p>There you go: rewriting tail-recursive functions with continuations.</p>
+
+<p>In <a href="https://amzn.to/2BSRAEn"><em>Functional Programming in R</em></a> I describe a different way to get a tail-recursive implementation of continuation-passing-style tail-recursive functions. It does not involve rewriting functions, but you need to capture them in thunks, similar to how we capture their closure here. If you want to know how that works, you can read <a href="https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/">this post</a>. There, I also try to explain closures, so it if isn&rsquo;t entirely clear how they work yet, maybe reading a different explanation will help.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:The-callCC-funct">The <code>callCC()</code> function <em>will</em> allow you to terminate early in recursion, but that is not relevant for tail-recursion and this post. <a class="footnote-return" href="#fnref:The-callCC-funct"><sup>[return]</sup></a></li>
+<li id="fn:And-if-you-have">And if you have a function that it cannot transform, then you are welcome to submit a bug report, or better still, a pull request. <a class="footnote-return" href="#fnref:And-if-you-have"><sup>[return]</sup></a></li>
+<li id="fn:You-can-read-mor">You can read more about continuations in <a href="https://amzn.to/2BSRAEn"><em>Functional Programming in R</em></a>. <a class="footnote-return" href="#fnref:You-can-read-mor"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://mailund.github.io/r-programmer-blog/2018/10/19/more-linked-list-performance/"><i class="fa fa-chevron-circle-left"></i> More Linked List Performance</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+        <section class="comments-block">
+      <button id="show-comments" style="display: none;"><i class="fa fa-comments-o"></i> Add/View Comments</button>
+</section>
+
+<section id="disqus_thread"></section>
+
+<script>
+      (function () {
+            
+            
+            if (window.location.hostname == "localhost")
+                  return;
+
+            var disqus_loaded = false;
+            var disqus_shortname = 'r-programmer-blog';
+            var disqus_button = document.getElementById("show-comments");
+
+            disqus_button.style.display = "";
+            disqus_button.addEventListener("click", disqus, false);
+
+            function disqus() {
+
+                  if (!disqus_loaded) {
+                        disqus_loaded = true;
+
+                        var e = document.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = true;
+                        e.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                        (document.getElementsByTagName("head")[0] ||
+                              document.getElementsByTagName("body")[0])
+                        .appendChild(e);
+
+                        
+                        document.getElementById("show-comments").style.display = "none";
+                  }
+            }
+
+            
+            var hash = window.location.hash.substr(1);
+            if (hash.length > 8) {
+                  if (hash.substring(0, 8) == "comment-") {
+                        disqus();
+                  }
+            }
+
+            
+            if (/bot|google|baidu|bing|msn|duckduckgo|slurp|yandex/i.test(navigator.userAgent)) {
+                  disqus();
+            }
+      })();
+</script>
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6>Copyright &copy; 2018 - Thomas Mailund | 
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://mailund.github.io/r-programmer-blog/index.xml">Subscribe</a></h6>
+    </footer>
+</div>
+<script src="https://mailund.github.io/r-programmer-blog/js/scripts.js"></script>
+</body>
+<div id="amzn-assoc-ad-04956520-8388-43ab-9b6e-fbe758d208f8"></div>
+<script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=04956520-8388-43ab-9b6e-fbe758d208f8"></script>
+
+</html>

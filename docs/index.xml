@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Continuations and `tailr`</title>
+      <link>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</link>
+      <pubDate>Mon, 25 Feb 2019 15:41:36 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</guid>
+      <description>Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.</description>
+    </item>
+    
+    <item>
       <title>More Linked List Performance</title>
       <link>https://mailund.github.io/r-programmer-blog/2018/10/19/more-linked-list-performance/</link>
       <pubDate>Fri, 19 Oct 2018 16:35:54 +0200</pubDate>
@@ -289,10 +298,10 @@ I was a bit slow in trying this out, because I had a hellish time setting up the
     
     <item>
       <title>tailr — Tail Recursion Optimisation</title>
-      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</link>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</link>
       <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</guid>
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</guid>
       <description>Believe it or not, all the bother with setting up this blog was such that I could write this post easier than I could on Wordpress. So now, let us get to some actual R programming!</description>
     </item>
     
@@ -331,6 +340,15 @@ It&amp;rsquo;s a fair question, and I am not creating a new blog just to make yo
       
       <guid>https://mailund.github.io/r-programmer-blog/1/01/01/</guid>
       <description>“Optional” types using pmatch /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */ !function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://mailund.github.io/r-programmer-blog/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/1/01/01/</guid>
+      <description>Continuations and tailr /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */ !function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?window:this,function(a,b){var c=[],d=c.</description>
     </item>
     
     <item>

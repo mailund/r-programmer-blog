@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.37.1" />
+  <meta name="generator" content="Hugo 0.53" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -33,14 +33,17 @@
  }
  </style>
 
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-126024558-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-126024558-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
 </head>
@@ -101,6 +104,27 @@ ga('send', 'pageview');
         <ul>
           
           <li class="first">
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/" title="Continuations and `tailr`">Continuations and `tailr`</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2019-02-25T15:41:36&#43;01:00">Feb 25, 2019</time>
+        </li>
+        
+        
+
+        
+
+        <li>11 min read</li>
+    </ul>
+</aside>
+            <p>Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
             <h1><a href="https://mailund.github.io/r-programmer-blog/2018/10/19/more-linked-list-performance/" title="More Linked List Performance">More Linked List Performance</a></h1> 
             <aside>
     <ul>
@@ -483,46 +507,6 @@ I haven&rsquo;t added any of this to pmatch yet.</p>
  How R finds the bindings of variables by looking through chains of environments.</p>
             
             <a href="https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/">Read more&hellip;</a>
-            
-          </li>
-          
-          <li >
-            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/" title="Overscoping and eval">Overscoping and eval</a></h1> 
-            <aside>
-    <ul>
-        <li>
-            <time class="post-date" datetime="2018-09-22T12:23:09&#43;02:00">Sep 22, 2018</time>
-        </li>
-        
-        
-        <li>
-            Categories: 
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
-                
-            </em>
-        </li>
-        
-
-        
-        <li>
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/scoping-rules/">#scoping-rules</a>
-                
-            </em>
-        </li>
-        
-
-        <li>16 min read</li>
-    </ul>
-</aside>
-            <p>In my previous post I used the lm function for an example of scope rules, but I left a few details out. I didn&rsquo;t want to muddy the example with too many details, so I chose to lie a little.</p>
-            
-            <a href="https://mailund.github.io/r-programmer-blog/2018/09/22/overscoping-and-eval/">Read more&hellip;</a>
             
           </li>
           
