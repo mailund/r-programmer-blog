@@ -6,10 +6,19 @@
     <description>Recent content in Tailr on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Fri, 27 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Feb 2019 15:41:36 +0100</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/tailr/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Continuations and `tailr`</title>
+      <link>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</link>
+      <pubDate>Mon, 25 Feb 2019 15:41:36 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</guid>
+      <description>Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.</description>
+    </item>
     
     <item>
       <title>New Package Releases: foolbox and tailr</title>
@@ -50,10 +59,10 @@ If you write a tail-recursive function that uses a parameter-function, the tailr
     
     <item>
       <title>tailr — Tail Recursion Optimisation</title>
-      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</link>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</link>
       <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</guid>
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</guid>
       <description>Believe it or not, all the bother with setting up this blog was such that I could write this post easier than I could on Wordpress. So now, let us get to some actual R programming!</description>
     </item>
     

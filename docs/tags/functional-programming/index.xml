@@ -6,10 +6,19 @@
     <description>Recent content in Functional Programming on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Fri, 19 Oct 2018 16:35:54 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 25 Feb 2019 15:41:36 +0100</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Continuations and `tailr`</title>
+      <link>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</link>
+      <pubDate>Mon, 25 Feb 2019 15:41:36 +0100</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/</guid>
+      <description>Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.</description>
+    </item>
     
     <item>
       <title>More Linked List Performance</title>

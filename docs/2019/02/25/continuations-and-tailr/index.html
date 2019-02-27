@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.37.1" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -33,17 +33,14 @@
  }
  </style>
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-126024558-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-126024558-1', 'auto');
+ga('send', 'pageview');
 </script>
 
 </head>
@@ -112,7 +109,32 @@ if (!doNotTrack) {
         </li>
         
         
+        <li>
+            Categories: 
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/categories/functional-programming/">Functional-programming</a>
+                
+            </em>
+        </li>
+        
 
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/functional-programming/">#functional-programming</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tail-recursion/">#tail-recursion</a>
+                
+                    , 
+                    <a href="https://mailund.github.io/r-programmer-blog/tags/tailr/">#tailr</a>
+                
+            </em>
+        </li>
         
 
         <li>11 min read</li>
@@ -171,7 +193,7 @@ list_sum_tr(lst)</code></pre></div>
 ##     if (is.null(lst)) acc
 ##     else list_sum(lst$cdr, lst$car + acc)
 ## }
-## &lt;bytecode: 0x7fdce665c598&gt;
+## &lt;bytecode: 0x7fa61b930e28&gt;
 </code></pre>
 
 <p>For this post, however, you do need to see it. It looks like this:</p>
@@ -395,6 +417,10 @@ tree_sum_tr(leaf(<span style="color:#3677a9">42</span>))</code></pre></div>
 <p>There you go: rewriting tail-recursive functions with continuations.</p>
 
 <p>In <a href="https://amzn.to/2BSRAEn"><em>Functional Programming in R</em></a> I describe a different way to get a tail-recursive implementation of continuation-passing-style tail-recursive functions. It does not involve rewriting functions, but you need to capture them in thunks, similar to how we capture their closure here. If you want to know how that works, you can read <a href="https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/">this post</a>. There, I also try to explain closures, so it if isn&rsquo;t entirely clear how they work yet, maybe reading a different explanation will help.</p>
+
+<p><strong>Update 27/2/2019:</strong> Actually, this doesn’t work as advertised. It just moves the call stack length from the recursions to the continuations. When we return from the recursion we call a continuation that calls another continuation that calls another continuation and so on. This can be fixed, but I don’t think it can be fixed to be more efficient than the <a href="https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/">trampoline approach</a>. If I can think up a more efficient way, then I will let you know.</p>
+
+<p>Now I am just thinking about how to automatically translate a recursive function into the thunk/trampoline pattern.</p>
 <div class="footnotes">
 
 <hr />

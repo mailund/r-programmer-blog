@@ -1,6 +1,12 @@
 ---
 title: "Continuations and `tailr`"
 date: 2019-02-25T15:41:36+01:00
+tags:
+  - functional-programming
+  - tail-recursion
+  - tailr
+categories:
+  - Functional-programming
 ---
 
 Tail recursion is essential in functional programming languages because they can be used to transform function calls into loops. If all recursive calls are the final results of a function call, i.e., you do not do anything to the value you get from a recursive call except returning it, then you can directly update your local variables and loop. You do not need a recursive call at all.
@@ -290,3 +296,8 @@ tree_sum <- function(tree, cont = identity) {
 There you go: rewriting tail-recursive functions with continuations.
 
 In [*Functional Programming in R*](https://amzn.to/2BSRAEn) I describe a different way to get a tail-recursive implementation of continuation-passing-style tail-recursive functions. It does not involve rewriting functions, but you need to capture them in thunks, similar to how we capture their closure here. If you want to know how that works, you can read [this post](https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/). There, I also try to explain closures, so it if isn't entirely clear how they work yet, maybe reading a different explanation will help.
+
+**Update 27/2/2019:** Actually, this doesn’t work as advertised. It just moves the call stack length from the recursions to the continuations. When we return from the recursion we call a continuation that calls another continuation that calls another continuation and so on. This can be fixed, but I don’t think it can be fixed to be more efficient than the [trampoline approach](https://mailund.github.io/r-programmer-blog/2018/10/10/thunks-and-trampolines/). If I can think up a more efficient way, then I will let you know.
+
+Now I am just thinking about how to automatically translate a recursive function into the thunk/trampoline pattern.
+
