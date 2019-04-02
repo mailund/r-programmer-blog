@@ -6,10 +6,19 @@
     <description>Recent content in Posts on The Working R Programmer</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright &amp;copy; 2018 - Thomas Mailund</copyright>
-    <lastBuildDate>Mon, 25 Feb 2019 15:41:36 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2019 20:34:37 +0200</lastBuildDate>
     
 	<atom:link href="https://mailund.github.io/r-programmer-blog/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Update Is Not Update</title>
+      <link>https://mailund.github.io/r-programmer-blog/2019/04/02/update-is-not-update/</link>
+      <pubDate>Tue, 02 Apr 2019 20:34:37 +0200</pubDate>
+      
+      <guid>https://mailund.github.io/r-programmer-blog/2019/04/02/update-is-not-update/</guid>
+      <description>I ran into this little problem yesterday and thought I would share it. I needed to collect a bunch of items into a list, and I needed to do that from several functions that functioned as callbacks.</description>
+    </item>
     
     <item>
       <title>Continuations and `tailr`</title>
@@ -289,10 +298,10 @@ I was a bit slow in trying this out, because I had a hellish time setting up the
     
     <item>
       <title>tailr — Tail Recursion Optimisation</title>
-      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</link>
+      <link>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</link>
       <pubDate>Fri, 02 Mar 2018 10:38:06 +0100</pubDate>
       
-      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr--tail-recursion-optimisation/</guid>
+      <guid>https://mailund.github.io/r-programmer-blog/2018/03/02/tailr-tail-recursion-optimisation/</guid>
       <description>Believe it or not, all the bother with setting up this blog was such that I could write this post easier than I could on Wordpress. So now, let us get to some actual R programming!</description>
     </item>
     

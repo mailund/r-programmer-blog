@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.37.1" />
+  <meta name="generator" content="Hugo 0.53" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -33,14 +33,17 @@
  }
  </style>
 
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-126024558-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-126024558-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
 </head>
@@ -101,6 +104,27 @@ ga('send', 'pageview');
         <ul>
           
           <li class="first">
+            <h1><a href="https://mailund.github.io/r-programmer-blog/2019/04/02/update-is-not-update/" title="Update Is Not Update">Update Is Not Update</a></h1> 
+            <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2019-04-02T20:34:37&#43;02:00">Apr 2, 2019</time>
+        </li>
+        
+        
+
+        
+
+        <li>3 min read</li>
+    </ul>
+</aside>
+            <p>I ran into this little problem yesterday and thought I would share it. I needed to collect a bunch of items into a list, and I needed to do that from several functions that functioned as callbacks.</p>
+            
+            <a href="https://mailund.github.io/r-programmer-blog/2019/04/02/update-is-not-update/">Read more&hellip;</a>
+            
+          </li>
+          
+          <li >
             <h1><a href="https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/" title="Continuations and `tailr`">Continuations and `tailr`</a></h1> 
             <aside>
     <ul>
@@ -488,47 +512,6 @@ I haven&rsquo;t added any of this to pmatch yet.</p>
             <p>I wanted to write something about function parameters, how these are passed as so-called &ldquo;promises&rdquo;, how these have associated scopes (and the consequences of that), and how they give us lazy evaluation.</p>
             
             <a href="https://mailund.github.io/r-programmer-blog/2018/10/01/lists-and-functional-queues/">Read more&hellip;</a>
-            
-          </li>
-          
-          <li >
-            <h1><a href="https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/" title="Environments and formulae">Environments and formulae</a></h1> 
-            <aside>
-    <ul>
-        <li>
-            <time class="post-date" datetime="2018-09-27T04:41:19&#43;02:00">Sep 27, 2018</time>
-        </li>
-        
-        
-        <li>
-            Categories: 
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/non-standard-evaluation/">Non-standard evaluation</a>
-                
-            </em>
-        </li>
-        
-
-        
-        <li>
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/scope-rules/">#scope-rules</a>
-                
-            </em>
-        </li>
-        
-
-        <li>13 min read</li>
-    </ul>
-</aside>
-            <p>In my two previous posts on non-standard evaluation, Scoping rules and NSE and Overscoping and eval, I explained:
- How R finds the bindings of variables by looking through chains of environments.</p>
-            
-            <a href="https://mailund.github.io/r-programmer-blog/2018/09/27/environments-and-formulae/">Read more&hellip;</a>
             
           </li>
           

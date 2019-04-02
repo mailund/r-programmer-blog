@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="The HTML5 Herald" />
   <meta name="author" content="Thomas Mailund" />
-  <meta name="generator" content="Hugo 0.37.1" />
+  <meta name="generator" content="Hugo 0.53" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
@@ -33,14 +33,17 @@
  }
  </style>
 
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-126024558-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-126024558-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
 </head>
@@ -142,12 +145,8 @@ ga('send', 'pageview');
 
 <p>The drawing I used to explain the example was this:</p>
 
-
 <figure>
-    
-        <img src="lm2%20details%20ok.png" />
-    
-    
+    <img src="lm2%20details%20ok.png"/> 
 </figure>
 
 
@@ -174,12 +173,8 @@ g(<span style="color:#3677a9">3</span>)</code></pre></div>
 
 <p>The setup is this, where I have illustrated where the <code>g</code> body finds variables <code>x</code> and <code>y</code> by searching through the environment chain, the <code>y</code> variable in the immediate environment and the <code>x</code> variable in its parent.</p>
 
-
 <figure>
-    
-        <img src="nested%20calls.png" />
-    
-    
+    <img src="nested%20calls.png"/> 
 </figure>
 
 
@@ -197,12 +192,8 @@ x &lt;- y &lt;- z &lt;- <span style="color:#3677a9">1</span></code></pre></div>
 
 <p>The rules are the same as before, and the environments and how they are chained is this:</p>
 
-
 <figure>
-    
-        <img src="not%20nested.png" />
-    
-    
+    <img src="not%20nested.png"/> 
 </figure>
 
 
@@ -301,12 +292,8 @@ h &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(z) {
 
 <p>So in this version, <code>g</code> will evaluate <code>f(x)</code> in <code>h(5)</code>&rsquo;s environment and <code>f</code> will evaluate <code>x + y + z</code> in the same environment. When <code>g</code> evaluates <code>x + y + z</code> it finds <code>z</code> in the call-environment of <code>h(5)</code>, and it finds <code>x</code> and <code>y</code> in the global environment (because this is the parent of <code>h(5)</code>&rsquo;s environment). The environments of <code>g(y)</code> and <code>f(x)</code> are never in play here; we skip them entirely.</p>
 
-
 <figure>
-    
-        <img src="dyn%20scope%201.png" />
-    
-    
+    <img src="dyn%20scope%201.png"/> 
 </figure>
 
 

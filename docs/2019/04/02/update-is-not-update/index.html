@@ -102,97 +102,80 @@ if (!doNotTrack) {
 
 <article>
 
-    <h1>Matchbox and CMD CHECK</h1>
+    <h1>Update Is Not Update</h1>
 
     
         <aside>
     <ul>
         <li>
-            <time class="post-date" datetime="2018-03-08T06:59:09&#43;01:00">Mar 8, 2018</time>
+            <time class="post-date" datetime="2019-04-02T20:34:37&#43;02:00">Apr 2, 2019</time>
         </li>
         
-        
-        <li>
-            Categories: 
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/data-structures/">Data-structures</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/pattern-matching/">Pattern-matching</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/categories/package-development/">Package-development</a>
-                
-            </em>
-        </li>
         
 
         
-        <li>
-            <em>
-                
-                    
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/roxygen/">#roxygen</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/pmatch/">#pmatch</a>
-                
-                    , 
-                    <a href="https://mailund.github.io/r-programmer-blog/tags/matchbox/">#matchbox</a>
-                
-            </em>
-        </li>
-        
 
-        <li>2 min read</li>
+        <li>3 min read</li>
     </ul>
 </aside>
     
 
-    <p>Ok, first, the <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/">package I wrote about yesterday</a> will be called <code>matchbox</code>, following Dmytro Perepolkin&rsquo;s suggestion (thanks!). You can get it at <a href="https://github.com/mailund/matchbox">GitHub</a>.</p>
+    <p>I ran into this little problem yesterday and thought I would share it. I needed to collect a bunch of items into a list, and I needed to do that from several functions that functioned as callbacks.</p>
 
-<p>There isn&rsquo;t much to it yet since I haven&rsquo;t really started implementing the data structures I want to put in it. I plan to implement most of the structures from <a href="http://amzn.to/2G3Tkvk">Function Data Structures in R</a> but using pattern matching and tail-recursion optimisation, and I will write about it here.</p>
-
-<p>I have implemented some linked-lists functions, but a <code>CMD CHECK</code> of the package fails.</p>
-
-<p>If I run the functions through <code>tailr</code>, I get this interesting Note:</p>
-
-<pre><code>Error in attr(e, &quot;srcref&quot;)[[i]] : subscript out of bounds
-Calls: &lt;Anonymous&gt; ... &lt;Anonymous&gt; -&gt; collectUsage -&gt; collectUsageFun -&gt; walkCode -&gt; h
-Execution halted
-llength: Error while checking: subscript out of bounds
-llrev: Error while checking: subscript out of bounds
-</code></pre>
-
-<p>I have no idea what is happening here.</p>
-
-<p>If I disable the tail-recursion optimisation, I get this Note:</p>
-
-<pre><code>llength: no visible global function definition for ‘llength&lt;-’
-llength: no visible binding for global variable ‘car’
-llrev: no visible global function definition for ‘llrev&lt;-’
-llrev: no visible binding for global variable ‘car’
-Undefined global functions or variables:
-  car llength&lt;- llrev&lt;-
-</code></pre>
-
-<p>This, I am pretty sure, is because of the pattern matching DSL in <code>pmatch</code>. The <code>llength</code> function, for example, is define like this:</p>
-<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(llist, acc = <span style="color:#3677a9">0</span>) {
-    <span style="color:#6ab825">pmatch</span>::cases(
-        llist,
-        NIL -&gt; acc,
-        CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>)
-    )
+<p>Ok, that sounds abstract, so let me make it simple. I had a list</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">my_items &lt;- <span style="color:#6ab825;font-weight:bold">list</span>()</code></pre></div>
+<p>and one or more functions that should update it</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f1 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+  <span style="color:#999;font-style:italic"># add elm to my_item</span>
+}
+f2 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+  <span style="color:#999;font-style:italic"># add elm to my_item</span>
+}
+…
+fn &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+  <span style="color:#999;font-style:italic"># add elm to my_item</span>
 }</code></pre></div>
-<p>and the <code>cases</code> syntax uses the assignment operator. Therefore, the check thinks we are using the replacement operator <code>length&lt;-</code>. The</p>
-<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">CONS(car, cdr) -&gt; llength(cdr, acc + <span style="color:#3677a9">1</span>)</code></pre></div>
-<p>expression is translated into</p>
-<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">llength(cdr, acc + <span style="color:#3677a9">1</span>) &lt;- CONS(car, cdr)</code></pre></div>
-<p>by the parser, and a function call on the left-hand side of an assignment is interpreted as a replacement operator. So here, at least, I think I understand the problem. I just don&rsquo;t know how to tell the package check that I know what I am doing and it shouldn&rsquo;t worry about it.</p>
+<p>It was slightly more complicated because I didn’t want to use a global variable for <code>my_items</code> and so I wrapped all the functions in a (closure) scope, but there is no need for the added complexity here.</p>
 
-<p>Help!?</p>
+<p>First, I did what you should never do and concatenated the list with the new element.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f1 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+    my_items &lt;&lt;- <span style="color:#6ab825;font-weight:bold">c</span>(my_items, elm)
+}</code></pre></div>
+<p>I know that it is inefficient but it is easy to program, and if the list never gets long the performance is fine.<sup class="footnote-ref" id="fnref:Also-I-didn-t-th"><a href="#fn:Also-I-didn-t-th">1</a></sup></p>
+
+<p>The performance wasn’t fine.</p>
+
+<p>So I had to change append code.</p>
+
+<p>Before we get to that, however, I want to draw your attention to the assignment here. The assignment operator is <code>&lt;&lt;-</code>. If it was <code>&lt;-</code> I would create a local reference to the list <code>c(my_items, elm)</code> and I would <em>not</em> update the global variable.</p>
+
+<p>Let that be a hint for what happens next…</p>
+
+<p>If you want to append to a list then</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"> &lt;-  elm</code></pre></div>
+<p>is the way to do it. You get amortised constant time appends this way (instead of linear time appends with <code>c()</code>).</p>
+
+<p>So, this looks reasonable, right?</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f1 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+    my_list[[<span style="color:#6ab825">length</span>(my_list) + <span style="color:#3677a9">1</span>]] &lt;- elm
+}</code></pre></div>
+<p>It <em>does</em> look reasonable, but the problem is the <code>&lt;-</code> assignment. It is less obvious here because we are updating the global variable and not assigning to a local variable, except that is exactly what we are doing.</p>
+
+<p>When you update data in R, as a general rule, what you are actually doing is making a copy of the data with the modifications and then assigning the result back to the reference you have to the data.</p>
+
+<p>The assignment here calls the <code>[[&lt;-</code> function. When you assign to a function call (and <code>[[</code> is a function call) a <code>&lt;-</code> version of the function is called to produce updated values. The updated version is written to the variable you used. So what happens in my assignment from above is this. I get the global lest, then I modify it—which always means that I produce a new modified copy—and then I assign the result back to <code>my_list</code>. This, however, will be a new local variable. Even though I am modifying a list from a global variable, the way R handles indexing (and all <code>&lt;-</code> functions) gives me a local variable.</p>
+
+<p>The right solution, of course, is this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">f1 &lt;- <span style="color:#6ab825;font-weight:bold">function</span>(elm) {
+    my_list[[<span style="color:#6ab825">length</span>(my_list) + <span style="color:#3677a9">1</span>]] &lt;&lt;- elm
+}</code></pre></div><div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:Also-I-didn-t-th">Also, I didn’t think too hard about it. The efficient way to append isn’t complicated either, it is just not as readily available in my brain. <a class="footnote-return" href="#fnref:Also-I-didn-t-th"><sup>[return]</sup></a></li>
+</ol>
+</div>
 
 
 </article>
@@ -202,13 +185,9 @@ Undefined global functions or variables:
     <ul>
         
         <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/07/help-me-choose-a-name/"><i class="fa fa-chevron-circle-left"></i> Help Me Choose a Package Name</a>
+            <a href="https://mailund.github.io/r-programmer-blog/2019/02/25/continuations-and-tailr/"><i class="fa fa-chevron-circle-left"></i> Continuations and `tailr`</a>
         </li>
         
-        
-        <li>
-            <a href="https://mailund.github.io/r-programmer-blog/2018/03/09/problems-with-higher-order-functions-in-tailr/">Problems With Higher Order Functions in tailr <i class="fa fa-chevron-circle-right"></i> </a>
-        </li>
         
     </ul>
 </section>
